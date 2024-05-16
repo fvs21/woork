@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "application_user")
@@ -30,14 +31,24 @@ public class User {
 
     @JsonIgnore
     private String password;
+
     private Date dateOfBirth;
 
+    @JsonIgnore
     private boolean verified;
-    private long verificationCode;
+
+    @JsonIgnore
+    private String verificationCode;
+
+    @JsonIgnore
+    private Date code_generated_date;
+
+    @JsonIgnore
+    private Timestamp code_generated_timestamp;
 
     public User() {}
 
-    public User(String first_name, String last_name, String phone, String email, String password, Date dateOfBirth ) {
+    public User(String first_name, String last_name, String phone, String email, Date dateOfBirth, String password ) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.phone = phone;
@@ -110,11 +121,27 @@ public class User {
         this.verified = verified;
     }
 
-    public long getVerificationCode() {
+    public String getVerificationCode() {
         return verificationCode;
     }
 
-    public void setVerificationCode(long verificationCode) {
+    public void setVerificationCode(String verificationCode) {
         this.verificationCode = verificationCode;
+    }
+
+    public Date getCode_generated_date() {
+        return code_generated_date;
+    }
+
+    public void setCode_generated_date(Date code_generated_date) {
+        this.code_generated_date = code_generated_date;
+    }
+
+    public Timestamp getCode_generated_timestamp() {
+        return code_generated_timestamp;
+    }
+
+    public void setCode_generated_timestamp(Timestamp code_generated_timestamp) {
+        this.code_generated_timestamp = code_generated_timestamp;
     }
 }

@@ -1,0 +1,21 @@
+@use "./variables" as var;
+
+html, body {
+    height: 100%;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.color-black {
+    color: var.$primary-font-color;
+}
+
+.color-white {
+    color: white;
+}
+
