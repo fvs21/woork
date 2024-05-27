@@ -14,7 +14,7 @@
     padding-top: 5px;
 }
 
-label {
+.input-label {
     font-size: 16px;
     font-weight: bold;
 }
@@ -23,21 +23,34 @@ label {
     text-align: center;
 }
 
-hr {
+.form-hr {
     border-top: 1px;
 }
 
-button {
+.submit-btn {
     background-color: var.$primary-color;
     border: none;
     color: white;
     cursor: pointer;
+    transition: 0.3s;
+}
+.submit-btn:hover {
+    background-color: var.$secondary-color;
 }
 
-select:invalid {
+.select-form:invalid {
     color:gray;
 }
 
 .disabled-option {
     color: gray;
+}
+
+.cancel-btn {
+    background-color: white;
+    border: none;
+    font-size: large;
+    padding: 20px 0px;
+    cursor: pointer;
+    position: fixed;
 }

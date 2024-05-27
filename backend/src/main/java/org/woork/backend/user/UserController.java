@@ -1,18 +1,19 @@
 package org.woork.backend.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.woork.backend.exceptions.EmailAlreadyTakenException;
-import org.woork.backend.exceptions.IncorrectVerificationCodeException;
-import org.woork.backend.exceptions.PhoneNumberAlreadyTakenException;
+import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.exceptions.UserDoesNotExistException;
+import org.woork.backend.location.LocationObject;
 
 import java.util.LinkedHashMap;
 
+
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("api/user")
 public class UserController {
     private final UserService userService;
 
@@ -21,54 +22,38 @@ public class UserController {
         this.userService = userService;
     }
 
-    //Exceptions
-    @ExceptionHandler({EmailAlreadyTakenException.class})
-    public ResponseEntity<String> handleEmailAlreadyTaken() {
-        return new ResponseEntity<>("The email you provided is already taken", HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler({PhoneNumberAlreadyTakenException.class})
-    public ResponseEntity<String> handlePhoneNumberAlreadyTaken() {
-        return new ResponseEntity<>("The phone number you provided is already taken", HttpStatus.CONFLICT);
-    }
-
-   @ExceptionHandler({IncorrectVerificationCodeException.class})
-   public ResponseEntity<String> handleIncorrectVerificationCode() {
-        return new ResponseEntity<>("Incorrect verification code", HttpStatus.CONFLICT);
-   }
-
-   @ExceptionHandler({UserDoesNotExistException.class})
-   public ResponseEntity<String> handleUserDoesNotExist() {
+    @ExceptionHandler({UserDoesNotExistException.class})
+    public ResponseEntity<String> handleUserDoesNotExist() {
         return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-   }
-
-    //Mappings
-
-    @PostMapping("/register")
-    public User register(@RequestBody RegistrationObject registration) {
-        return userService.registerUser(registration);
     }
 
-    @PostMapping("/email/send-code")
-    public ResponseEntity<String> sendVerificationEmail(@RequestBody LinkedHashMap<String, String> body) {
-        userService.sendEmailVerificationCode(body.get("email"));
-        return new ResponseEntity<>("Verification code sent", HttpStatus.OK);
+    @GetMapping("/verify")
+    public User verifyUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        return userService.getUserFromToken(token);
     }
 
-    @PostMapping("/email/verify")
-    public User verifyEmail(@RequestBody LinkedHashMap<String, String> body) {
-        String email = body.get("email");
-        String code = body.get("otp");
+    @PutMapping("/gender/update")
+    public User updateGender(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody LinkedHashMap<String, String> body) {
+        User user = userService.getUserFromToken(token);
+        String gender = body.get("gender");
+        Gender genderEnum = Gender.valueOf(gender);
 
-        return userService.checkVerificationCode(email, code);
+        return userService.updateGender(user, genderEnum);
     }
 
-//    @PutMapping("/change/password")
-//    public ResponseEntity<String> changePassword(@RequestBody LinkedHashMap<String, String> body) {
-//        String email = body.get("email");
-//        String currentPassword = body.get("password");
-//        String newPassword = body.get("new_password");
-//
-//        return userService.changePassword(email, currentPassword, newPassword);
-//    }
+    @PutMapping("/location/update")
+    public User updateLocation(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody LocationObject locationObject) {
+        User user = userService.getUserFromToken(token);
+
+        return userService.updateLocation(user, locationObject);
+    }
+
+    @PutMapping("/pfp/update")
+    public ResponseEntity<String> updateProfilePicture(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                                                       @RequestParam("image") MultipartFile multipartFile) {
+        User user = userService.getUserFromToken(token);
+
+        String uploadImage = userService.uploadProfilePicture(user, multipartFile);
+        return new ResponseEntity<>(uploadImage, HttpStatus.OK);
+    }
 }

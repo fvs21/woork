@@ -2,12 +2,18 @@ package org.woork.backend.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.woork.backend.image.Image;
+import org.woork.backend.location.Location;
+import org.woork.backend.posting.Posting;
+import org.woork.backend.role.Role;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "application_user")
+@Table(name = "users")
 public class User {
     @Id
     @SequenceGenerator(
@@ -19,43 +25,85 @@ public class User {
         strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
+    @JsonIgnore
+    @Column(name = "user_id")
     private Long id;
     private String first_name;
     private String last_name;
 
-    @Column(unique = true)
+    @Column(name = "country_code")
+    private int countryCode;
+
+    @Column(name = "phone", unique = true)
     private String phone;
 
-    @Column(unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
+    @Column(name = "password")
     @JsonIgnore
     private String password;
 
+    @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role_junction",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
+    private Set<Role> authorities;
+
+    @Column(name = "verified")
     @JsonIgnore
     private boolean verified;
 
+    @Column(name = "verification_code")
     @JsonIgnore
     private String verificationCode;
 
+    @Column(name = "code_generation_date")
     @JsonIgnore
-    private Date code_generated_date;
+    private Date codeGenerationDate;
 
+    @Column(name = "code_generation_timestamp")
     @JsonIgnore
-    private Timestamp code_generated_timestamp;
+    private Timestamp codeGenerationTimestamp;
 
-    public User() {}
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_picture", referencedColumnName = "image_id")
+    @JsonIgnore
+    private Image profilePicture;
 
-    public User(String first_name, String last_name, String phone, String email, Date dateOfBirth, String password ) {
+    @OneToMany(mappedBy = "author")
+    private Set<Posting> postings;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "location", referencedColumnName = "location_id")
+    private Location location;
+
+
+    public User() {
+        this.authorities = new HashSet<>();
+        this.postings = new HashSet<>();
+    }
+
+    public User(String first_name, String last_name, int countryCode, String phone, String email, Date dateOfBirth, String password, Set<Role> authorities ) {
         this.first_name = first_name;
         this.last_name = last_name;
+        this.countryCode = countryCode;
         this.phone = phone;
         this.email = email;
         this.password = password;
         this.verified = false;
         this.dateOfBirth = dateOfBirth;
+        this.authorities = authorities;
+        this.postings = new HashSet<>();
     }
 
     public Long getId() {
@@ -90,6 +138,14 @@ public class User {
         this.password = password;
     }
 
+    public int getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(int countryCode) {
+        this.countryCode = countryCode;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -114,6 +170,14 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public Set<Role> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Role> authorities) {
+        this.authorities = authorities;
+    }
+
     public boolean isVerified() {
         return verified;
     }
@@ -129,19 +193,51 @@ public class User {
         this.verificationCode = verificationCode;
     }
 
-    public Date getCode_generated_date() {
-        return code_generated_date;
+    public Date getCodeGenerationDate() {
+        return codeGenerationDate;
     }
 
-    public void setCode_generated_date(Date code_generated_date) {
-        this.code_generated_date = code_generated_date;
+    public void setCodeGenerationDate(Date code_generated_date) {
+        this.codeGenerationDate = code_generated_date;
     }
 
-    public Timestamp getCode_generated_timestamp() {
-        return code_generated_timestamp;
+    public Timestamp getCodeGenerationTimestamp() {
+        return codeGenerationTimestamp;
     }
 
-    public void setCode_generated_timestamp(Timestamp code_generated_timestamp) {
-        this.code_generated_timestamp = code_generated_timestamp;
+    public void setCodeGenerationTimestamp(Timestamp code_generated_timestamp) {
+        this.codeGenerationTimestamp = code_generated_timestamp;
+    }
+
+    public Set<Posting> getPostings() {
+        return postings;
+    }
+
+    public void setPostings(Set<Posting> postings) {
+        this.postings = postings;
+    }
+
+    public Image getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(Image profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

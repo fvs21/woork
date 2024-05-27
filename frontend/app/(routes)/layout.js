@@ -1,8 +1,8 @@
-import '../assets/globals.scss'
+'use client'
 
-export const metadata = {
-  title: "Woork",
-};
+import '../assets/globals.scss'
+import Provider from '../utils/Provider';
+
 
 export default function RootLayout({ children }) {
   return (
@@ -12,7 +12,9 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <noscript>You need to enable Javascript to run this app</noscript>
-        {children}
+        <Provider>
+          {children}
+        </Provider>   
       </body>
     </html>
   );

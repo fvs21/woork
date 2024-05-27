@@ -4,6 +4,6 @@ public class PhoneNumberAlreadyTakenException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public PhoneNumberAlreadyTakenException() {
-        super("Phone number is already taken");
+        super("Phone number provided is already taken");
     }
 }

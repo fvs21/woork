@@ -1,0 +1,67 @@
+@use '/app/assets/variables' as var;
+
+.main-nav-bar {
+    background-color: var.$primary-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.links {
+    text-decoration: none;
+    color: white;
+}
+
+.profile-btn {
+    background-color: white;
+    border: 0;
+    border-radius: 25px;
+    padding: 10px 14px;
+    transition: 0.3s;
+    margin-left: 5px;
+    font-size: medium;
+    color: var.$primary-color;
+    cursor: pointer;
+}
+
+.profile-btn:hover {
+    opacity: 0.7;
+}
+
+.nav-bar-btn {
+    border: 0;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 10px 14px;
+    background-color: var.$primary-color;
+    color: white;
+    font-size: medium;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.nav-bar-btn:hover {
+    background-color: var.$secondary-color;
+}
+
+.logo {
+    font-size: 24px;
+}
+
+.nav-links {
+    list-style: none;
+
+    li {
+        display: inline-block;
+        color: white;
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 899px) {
+    .nav-links {
+        visibility: hidden;
+    }
+}
