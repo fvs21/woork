@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.woork.backend.annotations.Verified;
 import org.woork.backend.exceptions.UserDoesNotExistException;
+import org.woork.backend.exceptions.UserNotVerifiedException;
 import org.woork.backend.location.LocationObject;
 
 import java.util.LinkedHashMap;
@@ -23,8 +25,13 @@ public class UserController {
     }
 
     @ExceptionHandler({UserDoesNotExistException.class})
-    public ResponseEntity<String> handleUserDoesNotExist() {
-        return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> handleUserDoesNotExist(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({UserNotVerifiedException.class})
+    public ResponseEntity<String> handleUserNotVerified(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/verify")

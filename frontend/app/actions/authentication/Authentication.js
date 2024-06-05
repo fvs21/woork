@@ -1,13 +1,10 @@
-import axios from "axios";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import axios from '../../api/axios'
 
 export async function registerUser(body) {
-    try {
-        const response = await axios.post(
-            'http://localhost:8000/auth/register', 
-            body
-        );
-        return response;
-    } catch(error) {
-        return error;
+    const response = await axios.post(body);
+    
+    if(response.status != 200)   {
+        throw new Error(response.status, response.data);
     }
 }

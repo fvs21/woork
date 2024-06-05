@@ -1,5 +1,6 @@
 package org.woork.backend.image;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +17,8 @@ import java.nio.file.Files;
 public class ImageService {
     private final ImageRepository imageRepository;
 
-    private static final File DIRECTORY = new File("/");
+    private static final String imagesPath = Dotenv.load().get("images_path");
+    private static final File DIRECTORY = new File(imagesPath);
     private static final String URL = "http://localhost:8080/api/images/";
 
     @Autowired
@@ -25,8 +27,8 @@ public class ImageService {
     }
 
     public Image uploadImage(MultipartFile file, String prefix) {
-        if(!file.getContentType().split("/")[1].equals("jpeg") ||
-        !file.getContentType().split("/")[1].equals("png")) {
+        String fileType = file.getContentType().split("/")[1];
+        if(!(fileType.equals("png") || fileType.equals("jpg") || fileType.equals("jpeg"))) {
             throw new UnsupportedImageTypeException();
         }
         try {

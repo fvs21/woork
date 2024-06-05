@@ -1,19 +1,19 @@
 package org.woork.backend.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.woork.backend.authentication.AuthenticationResponse;
 import org.woork.backend.authentication.RegistrationObject;
-import org.woork.backend.exceptions.EmailAlreadyTakenException;
-import org.woork.backend.exceptions.IncorrectVerificationCodeException;
-import org.woork.backend.exceptions.PhoneNumberAlreadyTakenException;
-import org.woork.backend.exceptions.UserDoesNotExistException;
+import org.woork.backend.exceptions.*;
 import org.woork.backend.image.Image;
 import org.woork.backend.image.ImageService;
 import org.woork.backend.location.Location;
@@ -21,6 +21,7 @@ import org.woork.backend.location.LocationObject;
 import org.woork.backend.location.LocationRepository;
 import org.woork.backend.role.Role;
 import org.woork.backend.role.RoleRepository;
+import org.woork.backend.sms.SMSService;
 import org.woork.backend.token.TokenService;
 import java.security.SecureRandom;
 import java.util.Set;
@@ -34,17 +35,19 @@ public class UserService implements UserDetailsService {
     private final TokenService tokenService;
     private final LocationRepository locationRepository;
     private final ImageService imageService;
+    private final SMSService smsService;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
                        RoleRepository roleRepository, TokenService tokenService,
-                       LocationRepository locationRepository, ImageService imageService) {
+                       LocationRepository locationRepository, ImageService imageService, SMSService smsService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.tokenService = tokenService;
         this.locationRepository = locationRepository;
         this.imageService = imageService;
+        this.smsService = smsService;
     }
 
     public User registerUser(RegistrationObject registration) {
@@ -61,35 +64,88 @@ public class UserService implements UserDetailsService {
         user.setAuthorities(roles);
 
         try {
-            User saved_user = userRepository.save(user);
-            //DO EMAIL OR PHONE VERIFICATION
-            return saved_user;
-        } catch (Exception e) {
+            userRepository.save(user);
+            String verificationCode = generateVerificationCode();
+            user.setPhoneVerificationCode(
+                    passwordEncoder.encode(verificationCode)
+            );
+            sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
             throw new PhoneNumberAlreadyTakenException();
         }
-    }
-
-    public User updateEmail(String phone, String email) {
-        User user = userRepository.findByPhone(phone).orElseThrow(UserDoesNotExistException::new);
-        user.setEmail(email);
-        return userRepository.save(user);
     }
 
     private String generateVerificationCode() {
         SecureRandom random = new SecureRandom();
         StringBuilder otp = new StringBuilder();
 
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             otp.append(random.nextInt(10));
         }
 
         return otp.toString();
+
     }
 
-    public void sendEmailVerificationCode(String email) {
+    public String updatePhoneNumber(User user, String countryCode, String phoneNumber) {
+        try {
+            user.setPhone(countryCode + phoneNumber);
+            user.setCountryCode(Integer.parseInt(countryCode));
+
+            String verificationCode = generateVerificationCode();
+            sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
+            user.setPhoneVerificationCode(
+                    passwordEncoder.encode(verificationCode)
+            );
+            user.setVerified(false);
+            userRepository.save(user);
+            return "Phone number successfully updated. Verification code sent";
+        } catch (Exception e) {
+            throw new PhoneNumberAlreadyTakenException();
+        }
+    }
+
+    public void sendPhoneVerificationCode(String phoneNumber, String verificationCode) {
+        if(!smsService.checkPhoneValidity(phoneNumber)) {
+            throw new InvalidPhoneNumberException();
+        }
+        String message = "Your verification code is " + verificationCode;
+        smsService.sendSMS(
+                phoneNumber,
+                message
+        );
+    }
+
+    public User checkPhoneVerificationCode(User user, String verificationCode) {
+        String storedVerificationCode = user.getPhoneVerificationCode();
+        if(!passwordEncoder.matches(verificationCode, storedVerificationCode)) {
+            throw new IncorrectVerificationCodeException();
+        }
+        user.setPhoneVerificationCode(null);
+        user.setVerified(true);
+        return userRepository.save(user);
+    }
+
+    public String updateEmail(User user, String email) {
+        try {
+            user.setEmail(email);
+
+            String verificationCode = generateVerificationCode();
+            sendEmailVerificationCode(email, verificationCode);
+            user.setEmailVerificationCode(
+                    passwordEncoder.encode(verificationCode)
+            );
+            userRepository.save(user);
+            return "Email successfully updated. Verification code sent";
+        } catch (Exception e) {
+            throw new EmailAlreadyTakenException();
+        }
+    }
+
+    public void sendEmailVerificationCode(String email, String verificationCode) {
         User user = userRepository.findByEmail(email).orElseThrow(UserDoesNotExistException::new);
-        String verificationCode = generateVerificationCode();
-        user.setVerificationCode(passwordEncoder.encode(verificationCode));
+        user.setEmailVerificationCode(passwordEncoder.encode(verificationCode));
 
         //TODO: Add verification code generation date and datetime to check expiration
 
@@ -98,19 +154,23 @@ public class UserService implements UserDetailsService {
         System.out.println("Your one time generated password: " + verificationCode);
     }
 
-    public User checkVerificationCode(String email, String verificationCode) {
+    public User checkEmailVerificationCode(String email, String verificationCode) {
         User user = userRepository.findByEmail(email).orElseThrow(UserDoesNotExistException::new);
 
         //TODO: Check verification code expiration
 
-        if(passwordEncoder.matches(verificationCode, user.getVerificationCode())) {
-            user.setVerificationCode(null);
-            user.setVerified(true);
+        if(passwordEncoder.matches(verificationCode, user.getEmailVerificationCode())) {
+            user.setEmailCodeGenerationDate(null);
             userRepository.save(user);
             return user;
         } else {
             throw new IncorrectVerificationCodeException();
         }
+    }
+
+    public boolean isUserVerified(String token) {
+        User user = getUserFromToken(token);
+        return user.isVerified();
     }
 
     @Override
@@ -130,11 +190,11 @@ public class UserService implements UserDetailsService {
     }
 
     public User getUserFromToken(String token) {
-        String phoneOrEmail = "";
-        if(token.startsWith("Bearer")) {
-            String strippedToken = token.substring(7);
-            phoneOrEmail = tokenService.getPhoneOrEmailFromToken(strippedToken);
+        if(!token.startsWith("Bearer")) {
+            throw new InvalidBearerTokenException("Token is not a valid Bearer token");
         }
+        String strippedToken = token.substring(7);
+        String phoneOrEmail = tokenService.getPhoneOrEmailFromToken(strippedToken);
         return getUserByEmailOrPhone(phoneOrEmail);
     }
 
@@ -168,4 +228,5 @@ public class UserService implements UserDetailsService {
 
         return "Profile picture saved successfully";
     }
+
 }

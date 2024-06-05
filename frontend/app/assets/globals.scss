@@ -21,3 +21,10 @@ html, body {
     color: white;
 }
 
+.color-error {
+    color: rgb(255, 33, 33);
+}
+
+.color-primary {
+    color: var.$primary-color;
+}

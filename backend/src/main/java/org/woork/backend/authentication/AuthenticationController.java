@@ -1,6 +1,7 @@
 package org.woork.backend.authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -60,25 +61,65 @@ public class AuthenticationController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({AuthenticationErrorException.class})
+    public ResponseEntity<String> handleAuthenticationError(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({InvalidPhoneNumberException.class})
+    public ResponseEntity<String> handleInvalidPhoneNumber(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     //Mappings
 
     @PostMapping("/register")
-    public User register(@RequestBody RegistrationObject registration) {
-        return userService.registerUser(registration);
+    public AuthenticationResponse register(@RequestBody RegistrationObject registration) {
+        userService.registerUser(registration);
+        AuthenticationResponse authResponse = new AuthenticationResponse();
+
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            (registration.getCountryCode() + registration.getPhone()),
+                            registration.getPassword()
+                    )
+            );
+            String token = tokenService.generateToken(auth);
+            authResponse.setAccess_token(token);
+            return authResponse;
+        } catch (AuthenticationException e) {
+            throw new AuthenticationErrorException();
+        }
+    }
+
+    @PutMapping("/phone/update")
+    public String updatePhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                                  @RequestBody LinkedHashMap<String, String> body) {
+        String countryCode = body.get("countryCode");
+        String phoneNumber = body.get("phoneNumber");
+
+        User user = userService.getUserFromToken(token);
+
+        return userService.updatePhoneNumber(user, countryCode, phoneNumber);
+    }
+
+    @PostMapping("/phone/verify")
+    public User verifyPhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                                    @RequestBody LinkedHashMap<String, String> body) {
+        User user = userService.getUserFromToken(token);
+        String verificationCode = body.get("otp");
+
+        return userService.checkPhoneVerificationCode(user, verificationCode);
     }
 
     @PutMapping("/email/update")
-    public User updateEmail(@RequestBody LinkedHashMap<String, String> body) {
-        String phone = body.get("phone");
+    public String updateEmail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestBody LinkedHashMap<String, String> body) {
+        User user = userService.getUserFromToken(token);
         String email = body.get("email");
 
-        return userService.updateEmail(phone, email);
-    }
-
-    @PostMapping("/email/send-code")
-    public ResponseEntity<String> sendVerificationEmail(@RequestBody LinkedHashMap<String, String> body) {
-        userService.sendEmailVerificationCode(body.get("email"));
-        return new ResponseEntity<>("Verification code sent", HttpStatus.OK);
+        return userService.updateEmail(user, email);
     }
 
     @PostMapping("/email/verify")
@@ -86,21 +127,12 @@ public class AuthenticationController {
         String email = body.get("email");
         String code = body.get("otp");
 
-        return userService.checkVerificationCode(email, code);
+        return userService.checkEmailVerificationCode(email, code);
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LinkedHashMap<String, String> body) {
-        String phoneOrEmail;
-
-        if(body.containsKey("phone")) {
-            phoneOrEmail = body.get("country_code") + body.get("phone");
-        } else if (body.containsKey("email")) {
-            phoneOrEmail = body.get("email");
-        } else {
-            throw new CredentialsNotProvidedException();
-        }
-
+    public AuthenticationResponse login(@RequestBody LinkedHashMap<String, String> body) {
+        String phoneOrEmail = body.get("credential");
         String password = body.get("password");
 
         try {
@@ -108,7 +140,7 @@ public class AuthenticationController {
                     new UsernamePasswordAuthenticationToken(phoneOrEmail, password)
             );
             String token = tokenService.generateToken(auth);
-            return new LoginResponse(
+            return new AuthenticationResponse(
                     userService.getUserByEmailOrPhone(phoneOrEmail),
                     token
             );

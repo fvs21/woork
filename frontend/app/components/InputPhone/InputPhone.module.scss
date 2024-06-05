@@ -1,0 +1,24 @@
+.input-label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.select-form {
+    padding: 0px 10px;
+    border-radius: 6px;
+    border: 0.2px solid gray;
+    font-size: 16px;
+    display: block;
+}
+
+.input-container {
+    display: grid;
+    grid-auto-flow: column;
+    column-gap: 10px;
+    grid-template-columns: 35%;
+}
+
+
+.select-form:invalid {
+    color:gray;
+}

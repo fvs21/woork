@@ -1,7 +1,8 @@
 'use client'
 
 import '../assets/globals.scss'
-import Provider from '../utils/Provider';
+import Provider from '../context/Provider';
+import { AuthProvider } from '../context/AuthProvider'
 
 
 export default function RootLayout({ children }) {
@@ -9,11 +10,14 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Woork</title>
       </head>
       <body>
         <noscript>You need to enable Javascript to run this app</noscript>
         <Provider>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </Provider>   
       </body>
     </html>

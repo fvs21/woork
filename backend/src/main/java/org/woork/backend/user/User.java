@@ -60,20 +60,24 @@ public class User {
     private Set<Role> authorities;
 
     @Column(name = "verified")
-    @JsonIgnore
     private boolean verified;
 
-    @Column(name = "verification_code")
+    @Column(name = "phone_verification_code")
     @JsonIgnore
-    private String verificationCode;
+    private String phoneVerificationCode;
 
-    @Column(name = "code_generation_date")
+    @Column(name = "phone_code_generation_date")
     @JsonIgnore
-    private Date codeGenerationDate;
+    private Date phoneCodeGenerationDate;
 
-    @Column(name = "code_generation_timestamp")
+
+    @Column(name = "email_verification_code")
     @JsonIgnore
-    private Timestamp codeGenerationTimestamp;
+    private String emailVerificationCode;
+
+    @Column(name = "email_code_generation_date")
+    @JsonIgnore
+    private Date emailCodeGenerationDate;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_picture", referencedColumnName = "image_id")
@@ -185,28 +189,36 @@ public class User {
         this.verified = verified;
     }
 
-    public String getVerificationCode() {
-        return verificationCode;
+    public String getPhoneVerificationCode() {
+        return phoneVerificationCode;
     }
 
-    public void setVerificationCode(String verificationCode) {
-        this.verificationCode = verificationCode;
+    public void setPhoneVerificationCode(String phoneVerificationCode) {
+        this.phoneVerificationCode = phoneVerificationCode;
     }
 
-    public Date getCodeGenerationDate() {
-        return codeGenerationDate;
+    public Date getPhoneCodeGenerationDate() {
+        return phoneCodeGenerationDate;
     }
 
-    public void setCodeGenerationDate(Date code_generated_date) {
-        this.codeGenerationDate = code_generated_date;
+    public void setPhoneCodeGenerationDate(Date phoneCodeGenerationDate) {
+        this.phoneCodeGenerationDate = phoneCodeGenerationDate;
     }
 
-    public Timestamp getCodeGenerationTimestamp() {
-        return codeGenerationTimestamp;
+    public String getEmailVerificationCode() {
+        return emailVerificationCode;
     }
 
-    public void setCodeGenerationTimestamp(Timestamp code_generated_timestamp) {
-        this.codeGenerationTimestamp = code_generated_timestamp;
+    public void setEmailVerificationCode(String emailVerificationCode) {
+        this.emailVerificationCode = emailVerificationCode;
+    }
+
+    public Date getEmailCodeGenerationDate() {
+        return emailCodeGenerationDate;
+    }
+
+    public void setEmailCodeGenerationDate(Date emailCodeGenerationDate) {
+        this.emailCodeGenerationDate = emailCodeGenerationDate;
     }
 
     public Set<Posting> getPostings() {

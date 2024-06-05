@@ -25,13 +25,8 @@ public class ImageController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({UnableToUploadImageException.class})
+    @ExceptionHandler({UnableToUploadImageException.class, UnableToDownloadImageException.class})
     public ResponseEntity<String> handleUnableToUploadImageException(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler({UnableToDownloadImageException.class})
-    public ResponseEntity<String> handleUnableToDownloadImageException(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

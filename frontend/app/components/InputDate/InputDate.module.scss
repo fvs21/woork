@@ -1,0 +1,13 @@
+.date-container {
+    display: grid;
+    grid-auto-flow: column;
+    column-gap: 10px;
+}
+
+.date-input {
+    padding: 15px 0px 15px 10px;
+    border-radius: 6px;
+    border: 0.2px solid gray;
+    font-size: 16px;
+    width: 100%;
+}

@@ -2,11 +2,13 @@ package org.woork.backend.authentication;
 
 import org.woork.backend.user.User;
 
-public class LoginResponse {
+public class AuthenticationResponse {
     User user;
     String access_token;
 
-    public LoginResponse(User user, String access_token) {
+    public AuthenticationResponse() {}
+
+    public AuthenticationResponse(User user, String access_token) {
         this.user = user;
         this.access_token = access_token;
     }
