@@ -1,10 +1,8 @@
 @use "/app/assets/variables" as var;
 
 .form-overlay {
-    z-index: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
     width: 100%;
     height: 100%;
 }

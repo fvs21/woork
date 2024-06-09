@@ -75,8 +75,9 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public AuthenticationResponse register(@RequestBody RegistrationObject registration) {
-        userService.registerUser(registration);
+        User user = userService.registerUser(registration);
         AuthenticationResponse authResponse = new AuthenticationResponse();
+        authResponse.setUser(user);
 
         try {
             Authentication auth = authenticationManager.authenticate(

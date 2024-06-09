@@ -1,0 +1,21 @@
+@use "/app/assets/variables" as var;
+
+.labeled-btn {
+    width: 100%;
+    padding: 12px;
+    text-align: left;
+    font-size: medium;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    border: 1px solid var.$gradient-color;
+    background-color: white;
+}
+
+.labeled-btn:hover {
+    background-color: var.$gradient-color;
+}
+
+.btn-label {
+    font-weight:600;
+}

@@ -14,9 +14,8 @@ export default function InputEmailOrPhone({credential, changeCredential, country
                 value={credential} changeValue={changeCredential} autofocus={active}/>
         )
     } else {
-        if(!active) {
-            setActive(true);
-        }
+        if(!active) { setActive(true); } //set email autofocus to true
+
         return (
             <InputPhone label={label} number={credential} changeNumber={changeCredential} countryCode={countryCode} 
                 changeCountryCode={changeCountryCode} autofocus={true} />

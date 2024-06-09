@@ -3,6 +3,7 @@ import styles from "./InputDate.module.scss";
 import { daysInMonth, months } from "../../utils/authentication/RegisterUtils";
 
 export default function InputDate({month, changeMonth, day, changeDay, year, changeYear}) {
+    const currentYear = new Date().getFullYear();
     return (
         <>
             <InputLabel>Fecha de nacimiento</InputLabel>
@@ -19,7 +20,7 @@ export default function InputDate({month, changeMonth, day, changeDay, year, cha
                 </select>
                 <select name="year" className={styles["date-input"]} required defaultValue={year} onChange={(e) => changeYear(e.target.value)}>
                     {[...Array(124)].map((x, i) => 
-                        <option value={year-123+i}>{year-123+i}</option>
+                        <option value={currentYear-123+i}>{currentYear-123+i}</option>
                     )}
                 </select>
             </div>

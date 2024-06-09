@@ -35,7 +35,7 @@ export default function PhoneVerification() {
             console.log(request);
 
             if(request.status == 200) {
-                router.push('/profile');
+                router.push('/account');
             }
         } catch(error) {
             console.log(error);

@@ -1,0 +1,144 @@
+@use "/app/assets/variables" as var;
+
+.profile-picture {
+    border-radius: 50%;
+    border: 2px solid var.$primary-color;
+    cursor: pointer;
+}
+
+.profile-picture:hover {
+    border: 3px solid var.$secondary-color; 
+}
+
+.pfp-btn {
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    background-color: gray;
+    width: 200px;
+    padding: 0;
+    margin: 0;
+}
+
+.pfp-modal {
+    width: 400px;
+    height: 240px;
+    padding: 6px 6px;
+}
+
+.exit-btn {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    font-size: medium;
+}
+
+.exit-btn:hover {
+    color: var.$primary-color;
+}
+
+.pfp-modal-header {
+    text-align: center;
+}
+
+.hr-style {
+    border: none;
+    height: 1px;
+    background-color: rgb(199, 199, 199);
+}
+
+.update-pfp-btn {
+    background-color: var.$primary-color;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 14px 10px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.update-pfp-btn:hover {
+    background-color: var.$secondary-color;
+}
+
+.cancel-pfp-container {
+    text-align: center;
+}
+
+.cancel-btn {
+    background-color: white;
+    color: black;
+    border: none;
+    width: 100%;
+    padding: 12px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: medium;
+}
+
+.cancel-btn:hover {
+    color: rgb(97, 97, 97);
+}
+
+.pfp-description {
+    text-align: center;
+    font-size: medium;
+}
+
+.basic-info-container {
+    display: flex;
+    align-items: center;
+}
+
+.name-container {
+    margin-left: 3%;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.user-info-header {
+    width: 100%;
+}
+
+.contact-info-container {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    gap: 10px;
+}
+
+.information-modal {
+    width: 500px;
+    height: 350px;
+    padding: 20px 10px;
+}
+
+.phone-modal-title {
+    text-align: center;
+}
+
+.phone-modal-desc {
+    font-size: 15px;
+}
+
+.email-modal-title {
+    text-align: center;
+}
+
+@media only screen and (max-width: 1000px) {
+    .left-container {
+        display: none !important;
+    }
+    .pfp-container {
+        img {
+            width: 150px;
+        }
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .name-container {
+        display: inline-block;
+    }
+}
