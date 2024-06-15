@@ -81,11 +81,6 @@
     color: rgb(97, 97, 97);
 }
 
-.pfp-description {
-    text-align: center;
-    font-size: medium;
-}
-
 .basic-info-container {
     display: flex;
     align-items: center;
@@ -115,15 +110,22 @@
 }
 
 .phone-modal-title {
-    text-align: center;
+    text-align: left;
 }
 
-.phone-modal-desc {
+.modal-desc {
     font-size: 15px;
 }
 
 .email-modal-title {
-    text-align: center;
+    text-align: left;
+}
+
+.return-btn {
+    font-size: medium;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 @media only screen and (max-width: 1000px) {

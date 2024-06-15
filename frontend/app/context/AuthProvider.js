@@ -4,7 +4,6 @@ const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState({
-        "user": {},
         "access_token": ""
     });
 

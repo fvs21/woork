@@ -67,4 +67,8 @@ public class ImageService {
         Image image = imageRepository.findByImageName(fileName).orElseThrow(ImageNotFoundException::new);
         return image.getImageType();
     }
+
+    public Image getDefaultPfp() {
+        return imageRepository.findByImageName("default-pfp").orElse(null);
+    }
 }

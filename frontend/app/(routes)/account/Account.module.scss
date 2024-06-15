@@ -6,12 +6,12 @@ $options-color: var.$gradient-color;
     display: flex;
     height: 100%;
     background: rgb(225,239,255);
-    background: linear-gradient(90deg, rgba(225,239,255,1) 0%, rgba(255,255,255,1) 49%, rgba(255,247,247,1) 100%);
+    background: linear-gradient(90deg, rgba(225,239,255,1) 0%, rgba(255,255,255,1) 49%, rgba(255,239,239,1) 100%);
 }
 
 .left-container {
     font-size: small;
-    border-right: 0.1px solid gray;
+    border-right: 0.1px solid var.$border-color;
     width: 35%;
     padding-left: 1%;
     padding-right: 1%;

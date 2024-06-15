@@ -3,8 +3,7 @@
 import SubmitButton from '../../components/SubmitButton/SubmitButton';
 import ValidatedInput from '../../components/ValidatedInput/ValidatedInput';
 import { useState } from 'react';
-import { useAxiosPrivate } from '../../hooks/useAxiosPrivate';
-import { useMutation } from 'react-query';
+import { useVerifyPhone } from '../../hooks/authentication';
 import { useRouter } from 'next/navigation';
 
 export default function PhoneVerification() {
@@ -16,22 +15,13 @@ export default function PhoneVerification() {
         "otp": code
     }
 
-    const axiosPrivate = useAxiosPrivate();
-
-    const { mutateAsync: verifyPhoneMutation } = useMutation({
-        mutationFn: async () => {
-            return await axiosPrivate.post(
-                '/auth/phone/verify',
-                body
-            )
-        }
-    })
+    const {verifyPhoneFn} = useVerifyPhone(body);
 
     async function handleSubmit(event) {
         event.preventDefault();
 
         try {
-            const request = await verifyPhoneMutation();
+            const request = await verifyPhoneFn();
             console.log(request);
 
             if(request.status == 200) {
@@ -44,7 +34,7 @@ export default function PhoneVerification() {
 
     return (
         <>
-            <h1>Verifica tu teléfono</h1>
+            <h1>Verifica tu número de teléfono</h1>
             <form onSubmit={handleSubmit}>
                 <ValidatedInput name={"verificationCode"} type={"text"} label={"Ingresa el código de verificación que te enviamos."} 
                     placeholder={"Código de verificación"} changeValue={setCode} autofocus={false}/>

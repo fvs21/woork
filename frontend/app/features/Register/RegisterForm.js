@@ -7,8 +7,8 @@ import InputPhone from "../../components/InputPhone/InputPhone";
 import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import InputDate from "../../components/InputDate/InputDate";
-import axios from "../../api/axios"
 import { useAuth } from "../../hooks/useAuth";
+import { useRegisterUser } from "../../hooks/authentication";
 
 export default function RegisterForm(props) {
     const day = new Date().getDate();
@@ -35,22 +35,16 @@ export default function RegisterForm(props) {
         "password": password
     }
 
-    const { mutateAsync: registerUserMutation } = useMutation({
-        mutationFn: async () => {
-            return await axios.post(
-                '/auth/register', 
-                body
-            );
-        },  
-    })
+    const { registerUserFn } = useRegisterUser(body);
 
     async function handleSubmit(e) {
         e.preventDefault();
         
-        
         try {
-            const request = await registerUserMutation();
-            setAuth(request.data)
+            const request = await registerUserFn();
+            setAuth({
+                "access_token": request.data.access_token
+            });
             props.setStep(1);
         } catch (error) {
             console.log(error.response);

@@ -4,14 +4,12 @@ import { useAuth } from './useAuth'
 export function useRefreshToken() {
     const { setAuth } = useAuth();
 
-    const refresh = () => {
-        const response = axios.get('/refresh', {
-            withCredentials: true
-        });
+    const refresh = async () => {
+        const response = await axios.get('/auth/refresh');
         setAuth(prev => {
-            return {...prev, access_token: response.data.access_token};
+            return {...prev, access_token: response.data};
         });
-        return response.data.access_token;
+        return response.data;
     }
 
     return refresh;

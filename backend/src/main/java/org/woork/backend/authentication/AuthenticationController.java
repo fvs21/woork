@@ -1,5 +1,6 @@
 package org.woork.backend.authentication;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.web.bind.annotation.*;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.token.TokenService;
@@ -71,24 +73,38 @@ public class AuthenticationController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({InvalidTokenException.class})
+    public ResponseEntity<String> handleInvalidToken(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({InvalidBearerTokenException.class})
+    public ResponseEntity<String> handleInvalidBearerToken(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     //Mappings
 
     @PostMapping("/register")
-    public AuthenticationResponse register(@RequestBody RegistrationObject registration) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegistrationObject registration, HttpServletResponse response) {
         User user = userService.registerUser(registration);
-        AuthenticationResponse authResponse = new AuthenticationResponse();
-        authResponse.setUser(user);
 
         try {
-            Authentication auth = authenticationManager.authenticate(
+            authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             (registration.getCountryCode() + registration.getPhone()),
                             registration.getPassword()
                     )
             );
-            String token = tokenService.generateToken(auth);
-            authResponse.setAccess_token(token);
-            return authResponse;
+            String accessToken = tokenService.generateAccessToken(user);
+            AuthenticationResponse authResponse = new AuthenticationResponse(user, accessToken);
+
+            String refreshToken = tokenService.generateRefreshToken(user);
+
+            response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateTokenCookie(refreshToken).toString());
+
+            return new ResponseEntity<>(authResponse, HttpStatus.OK);
+
         } catch (AuthenticationException e) {
             throw new AuthenticationErrorException();
         }
@@ -98,9 +114,9 @@ public class AuthenticationController {
     public String updatePhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                   @RequestBody LinkedHashMap<String, String> body) {
         String countryCode = body.get("countryCode");
-        String phoneNumber = body.get("phoneNumber");
+        String phoneNumber = body.get("number");
 
-        User user = userService.getUserFromToken(token);
+        User user = userService.getUserFromAccessToken(token);
 
         return userService.updatePhoneNumber(user, countryCode, phoneNumber);
     }
@@ -108,7 +124,7 @@ public class AuthenticationController {
     @PostMapping("/phone/verify")
     public User verifyPhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                     @RequestBody LinkedHashMap<String, String> body) {
-        User user = userService.getUserFromToken(token);
+        User user = userService.getUserFromAccessToken(token);
         String verificationCode = body.get("otp");
 
         return userService.checkPhoneVerificationCode(user, verificationCode);
@@ -117,7 +133,7 @@ public class AuthenticationController {
     @PutMapping("/email/update")
     public String updateEmail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestBody LinkedHashMap<String, String> body) {
-        User user = userService.getUserFromToken(token);
+        User user = userService.getUserFromAccessToken(token);
         String email = body.get("email");
 
         return userService.updateEmail(user, email);
@@ -132,17 +148,23 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody LinkedHashMap<String, String> body) {
+    public AuthenticationResponse login(@RequestBody LinkedHashMap<String, String> body, HttpServletResponse response) {
         String phoneOrEmail = body.get("credential");
         String password = body.get("password");
 
         try {
-            Authentication auth = authenticationManager.authenticate(
+            authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(phoneOrEmail, password)
             );
-            String token = tokenService.generateToken(auth);
+            User user = userService.getUserByEmailOrPhone(phoneOrEmail);
+
+            String refreshToken = tokenService.generateRefreshToken(user);
+
+            response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateTokenCookie(refreshToken).toString());
+
+            String token = tokenService.generateAccessToken(user);
             return new AuthenticationResponse(
-                    userService.getUserByEmailOrPhone(phoneOrEmail),
+                    user,
                     token
             );
         } catch (AuthenticationException e) {
@@ -150,4 +172,16 @@ public class AuthenticationController {
         }
     }
 
+    @GetMapping("/refresh")
+    public String refresh(@CookieValue("refresh_token") String token) {
+        User user = userService.getUserFromRefreshToken(token);
+        String access_token = tokenService.getNewAccessToken(user, token);
+
+        return access_token;
+    }
+
+    @GetMapping("/logout")
+    public String logout(@CookieValue("refresh_token") String token) {
+        return "";
+    }
 }

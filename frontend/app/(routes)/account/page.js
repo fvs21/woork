@@ -5,17 +5,24 @@ import { useQuery } from "react-query";
 import { useState } from "react";
 import styles from "./Account.module.scss";
 import { determineOptionPanel } from "../../utils/Account/AccountUtils";
-import Modal from "../../components/Modal/Modal";
-import InformationPanel from "../../features/InformationPanel/InformationPanel";
-import SecurityPanel from "../../features/SecurityPanel/SecurityPanel";
+import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
+import { useFetchUser } from "../../hooks/authentication";
 
 export default function AccountPage() {
     const [option, setOption] = useState(0);
+
+    const {isLoading} = useFetchUser();
 
     function determineIfClicked(clicked) {
         if(clicked) {
             return styles['clicked']
         }
+    }
+
+    if(isLoading) {
+        return (
+            <LoadingScreen />
+        )
     }
     return (
         <>  
@@ -26,7 +33,7 @@ export default function AccountPage() {
                             <div className={styles['header-container']}>
                                 <a href="/">
                                     <button className={styles['nav-bar-header-btn']}>
-                                        <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i>
+                                        <i className="fa fa-arrow-left fa-1" aria-hidden="true"></i>
                                     </button>
                                 </a>
                                 <h2>Configuración</h2>

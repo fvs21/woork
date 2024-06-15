@@ -52,7 +52,7 @@ export default function LoginForm() {
                 setAuth(request.data);
                 
                 if(request.data.user.verified) {
-                    router.push('/');
+                    router.push('/account');
                 } else {
                     setVerificationForm(true);
                 }

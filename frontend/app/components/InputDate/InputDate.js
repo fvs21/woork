@@ -10,7 +10,7 @@ export default function InputDate({month, changeMonth, day, changeDay, year, cha
             <div className={styles['date-container']}>
                 <select name="month" className={styles["date-input"]} required defaultValue={month} onChange={(e) => changeMonth(e.target.value)}>
                     {[...Array(12)].map((x, i) => 
-                        <option value={i+1}>{months[i]}</option>
+                        <option value={i}>{months[i]}</option>
                     )}
                 </select>
                 <select name="day" className={styles["date-input"]} required defaultValue={day} onChange={(e) => changeDay(e.target.value)}>
@@ -20,7 +20,7 @@ export default function InputDate({month, changeMonth, day, changeDay, year, cha
                 </select>
                 <select name="year" className={styles["date-input"]} required defaultValue={year} onChange={(e) => changeYear(e.target.value)}>
                     {[...Array(124)].map((x, i) => 
-                        <option value={currentYear-123+i}>{currentYear-123+i}</option>
+                        <option value={currentYear-100+i}>{currentYear-100+i}</option>
                     )}
                 </select>
             </div>

@@ -1,17 +1,17 @@
 package org.woork.backend;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.woork.backend.config.RsaKeyProperties;
-import org.woork.backend.posting.Posting;
-import org.woork.backend.posting.PostingRepository;
+import org.woork.backend.image.Image;
+import org.woork.backend.image.ImageRepository;
 import org.woork.backend.role.Role;
 import org.woork.backend.role.RoleRepository;
-import org.woork.backend.user.User;
-import org.woork.backend.user.UserRepository;
+
 
 @EnableConfigurationProperties({RsaKeyProperties.class})
 @SpringBootApplication
@@ -22,9 +22,15 @@ public class BackendApplication {
     }
 
     @Bean
-    CommandLineRunner run(RoleRepository roleRepository, PostingRepository postingRepository, UserRepository userRepository) {
+    CommandLineRunner run(RoleRepository roleRepository, ImageRepository imageRepository) {
         return args -> {
             roleRepository.save(new Role("USER"));
+            imageRepository.save(new Image(
+                    "default-pfp",
+                    "image/jpg",
+                    Dotenv.load().get("images_path")+"/default-pfp.jpg",
+                    "http://localhost:8000/api/images/default-pfp"
+            ));
         };
     }
 

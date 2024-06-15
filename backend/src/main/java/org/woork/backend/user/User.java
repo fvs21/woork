@@ -81,7 +81,6 @@ public class User {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_picture", referencedColumnName = "image_id")
-    @JsonIgnore
     private Image profilePicture;
 
     @OneToMany(mappedBy = "author")

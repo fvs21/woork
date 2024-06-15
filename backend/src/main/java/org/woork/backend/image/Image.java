@@ -21,9 +21,11 @@ public class Image {
     private Long id;
 
     @Column(name = "image_name", unique = true, nullable = false)
+    @JsonIgnore
     private String imageName;
 
     @Column(name = "image_type", nullable = false)
+    @JsonIgnore
     private String imageType;
 
     @Column(name = "image_path", nullable = false)

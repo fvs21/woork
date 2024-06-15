@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.woork.backend.authentication.AuthenticationResponse;
 import org.woork.backend.authentication.RegistrationObject;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.image.Image;
@@ -24,6 +23,7 @@ import org.woork.backend.role.RoleRepository;
 import org.woork.backend.sms.SMSService;
 import org.woork.backend.token.TokenService;
 import java.security.SecureRandom;
+import java.sql.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,7 +57,8 @@ public class UserService implements UserDetailsService {
         user.setCountryCode(registration.getCountryCode());
         user.setPhone(registration.getCountryCode() + registration.getPhone());
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
-        user.setDateOfBirth(registration.getDateOfBirth());
+        user.setDateOfBirth(Date.valueOf(registration.getDateOfBirth()));
+        user.setProfilePicture(imageService.getDefaultPfp());
 
         Set<Role> roles = user.getAuthorities();
         roles.add(roleRepository.findByAuthority("USER").get());
@@ -69,7 +70,8 @@ public class UserService implements UserDetailsService {
             user.setPhoneVerificationCode(
                     passwordEncoder.encode(verificationCode)
             );
-            sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
+            System.out.println(verificationCode);
+            //sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
             throw new PhoneNumberAlreadyTakenException();
@@ -94,7 +96,8 @@ public class UserService implements UserDetailsService {
             user.setCountryCode(Integer.parseInt(countryCode));
 
             String verificationCode = generateVerificationCode();
-            sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
+            System.out.println(verificationCode);
+            //sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
             user.setPhoneVerificationCode(
                     passwordEncoder.encode(verificationCode)
             );
@@ -169,7 +172,7 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean isUserVerified(String token) {
-        User user = getUserFromToken(token);
+        User user = getUserFromAccessToken(token);
         return user.isVerified();
     }
 
@@ -189,13 +192,25 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmailOrPhone(emailOrPhone, emailOrPhone).orElseThrow(UserDoesNotExistException::new);
     }
 
-    public User getUserFromToken(String token) {
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(UserDoesNotExistException::new);
+    }
+
+    public User getUserFromAccessToken(String token) {
         if(!token.startsWith("Bearer")) {
             throw new InvalidBearerTokenException("Token is not a valid Bearer token");
         }
         String strippedToken = token.substring(7);
-        String phoneOrEmail = tokenService.getPhoneOrEmailFromToken(strippedToken);
-        return getUserByEmailOrPhone(phoneOrEmail);
+        if(!tokenService.isTokenAccess(strippedToken)) {
+            throw new InvalidTokenException();
+        }
+        Long id = tokenService.getIdFromToken(strippedToken);
+        return getUserById(id);
+    }
+
+    public User getUserFromRefreshToken(String refreshToken) {
+        Long id = tokenService.getIdFromToken(refreshToken);
+        return getUserById(id);
     }
 
     public User updateGender(User user, Gender gender) {
