@@ -49,48 +49,41 @@ export default function LoginForm() {
             console.log(request);
 
             if(request.status == 200) {
-                setAuth(request.data);
+                setAuth({
+                    "access_token": request.data.access_token,
+                    "loggedIn": true
+                });
                 
-                if(request.data.user.verified) {
-                    router.push('/account');
-                } else {
-                    setVerificationForm(true);
-                }
+                router.push("/account");
             }
         } catch(error) {
             console.log(error);
         }
     }
 
-    if(!verificationForm) {
-        return (
-            <>
-                <div className={styles['form-title']}>
-                    <h2>Inicia sesión en woork</h2>
-                </div>
-                <hr className={styles['hr-style']} />
+    return (
+        <>
+            <div className={styles['form-title']}>
+                <h2>Inicia sesión</h2>
+            </div>
+            <hr className={styles['hr-style']} />
+            <br/>
+            <form onSubmit={handleSubmit} method="post">
+                <InputEmailOrPhone credential={credential} changeCredential={setCredential} countryCode={countryCode}  
+                    changeCountryCode={setCountryCode}/>
                 <br/>
-                <form onSubmit={handleSubmit} method="post">
-                    <InputEmailOrPhone credential={credential} changeCredential={setCredential} countryCode={countryCode}  
-                        changeCountryCode={setCountryCode}/>
-                    <br/>
-                    <ValidatedInput name={"password"} type={"password"} label={"Contraseña"} placeholder={"Contraseña"} 
-                        changeValue={setPassword} autofocus={false} />
-                    <br/>
-                    <SubmitButton>Iniciar sesión</SubmitButton>
-                </form>
+                <ValidatedInput name={"password"} type={"password"} label={"Contraseña"} placeholder={"Contraseña"} 
+                    changeValue={setPassword} autofocus={false} />
                 <br/>
-                <div className={styles['div-center']}>
-                    <span className={styles['bottom-links']}>
-                        <a href="/register">No tienes una cuenta?</a>
-                    </span>
-                </div>
-            </>
-        )
-    } else {
-        return (
-            <PhoneVerification />
-        )
-    }
+                <SubmitButton>Iniciar sesión</SubmitButton>
+            </form>
+            <br/>
+            <div className={styles['div-center']}>
+                <span className={styles['bottom-links']}>
+                    <a href="/register">No tienes una cuenta?</a>
+                </span>
+            </div>
+        </>
+    )
     
 }

@@ -1,7 +1,5 @@
 'use client';
 
-import { useAxiosPrivate } from "../../hooks/useAxiosPrivate";
-import { useQuery } from "react-query";
 import { useState } from "react";
 import styles from "./Account.module.scss";
 import { determineOptionPanel } from "../../utils/Account/AccountUtils";
@@ -11,7 +9,7 @@ import { useFetchUser } from "../../hooks/authentication";
 export default function AccountPage() {
     const [option, setOption] = useState(0);
 
-    const {isLoading} = useFetchUser();
+    const { isLoading } = useFetchUser();
 
     function determineIfClicked(clicked) {
         if(clicked) {

@@ -1,33 +1,36 @@
 import { axiosPrivate } from "../api/axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRefreshToken } from "./useRefreshToken";
 import { useAuth } from "./useAuth";
 
-
 export function useAxiosPrivate() {
     const refresh = useRefreshToken();
+    const [sent, setSent] = useState(false);
     const { auth } = useAuth();
 
     useEffect(() => {
         const requestIntercept = axiosPrivate.interceptors.request.use(
-            async (config) => {
-                if(!auth?.access_token) {
+            async (request) => {
+                if(!auth?.access_token && !sent) {
+                    setSent(true);
                     const newAccessToken = await refresh();
-                    config.headers['Authorization'] = `Bearer ${newAccessToken.access_token}`; 
+                    request.headers['Authorization'] = `Bearer ${newAccessToken}`;    
                 }
-                if(!config.headers['Authorization']) {
-                    config.headers['Authorization'] = `Bearer ${auth?.access_token}`;
+                if(!request.headers['Authorization']) {
+                    request.headers['Authorization'] = `Bearer ${auth?.access_token}`;
                 }
-                return config;
+                return request;
             }, (error) => Promise.reject(error)
         ); 
         const responseIntercept = axiosPrivate.interceptors.response.use(
             response => response,
             async(error) => {
                 const prevRequest = error?.config;
-                if(error?.response?.status === 403 && !prevRequest?.sent) {
+                const EXPIRED_ACCESS_TOKEN_MSG = "Expired access token."; //change it
+                
+                if(error?.response?.status === 401 && !prevRequest?.sent && error.response.data === EXPIRED_ACCESS_TOKEN_MSG) { 
                     prevRequest.sent = true;
-                    const newAccessToken = await refresh();
+                    const {newAccessToken} = await refresh();
                     prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
                     return axiosPrivate(prevRequest);
                 }

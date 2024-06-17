@@ -1,28 +1,27 @@
 @use '/app/assets/variables' as var;
 
 .main-nav-bar {
-    background-color: var.$primary-color;
+    background-color: gray;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 5%;
-    padding-right: 5%;
+    padding: 5px 5% 5px 5%;
 }
 
 .links {
     text-decoration: none;
-    color: white;
+    color: black;
 }
 
 .profile-btn {
-    background-color: white;
+    background-color: var.$primary-color;
     border: 0;
     border-radius: 25px;
     padding: 10px 14px;
     transition: 0.3s;
     margin-left: 5px;
     font-size: medium;
-    color: var.$primary-color;
+    color: white;
     cursor: pointer;
 }
 
@@ -35,19 +34,23 @@
     border-radius: 25px;
     cursor: pointer;
     padding: 10px 14px;
-    background-color: var.$primary-color;
-    color: white;
+    background-color: white;
+    color: black;
     font-size: medium;
     transition: 0.3s;
     text-decoration: none;
 }
 
 .nav-bar-btn:hover {
-    background-color: var.$secondary-color;
+    background-color: var.$bg-gray;
 }
 
 .logo {
-    font-size: 24px;
+    div {
+        display: flex;
+        justify-content: center;
+        height: 100%;
+    }
 }
 
 .nav-links {

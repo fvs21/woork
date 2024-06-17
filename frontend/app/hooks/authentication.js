@@ -1,17 +1,19 @@
 import {useAxiosPrivate} from "./useAxiosPrivate";
 import axios from "../api/axios";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+
 
 export function useFetchUser() {
     const axiosPrivate = useAxiosPrivate();
 
-    const {data, isLoading} = useQuery({
+    const { data, isLoading } = useQuery({
         queryFn: async () => {
             return await axiosPrivate.get('/user/verify');
         },
         queryKey: ["user-info"],
         staleTime: Infinity,
-        cacheTime: 5000
+        cacheTime: 5000,
+        retry: false
     });
 
     return { data, isLoading };
@@ -47,6 +49,7 @@ export function useUpdatePhone(body) {
 
 export function useVerifyPhone(body) {
     const axiosPrivate = useAxiosPrivate();
+    const queryClient = useQueryClient();
 
     const { mutateAsync: verifyPhoneFn } = useMutation({
         mutationFn: async () => {
@@ -55,7 +58,9 @@ export function useVerifyPhone(body) {
                 body
             );
         },
-        mutationKey: ['user-info']
+        onSuccess: (data) => {
+            queryClient.setQueryData(['user-info'], data);
+        }
     });
 
     return { verifyPhoneFn };
@@ -92,5 +97,22 @@ export function useVerifyEmail(body) {
 }
 
 export function useUpdatePfp(body) {
-    //TODO
+    const axiosPrivate = useAxiosPrivate();
+    const queryClient = useQueryClient();
+    const formData = new FormData();
+    formData.append("image", body);
+    
+    const { mutateAsync: updatePfpFn } = useMutation({
+        mutationFn: async () => {
+            return await axiosPrivate.put(
+                '/user/pfp/update',
+                formData
+            );
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['user-info']);
+        }
+    });
+
+    return { updatePfpFn };
 }

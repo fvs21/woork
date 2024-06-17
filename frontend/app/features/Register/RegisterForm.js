@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import styles from './RegisterForm.module.scss'
-import { useMutation } from "react-query";
 import InputPhone from "../../components/InputPhone/InputPhone";
 import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import InputDate from "../../components/InputDate/InputDate";
 import { useAuth } from "../../hooks/useAuth";
 import { useRegisterUser } from "../../hooks/authentication";
+import Logotype from "../../components/Logotype/Logotype";
 
 export default function RegisterForm(props) {
     const day = new Date().getDate();
@@ -43,7 +43,8 @@ export default function RegisterForm(props) {
         try {
             const request = await registerUserFn();
             setAuth({
-                "access_token": request.data.access_token
+                "access_token": request.data.access_token,
+                "loggedIn": true
             });
             props.setStep(1);
         } catch (error) {
@@ -54,7 +55,7 @@ export default function RegisterForm(props) {
     return (
         <>
             <div className={styles['form-title']}>
-                <h2>Bienvenid@ a woork!</h2>
+                <h2>Registrate</h2>
             </div>
             <hr className={styles["hr-style"]}/>
             <br/>

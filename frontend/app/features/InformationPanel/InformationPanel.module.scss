@@ -2,12 +2,16 @@
 
 .profile-picture {
     border-radius: 50%;
-    border: 2px solid var.$primary-color;
+    outline: 2px solid var.$primary-color;
     cursor: pointer;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    
 }
 
 .profile-picture:hover {
-    border: 3px solid var.$secondary-color; 
+    outline: 3px solid var.$secondary-color; 
 }
 
 .pfp-btn {
@@ -21,9 +25,21 @@
 }
 
 .pfp-modal {
-    width: 400px;
-    height: 240px;
-    padding: 6px 6px;
+    width: 500px;
+    height: 460px;
+    padding: 10px 10px;
+}
+
+.pfp-viewer {
+    border-radius: 50%;
+    border: 2px solid var.$primary-color;
+    object-fit: cover;
+    width: 220px;
+    height: 220px;
+}
+
+.pfp-modal-pfp-container {
+    text-align: center;
 }
 
 .exit-btn {
@@ -38,7 +54,7 @@
 }
 
 .pfp-modal-header {
-    text-align: center;
+    text-align: left;
 }
 
 .hr-style {
@@ -51,11 +67,16 @@
     background-color: var.$primary-color;
     color: white;
     border: none;
-    width: 100%;
     padding: 14px 10px;
     border-radius: 8px;
     font-size: 15px;
     cursor: pointer;
+    width: 100%;
+}
+
+.update-pfp-form-container {
+    text-align: center;
+    width: 100%;
 }
 
 .update-pfp-btn:hover {
@@ -106,7 +127,7 @@
 .information-modal {
     width: 500px;
     height: 350px;
-    padding: 20px 10px;
+    padding: 20px 10px 10px;
 }
 
 .phone-modal-title {
@@ -135,6 +156,7 @@
     .pfp-container {
         img {
             width: 150px;
+            height: 150px;
         }
     }
 }

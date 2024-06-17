@@ -11,3 +11,8 @@ export function determineOptionPanel(option) {
             return <h1>W.I.P.</h1>
     }
 }
+
+export function checkIfValidImage(file) {
+    const validTypes = ["image/jpeg", "image/jpg", "image/png"];
+    return validTypes.includes(file.type);
+}

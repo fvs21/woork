@@ -1,3 +1,5 @@
+@use "/app/assets/variables" as var;
+
 .date-container {
     display: grid;
     grid-auto-flow: column;
@@ -7,7 +9,7 @@
 .date-input {
     padding: 15px 0px 15px 10px;
     border-radius: 6px;
-    border: 0.2px solid gray;
+    border: 0.2px solid var.$border-color;
     font-size: 16px;
     width: 100%;
 }

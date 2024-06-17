@@ -1,15 +1,18 @@
 'use client';
 
-import Navbar from '../../components/navbar/NavBar';
+import Navbar from '../../components/Navbar/Navbar';
 import { useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
+import { useRefreshToken } from '../../hooks/useRefreshToken';
+import { useFetchUser } from '../../hooks/authentication';
 
 export default function HomePage() {
     const [popUpVisible, setPopUpVisible] = useState(false);
+    
+    const { _, isLoading } = useFetchUser();
 
     return (
         <main>
-            <Navbar showButtons={true} setPopUp={setPopUpVisible} popUpVisible={popUpVisible}/>
+            <Navbar showButtons={!isLoading} setPopUp={setPopUpVisible} popUpVisible={popUpVisible}/>
         </main>
     )
 }

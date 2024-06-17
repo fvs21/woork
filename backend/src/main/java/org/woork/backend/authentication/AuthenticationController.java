@@ -114,7 +114,7 @@ public class AuthenticationController {
     public String updatePhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                   @RequestBody LinkedHashMap<String, String> body) {
         String countryCode = body.get("countryCode");
-        String phoneNumber = body.get("number");
+        String phoneNumber = body.get("phone");
 
         User user = userService.getUserFromAccessToken(token);
 

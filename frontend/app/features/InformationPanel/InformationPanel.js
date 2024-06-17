@@ -28,7 +28,7 @@ export default function InformationPanel() {
         <div className={styles['main-container']}>
             <div className={styles['basic-info-container']}>
                 <div className={styles['pfp-container']}>
-                    <img src={user.profilePicture.imageUrl} width="200px" 
+                    <img src={user?.profilePicture.imageUrl}
                         className={styles['profile-picture']} onClick={() => setDisplayPfpModal(true)}/>
                 </div>
                 <div className={styles['name-container']}>

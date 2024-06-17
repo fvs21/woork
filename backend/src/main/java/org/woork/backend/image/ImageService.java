@@ -19,7 +19,7 @@ public class ImageService {
 
     private static final String imagesPath = Dotenv.load().get("images_path");
     private static final File DIRECTORY = new File(imagesPath);
-    private static final String URL = "http://localhost:8080/api/images/";
+    private static final String URL = "http://localhost:8000/api/images/";
 
     @Autowired
     public ImageService(ImageRepository imageRepository) {

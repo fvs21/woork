@@ -1,10 +1,13 @@
+'use client';
+
 import { createContext, useState } from "react";
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState({
-        "access_token": ""
+        "access_token": "",
+        "loggedIn": false
     });
 
     return (
