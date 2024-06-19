@@ -1,0 +1,2 @@
+-implement age check
+-implement error handling on registration and account forms

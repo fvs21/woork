@@ -1,7 +1,7 @@
 @use '/app/assets/variables' as var;
 
 .main-nav-bar {
-    background-color: gray;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -51,6 +51,10 @@
         justify-content: center;
         height: 100%;
     }
+}
+
+.page-loading {
+    visibility: hidden;
 }
 
 .nav-links {

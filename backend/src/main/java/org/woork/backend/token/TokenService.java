@@ -42,6 +42,7 @@ public class TokenService {
                 .subject(user.getId().toString())
                 .claim("scope", scope)
                 .claim("type", "refresh")
+                .claim("verified", user.isVerified())
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
@@ -105,7 +106,6 @@ public class TokenService {
         Jwt decoded = jwtDecoder.decode(token);
         return decoded.getClaim("type").equals("access");
     }
-
 
     public Long getIdFromToken(String token) {
         Jwt decoded = jwtDecoder.decode(token);

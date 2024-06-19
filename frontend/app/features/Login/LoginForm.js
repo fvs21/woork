@@ -11,6 +11,7 @@ import { DetermineEmailOrPhone } from "../../utils/authentication/LoginUtils";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../hooks/useAuth";
 import PhoneVerification from "../PhoneVerification/PhoneVerification";
+import Link from "next/link";
 
 export default function LoginForm() {
     const [credential, setCredential] = useState("");
@@ -80,7 +81,7 @@ export default function LoginForm() {
             <br/>
             <div className={styles['div-center']}>
                 <span className={styles['bottom-links']}>
-                    <a href="/register">No tienes una cuenta?</a>
+                    <Link href="/register">No tienes una cuenta?</Link>
                 </span>
             </div>
         </>

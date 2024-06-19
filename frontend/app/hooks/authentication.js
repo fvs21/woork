@@ -20,6 +20,8 @@ export function useFetchUser() {
 }
 
 export function useRegisterUser(body) {
+    const queryClient = useQueryClient();
+
     const { mutateAsync: registerUserFn } = useMutation({
         mutationFn: async () => {
             return await axios.post(
@@ -27,6 +29,9 @@ export function useRegisterUser(body) {
                 body
             );
         },  
+        onSuccess: (data) => {
+            queryClient.setQueryData(['user-info'], data.user);
+        }
     });
 
     return { registerUserFn };

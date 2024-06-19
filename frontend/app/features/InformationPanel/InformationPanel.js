@@ -7,17 +7,17 @@ import LabeledButton from '../../components/LabeledButton/LabeledButton';
 import PhoneNumberModal from './PhoneNumberModal';
 import EmailModal from './EmailModal';
 import AddressModal from './AddressModal';
+import PhoneNotVerifiedModal from './PhoneNotVerifiedModal';
 import { useUser } from '../../hooks/useUser';
 
 export default function InformationPanel() {
+    const user = useUser();
     const [displayPfpModal, setDisplayPfpModal] = useState(false);
     const [displayPhoneModal, setDisplayPhoneModal] = useState(false);
     const [displayEmailModal, setDisplayEmailModal] = useState(false);
     const [displayAddressModal, setDisplayAddressModal] = useState(false);
     const [displayDobModal, setDisplayDobModal] = useState(false);
     const [displayGenderModal, setDisplayGenderModal] = useState(false);
-
-    const user = useUser();
     
     const dob = new Date(user?.dateOfBirth + " ");
 
@@ -42,7 +42,7 @@ export default function InformationPanel() {
                     <h2>Información personal</h2> 
                 </div>
                 <div className={styles['contact-info-container']}>
-                    <LabeledButton label={"Número"} text={"+" + user?.phone} clickedFn={() => setDisplayPhoneModal(true)}/>
+                    <LabeledButton label={"Número"} text={"+" + user?.phone} clickedFn={() => setDisplayPhoneModal(true)} />
                     <LabeledButton label={"Correo"} text={user?.email != null ? user.email : "No agregado"} clickedFn={() => setDisplayEmailModal(true)} /> 
                 </div>
                 <br/>

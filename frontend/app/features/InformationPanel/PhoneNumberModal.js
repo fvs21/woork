@@ -6,6 +6,7 @@ import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import { useUser } from "../../hooks/useUser";
 import { useUpdatePhone, useVerifyPhone } from "../../hooks/authentication";
 import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
+import PhoneNotVerified from "./PhoneNotVerifiedModal";
 
 export default function PhoneNumberModal({changeDisplayModal}) {
     const user = useUser();
@@ -36,7 +37,7 @@ export default function PhoneNumberModal({changeDisplayModal}) {
         event.preventDefault();
         if(countryCode+phoneNumber !== user.phone) {
             try {
-                const request = await updatePhoneFn();
+                await updatePhoneFn();
                 setStep(1);
             } catch (error) {
                 console.log(error);
@@ -50,7 +51,7 @@ export default function PhoneNumberModal({changeDisplayModal}) {
         event.preventDefault();
 
         try {
-            const request = await verifyPhoneFn();
+            await verifyPhoneFn();
             changeDisplayModal(false);
         } catch(error) {
             console.log(error);
@@ -91,7 +92,7 @@ export default function PhoneNumberModal({changeDisplayModal}) {
                         <h2>Verifica tu número de teléfono</h2>
                     </div>
                     <form onSubmit={handleVerifyPhone}>
-                        <ValidatedInput name={"verificationCode"} type={"text"} label={"Ingresa el código de verificación que te enviamos."} 
+                        <ValidatedInput name={"verificationCode"} type={"text"} label={"Ingresa el código de verificación que enviamos a +" +countryCode+phoneNumber} 
                             placeholder={"Código de verificación"} changeValue={setCode} autofocus={false}/>
                         <br/>
                         <SubmitButton>Verificar</SubmitButton>

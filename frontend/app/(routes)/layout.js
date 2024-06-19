@@ -2,7 +2,7 @@
 
 import '../assets/globals.scss'
 import Provider from '../context/Provider';
-import { AuthProvider } from '../context/AuthProvider'
+import { AuthProvider } from '../context/AuthProvider';
 
 
 export default function RootLayout({ children }) {

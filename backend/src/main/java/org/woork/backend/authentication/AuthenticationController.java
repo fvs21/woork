@@ -123,11 +123,17 @@ public class AuthenticationController {
 
     @PostMapping("/phone/verify")
     public User verifyPhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                                    @RequestBody LinkedHashMap<String, String> body) {
-        User user = userService.getUserFromAccessToken(token);
+                                    @RequestBody LinkedHashMap<String, String> body, HttpServletResponse response) {
         String verificationCode = body.get("otp");
 
-        return userService.checkPhoneVerificationCode(user, verificationCode);
+        User user = userService.checkPhoneVerificationCode(
+                userService.getUserFromAccessToken(token),
+                verificationCode
+        );
+
+        String refreshToken = tokenService.generateRefreshToken(user);
+        response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateTokenCookie(refreshToken).toString());
+        return user;
     }
 
     @PutMapping("/email/update")

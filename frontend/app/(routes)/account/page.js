@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Account.module.scss";
 import { determineOptionPanel } from "../../utils/Account/AccountUtils";
 import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
 import { useFetchUser } from "../../hooks/authentication";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function AccountPage() {
     const [option, setOption] = useState(0);
-
-    const { isLoading } = useFetchUser();
+    const router = useRouter();
+    const { data, isLoading } = useFetchUser();
 
     function determineIfClicked(clicked) {
         if(clicked) {
@@ -29,11 +31,11 @@ export default function AccountPage() {
                     <ul className={styles['account-nav-bar']}>
                         <li className={styles['nav-bar-header']}>
                             <div className={styles['header-container']}>
-                                <a href="/">
+                                <Link href="/">
                                     <button className={styles['nav-bar-header-btn']}>
                                         <i className="fa fa-arrow-left fa-1" aria-hidden="true"></i>
                                     </button>
-                                </a>
+                                </Link>
                                 <h2>Configuración</h2>
                             </div>
                         </li>

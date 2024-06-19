@@ -8,7 +8,7 @@ import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import InputDate from "../../components/InputDate/InputDate";
 import { useAuth } from "../../hooks/useAuth";
 import { useRegisterUser } from "../../hooks/authentication";
-import Logotype from "../../components/Logotype/Logotype";
+import Link from "next/link";
 
 export default function RegisterForm(props) {
     const day = new Date().getDate();
@@ -55,7 +55,7 @@ export default function RegisterForm(props) {
     return (
         <>
             <div className={styles['form-title']}>
-                <h2>Registrate</h2>
+                <h2>Regístrate</h2>
             </div>
             <hr className={styles["hr-style"]}/>
             <br/>
@@ -77,7 +77,7 @@ export default function RegisterForm(props) {
             <br/>
             <div className={styles['div-center']}>   
                 <span className={`${styles['buttom-links']}`}>
-                    <a href="/login">Ya tienes una cuenta?</a>
+                    <Link href="/login">Ya tienes una cuenta?</Link>
                 </span>
             </div>
         </>
