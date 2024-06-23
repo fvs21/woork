@@ -1,8 +1,28 @@
+@use "/app/assets/variables" as var;
+
 .register-form {
-    padding-top: 3%;
+    padding-top: 2%;
     height: 100%;
 }
 
 .logotype-container {
     text-align: center;
+}
+
+.logout-btn-container {
+    position: fixed;
+    width: 100%;
+    text-align: right;
+    right: 3%;
+}
+
+.logout-btn {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 1px solid var.$border-color;
+}
+
+.logout-btn:hover {
+    opacity: 0.7;
 }

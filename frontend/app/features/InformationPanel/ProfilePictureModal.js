@@ -3,7 +3,7 @@ import Modal from "../../components/Modal/Modal";
 import styles from './InformationPanel.module.scss';
 import { useUser } from "../../hooks/useUser";
 import { useUpdatePfp } from "../../hooks/authentication";
-import { checkIfValidImage } from "../../utils/Account/AccountUtils";
+import { checkIfValidImage } from "../../utils/account/AccountUtils";
 
 export default function ProfilePictureModal({changeDisplayModal}) {
     const user = useUser();

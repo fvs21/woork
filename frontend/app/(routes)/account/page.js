@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./Account.module.scss";
-import { determineOptionPanel } from "../../utils/Account/AccountUtils";
+import { determineOptionPanel } from "../../utils/account/AccountUtils";
 import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
-import { useFetchUser } from "../../hooks/authentication";
+import { useFetchUser, useLogout } from "../../hooks/authentication";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -13,9 +13,23 @@ export default function AccountPage() {
     const router = useRouter();
     const { data, isLoading } = useFetchUser();
 
+    const { logoutFn } = useLogout();
+
     function determineIfClicked(clicked) {
         if(clicked) {
             return styles['clicked']
+        }
+    }
+
+    async function logoutUser(event) {
+        event.preventDefault();
+
+        try {
+            logoutFn();
+            window.location.replace("/");
+
+        } catch(error) {
+            console.log(error);
         }
     }
 
@@ -52,7 +66,7 @@ export default function AccountPage() {
                                 onClick={() => setOption(2)}>Métodos de pago</button>
                         </li>
                         <li>
-                            <button className={`${styles['option-btn']}`}>Cerrar sesión</button>
+                            <button onClick={logoutUser} className={`${styles['option-btn']}`}>Cerrar sesión</button>
                         </li>
                     </ul>
                 </div>

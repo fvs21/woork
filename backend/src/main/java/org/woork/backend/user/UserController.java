@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.exceptions.UserDoesNotExistException;
 import org.woork.backend.exceptions.UserNotVerifiedException;
-import org.woork.backend.image.Image;
 import org.woork.backend.location.LocationObject;
 
 import java.util.LinkedHashMap;

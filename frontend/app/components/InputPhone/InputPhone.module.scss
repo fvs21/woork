@@ -10,7 +10,6 @@
     border-radius: 6px;
     border: 0.2px solid var.$border-color;
     font-size: 16px;
-    display: block;
 }
 
 .input-container {
@@ -23,4 +22,9 @@
 
 .select-form:invalid {
     color:gray;
+}
+
+.error-msg {
+    font-size: small;
+    color: red;
 }

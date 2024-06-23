@@ -32,3 +32,22 @@ html, body {
 .bg-gray {
     background-color: var.$bg-gray;
 }
+
+.error-border {
+    border: 1.5px solid red !important;
+    margin:-1.5px 0 0 -1.5px;
+}
+
+.error-msg {
+    font-size: small;
+    color: red;
+}
+
+.normal-border {
+    border: 0.2px solid var.$border-color;
+}
+
+.purple-border {
+    border: 1px solid var.$primary-color;
+    margin: -1px 0 0 -1px;
+}

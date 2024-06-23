@@ -36,8 +36,8 @@ export default function PhoneVerification() {
         <>
             <h2>Verifica tu número de teléfono</h2>
             <form onSubmit={handleSubmit}>
-                <ValidatedInput name={"verificationCode"} type={"text"} label={"Ingresa el código de verificación que te enviamos."} 
-                    placeholder={"Código de verificación"} changeValue={setCode} autofocus={false}/>
+                <ValidatedInput valid={true} name={"verificationCode"} type={"text"} label={"Ingresa el código de verificación que te enviamos."} 
+                    placeholder={"Código de verificación"} setValue={setCode} autofocus={false}/>
                 <br/>
                 <SubmitButton>Verificar</SubmitButton>
             </form>

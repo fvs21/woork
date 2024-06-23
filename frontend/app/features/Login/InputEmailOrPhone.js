@@ -10,14 +10,14 @@ export default function InputEmailOrPhone({credential, changeCredential, country
 
     if(DetermineEmailOrPhone(credential)) {
         return (
-            <ValidatedInput name={"email"} type={"email"} label={label} placeholder={"Correo electrónico o número de teléfono"} 
-                value={credential} changeValue={changeCredential} autofocus={active}/>
+            <ValidatedInput valid={true} name={"email"} type={"email"} label={label} placeholder={"Correo electrónico o número de teléfono"} 
+                value={credential} setValue={changeCredential} autofocus={active}/>
         )
     } else {
         if(!active) { setActive(true); } //set email autofocus to true
 
         return (
-            <InputPhone label={label} number={credential} changeNumber={changeCredential} countryCode={countryCode} 
+            <InputPhone valid={true} label={label} number={credential} changeNumber={changeCredential} countryCode={countryCode} 
                 changeCountryCode={changeCountryCode} autofocus={true} />
         )
     }

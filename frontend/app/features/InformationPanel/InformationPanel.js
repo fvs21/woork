@@ -7,7 +7,7 @@ import LabeledButton from '../../components/LabeledButton/LabeledButton';
 import PhoneNumberModal from './PhoneNumberModal';
 import EmailModal from './EmailModal';
 import AddressModal from './AddressModal';
-import PhoneNotVerifiedModal from './PhoneNotVerifiedModal';
+import { defaultPfpUrl } from '../../utils/account/AccountUtils';
 import { useUser } from '../../hooks/useUser';
 
 export default function InformationPanel() {
@@ -21,14 +21,16 @@ export default function InformationPanel() {
     
     const dob = new Date(user?.dateOfBirth + " ");
 
-    const formattedDate = `${dob.getDate()}/${dob.getMonth()+1}/${dob.getFullYear()}`;
+    const formattedDate = `${dob.getDate()}/${dob.getMonth()}/${dob.getFullYear()}`;
+
+    const pfpUrl = user?.profilePicture?.imageUrl || defaultPfpUrl;
 
     
     return (
         <div className={styles['main-container']}>
             <div className={styles['basic-info-container']}>
                 <div className={styles['pfp-container']}>
-                    <img src={user?.profilePicture.imageUrl}
+                    <img src={pfpUrl}
                         className={styles['profile-picture']} onClick={() => setDisplayPfpModal(true)}/>
                 </div>
                 <div className={styles['name-container']}>

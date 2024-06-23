@@ -1,14 +1,13 @@
-import styles from "../../components/ValidatedInput/ValidatedInput.module.scss"
+import "../../assets/globals.scss";
 
-export function determineInputColor({active, valid}) {
+export function determineInputColor(active, valid) {
     if(!active && !valid) {
-        return styles['error-border'];
+        return 'error-border';
     } else if(active && valid) {
-        return styles['purple-border'];
+        return 'purple-border';
     } else if(active && !valid) {
-        return styles['error-border'];
+        return 'purple-border';
     }
 
-    return styles['normal-border'];
+    return 'normal-border';
 }
-

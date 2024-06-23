@@ -2,7 +2,6 @@ package org.woork.backend.token;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.woork.backend.user.User;
 
 @Entity
 @Table

@@ -1,2 +1,4 @@
--implement age check
--implement error handling on registration and account forms
+-implement age check. DONE
+-refactor register form inputs.
+-implement error handling on registration and account forms.
+-logout.

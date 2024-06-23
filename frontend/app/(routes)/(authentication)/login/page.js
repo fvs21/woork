@@ -1,5 +1,4 @@
 import LoginForm from "../../../features/Login/LoginForm"
-import Navbar from "../../../components/navbar/NavBar"
 import styles from './Login.module.scss'
 import Form from "../../../components/Form/Form"
 import Logotype from "../../../components/Logotype/Logotype"

@@ -1,6 +1,6 @@
 @use "/app/assets/variables" as var;
 
-.name-input-container {
+.fullname-field {
    display: grid;
    grid-auto-flow: column;
    column-gap: 10px;
@@ -45,4 +45,9 @@
         color: var.$primary-color;
         font-weight: bold;
     }
+}
+
+.registration-disclaimers {
+    font-size: 11px;
+    color: gray;
 }

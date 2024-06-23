@@ -113,13 +113,12 @@ public class TokenService {
     }
 
     public ResponseCookie generateTokenCookie(String token) {
-        ResponseCookie cookie = ResponseCookie.from("refresh_token", token)
+        return ResponseCookie.from("refresh_token", token)
                 .path("/")
                 .httpOnly(true)
                 .maxAge(3600*24*7)
                 .sameSite("Lax")
                 .build();
-        return cookie;
     }
 
     public boolean validateRefreshToken(String token) {
@@ -132,5 +131,14 @@ public class TokenService {
             throw new InvalidTokenException();
         }
         return generateAccessToken(user);
+    }
+
+    public ResponseCookie generateLogoutCookie() {
+        return ResponseCookie.from("refresh_token", "")
+                .path("/")
+                .httpOnly(true)
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
     }
 }

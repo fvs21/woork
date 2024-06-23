@@ -28,11 +28,11 @@ public class Image {
     @JsonIgnore
     private String imageType;
 
-    @Column(name = "image_path", nullable = false)
+    @Column(name = "image_path", unique = true, nullable = false)
     @JsonIgnore
     private String imagePath;
 
-    @Column(name = "image_url", nullable = false)
+    @Column(name = "image_url", unique = true, nullable = false)
     private String imageUrl;
 
     public Image() {}

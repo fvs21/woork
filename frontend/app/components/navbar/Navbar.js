@@ -1,5 +1,5 @@
-import styles from './Navbar.module.scss'
-import '../../assets/globals.scss'
+import styles from './Navbar.module.scss';
+import '../../assets/globals.scss';
 import Logotype from "../Logotype/Logotype";
 import { useAuth } from '../../hooks/useAuth';
 import Link from 'next/link';

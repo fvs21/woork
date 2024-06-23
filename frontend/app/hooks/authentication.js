@@ -121,3 +121,19 @@ export function useUpdatePfp(body) {
 
     return { updatePfpFn };
 }
+
+export function useLogout() {
+    const axiosPrivate = useAxiosPrivate();
+    const queryClient = useQueryClient();
+
+    const { mutateAsync: logoutFn } = useMutation({
+        mutationFn: async () => {
+            return await axiosPrivate.get('/auth/logout');
+        },
+        onSuccess: () => {
+            queryClient.removeQueries(['user-info']);
+        }
+    });
+
+    return { logoutFn };
+}

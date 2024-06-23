@@ -2,53 +2,98 @@
 
 import { useState } from "react";
 import styles from './RegisterForm.module.scss'
-import InputPhone from "../../components/InputPhone/InputPhone";
-import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
-import InputDate from "../../components/InputDate/InputDate";
 import { useAuth } from "../../hooks/useAuth";
 import { useRegisterUser } from "../../hooks/authentication";
 import Link from "next/link";
+import { stringifyDateOfBirth } from "../../utils/authentication/RegisterUtils";
+import RegisterNameInput from "./RegisterNameInput";
+import RegisterDateInput from "./RegisterDateInput";
+import RegisterPasswordInput from "./RegisterPasswordInput";
+import RegisterPhoneInput from "./RegisterPhoneInput";
+import { validateRegisterBody } from "../../services/Validators";
+import { PHONE_NUMBER_TAKEN_ERROR } from "../../utils/authentication/ErrorResponses";
+import { useRouter } from "next/navigation";
 
-export default function RegisterForm(props) {
+export default function RegisterForm() {
     const day = new Date().getDate();
-    const month = new Date().getMonth() + 1;
+    const month = new Date().getMonth()+1;
     const year = new Date().getFullYear();
-
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [countryCode, setCountryCode] = useState("");
-    const [phone, setPhone] = useState("");
-    const [selectedMonth, setSelectedMonth] = useState(month);
-    const [selectedYear, setSelectedYear] = useState(year); 
-    const [selectedDay, setSelectedDay] = useState(day);
-    const [password, setPassword] = useState("");
-
     const { setAuth } = useAuth();
+    const router = useRouter();
+
+    const [firstName, setFirstName] = useState({
+        value: "",
+        errorMsg: "",
+    });
+    const [lastName, setLastName] = useState({
+        value: "",
+        errorMsg: "",
+    });
+    const [phoneNumber, setPhoneNumber] = useState({
+        countryCode: "",
+        phone: "",
+        errorMsg: "",
+    });
+    const [dateOfBirth, setDateOfBirth] = useState({
+        month: month,
+        year: year,
+        day: day,
+        errorMsg: ""
+    });
+    const [password, setPassword] = useState({
+        value: "",
+        errorMsg: "",
+    });
+
+    function setErrorMsg(setter, error) {
+        setter(prevState => ({
+            ...prevState,
+            errorMsg: error
+        }));
+    }
+
+    function resetErrors() {
+        setErrorMsg(setFirstName, "");
+        setErrorMsg(setLastName, "");
+        setErrorMsg(setPhoneNumber, "");
+        setErrorMsg(setDateOfBirth, "");
+        setErrorMsg(setPassword, "");
+    }
 
     const body = {
-        "firstName": firstName,
-        "lastName": lastName,
-        "countryCode": countryCode,
-        "phone": phone,
-        "dateOfBirth": new Date(selectedYear, selectedMonth, selectedDay).toISOString().split('T')[0],
-        "password": password
+        "firstName": firstName.value,
+        "lastName": lastName.value,
+        "countryCode": phoneNumber.countryCode,
+        "phone": phoneNumber.phone,
+        "dateOfBirth": stringifyDateOfBirth(dateOfBirth.year, dateOfBirth.month-1, dateOfBirth.day),
+        "password": password.value
     }
 
     const { registerUserFn } = useRegisterUser(body);
 
     async function handleSubmit(e) {
         e.preventDefault();
-        
+        if(!validateRegisterBody(body)) {
+            return;
+        }
+
         try {
+            resetErrors();
             const request = await registerUserFn();
             setAuth({
                 "access_token": request.data.access_token,
                 "loggedIn": true
             });
-            props.setStep(1);
-        } catch (error) {
-            console.log(error.response);
+            router.push("/register/verify");
+        } catch (error) { 
+            const response = error.response.data;
+
+            switch(response) {
+                case PHONE_NUMBER_TAKEN_ERROR:
+                    setErrorMsg(setPhoneNumber, "Número de teléfono ya en uso.");
+                    break;
+            }
         }
     }
 
@@ -60,17 +105,19 @@ export default function RegisterForm(props) {
             <hr className={styles["hr-style"]}/>
             <br/>
             <form onSubmit={handleSubmit} method="post">
-                <div className={styles["name-input-container"]}>
-                    <ValidatedInput name={"firstName"} value={firstName} type={"text"} placeholder={"Nombre"} changeValue={setFirstName} autofocus={false}/>
-                    <ValidatedInput name={"lastName"} value={lastName} type={"text"} placeholder={"Apellido"} changeValue={setLastName} autofocus={false}/>
+                <RegisterNameInput firstName={firstName.value} setFirstName={setFirstName} lastName={lastName.value} setLastName={setLastName} />
+                <br/>
+                <RegisterPhoneInput phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} errorMsg={phoneNumber.errorMsg} />
+                <br/>
+                <RegisterPasswordInput password={password} setPassword={setPassword} />
+                <br/>
+                <RegisterDateInput dateOfBirth={dateOfBirth} setDateOfBirth={setDateOfBirth} />
+                <br/>
+                <div className={styles['registration-disclaimers']}>
+                    <span>Debes tener más de 18 años para poder registrarte en woork.</span>
+                    <br/><br/>
+                    <span>Al hacer click en "Regístrate", aceptas nuestros Términos y Condiciones...</span>
                 </div>
-                <br/>
-                <InputPhone label={"Número de teléfono"} countryCode={countryCode} changeCountryCode={setCountryCode} number={phone} changeNumber={setPhone} autofocus={false}/>
-                <br/>
-                <ValidatedInput name={"password"} value={password} type={"password"} label={"Contraseña"} placeholder={"Contraseña"} changeValue={setPassword} />
-                <br/>
-                <InputDate month={selectedMonth} changeMonth={setSelectedMonth} day={selectedDay} changeDay={setSelectedDay}
-                    year={selectedYear} changeYear={setSelectedYear}/>
                 <br/>
                 <SubmitButton>Regístrate</SubmitButton>
             </form>

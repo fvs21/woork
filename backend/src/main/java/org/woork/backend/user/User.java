@@ -2,14 +2,21 @@ package org.woork.backend.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.woork.backend.exceptions.CredentialsNotProvidedException;
+import org.woork.backend.exceptions.InvalidCountryCodeException;
+import org.woork.backend.exceptions.InvalidPhoneNumberException;
+import org.woork.backend.exceptions.RegistrationException;
 import org.woork.backend.image.Image;
 import org.woork.backend.location.Location;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.role.Role;
+import org.woork.backend.utils.RegistrationUtils;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -146,6 +153,10 @@ public class User {
     }
 
     public void setCountryCode(int countryCode) {
+        Set<Integer> set = new HashSet<>(List.of(52));
+        if(!set.contains(countryCode)) {
+            throw new InvalidCountryCodeException();
+        }
         this.countryCode = countryCode;
     }
 
@@ -169,8 +180,11 @@ public class User {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setDateOfBirth(String dateOfBirth) {
+        if(!RegistrationUtils.verifyAge(dateOfBirth)) {
+            throw new RegistrationException("User must be over the age of 18");
+        }
+        this.dateOfBirth = Date.valueOf(dateOfBirth);
     }
 
     public Set<Role> getAuthorities() {

@@ -1,6 +1,7 @@
 package org.woork.backend.authentication;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.token.TokenService;
@@ -53,12 +55,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({CredentialsNotProvidedException.class})
-    public ResponseEntity<String> handleCredentialsNotProvided(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({IncorrectCredentialsException.class})
+    @ExceptionHandler({IncorrectCredentialsException.class, CredentialsNotProvidedException.class})
     public ResponseEntity<String> handleIncorrectCredentials(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -68,7 +65,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({InvalidPhoneNumberException.class})
+    @ExceptionHandler({InvalidPhoneNumberException.class, InvalidCountryCodeException.class})
     public ResponseEntity<String> handleInvalidPhoneNumber(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -83,10 +80,23 @@ public class AuthenticationController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({RegistrationException.class})
+    public ResponseEntity<String> handleRegistrationException(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+
     //Mappings
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegistrationObject registration, HttpServletResponse response) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegistrationObject registration,
+                                                           BindingResult bindingResult, HttpServletResponse response) {
+        if(bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(fieldError -> {
+                throw new RegistrationException(fieldError.getDefaultMessage());
+            });
+        }
+
         User user = userService.registerUser(registration);
 
         try {
@@ -187,7 +197,10 @@ public class AuthenticationController {
     }
 
     @GetMapping("/logout")
-    public String logout(@CookieValue("refresh_token") String token) {
-        return "";
+    public String logout(@CookieValue("refresh_token") String token, HttpServletResponse response) {
+        userService.getUserFromRefreshToken(token);
+        response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateLogoutCookie().toString());
+
+        return "Logged out successfully";
     }
 }

@@ -1,12 +1,26 @@
 package org.woork.backend.authentication;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class RegistrationObject {
+
+    @NotBlank(message = "First name cannot be null")
     private String firstName;
+
+    @NotBlank(message = "Last name cannot be null")
     private String lastName;
+
     private int countryCode;
+
+    @NotBlank(message = "Phone number cannot be null")
+    @Size(min = 10, max = 10, message = "Invalid phone number length")
     private String phone;
+
+    @NotBlank
     private String dateOfBirth;
+
+    @Size(min = 8, max = 16, message = "Password must be at least 8 characters long and maximum 16 characters long")
     private String password;
 
     public RegistrationObject() {

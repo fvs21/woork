@@ -10,15 +10,12 @@ import { useMutation } from "react-query";
 import { DetermineEmailOrPhone } from "../../utils/authentication/LoginUtils";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../hooks/useAuth";
-import PhoneVerification from "../PhoneVerification/PhoneVerification";
 import Link from "next/link";
 
 export default function LoginForm() {
     const [credential, setCredential] = useState("");
     const [countryCode, setCountryCode] = useState("");
     const [password, setPassword] = useState("");
-
-    const [verificationForm, setVerificationForm] = useState(false);
 
     const router = useRouter();
     const { setAuth } = useAuth();
@@ -73,8 +70,8 @@ export default function LoginForm() {
                 <InputEmailOrPhone credential={credential} changeCredential={setCredential} countryCode={countryCode}  
                     changeCountryCode={setCountryCode}/>
                 <br/>
-                <ValidatedInput name={"password"} type={"password"} label={"Contraseña"} placeholder={"Contraseña"} 
-                    changeValue={setPassword} autofocus={false} />
+                <ValidatedInput valid={true} name={"password"} type={"password"} label={"Contraseña"} placeholder={"Contraseña"} 
+                    setValue={setPassword} autofocus={false} />
                 <br/>
                 <SubmitButton>Iniciar sesión</SubmitButton>
             </form>

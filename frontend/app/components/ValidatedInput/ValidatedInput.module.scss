@@ -19,19 +19,3 @@
 .input-container {
     padding: 0;
 }
-
-.normal-border {
-    border: 0.2px solid var.$border-color;
-}
-
-.purple-border {
-    border: 1px solid var.$primary-color;
-}
-
-.error-border {
-    border: 1.5px solid red;
-}
-
-.error-msg {
-    font-size: small;
-}

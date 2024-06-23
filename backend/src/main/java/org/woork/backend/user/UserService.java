@@ -22,7 +22,8 @@ import org.woork.backend.role.Role;
 import org.woork.backend.role.RoleRepository;
 import org.woork.backend.sms.SMSService;
 import org.woork.backend.token.TokenService;
-import java.security.SecureRandom;
+import org.woork.backend.utils.RegistrationUtils;
+
 import java.sql.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -57,8 +58,7 @@ public class UserService implements UserDetailsService {
         user.setCountryCode(registration.getCountryCode());
         user.setPhone(registration.getCountryCode() + registration.getPhone());
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
-        user.setDateOfBirth(Date.valueOf(registration.getDateOfBirth()));
-        user.setProfilePicture(imageService.getDefaultPfp());
+        user.setDateOfBirth(registration.getDateOfBirth());
 
         Set<Role> roles = user.getAuthorities();
         roles.add(roleRepository.findByAuthority("USER").get());
@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService {
 
         try {
             userRepository.save(user);
-            String verificationCode = generateVerificationCode();
+            String verificationCode = RegistrationUtils.generateVerificationCode();
             user.setPhoneVerificationCode(
                     passwordEncoder.encode(verificationCode)
             );
@@ -78,24 +78,13 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    private String generateVerificationCode() {
-        SecureRandom random = new SecureRandom();
-        StringBuilder otp = new StringBuilder();
-
-        for (int i = 0; i < 7; i++) {
-            otp.append(random.nextInt(10));
-        }
-
-        return otp.toString();
-
-    }
 
     public String updatePhoneNumber(User user, String countryCode, String phoneNumber) {
         try {
             user.setPhone(countryCode + phoneNumber);
             user.setCountryCode(Integer.parseInt(countryCode));
 
-            String verificationCode = generateVerificationCode();
+            String verificationCode = RegistrationUtils.generateVerificationCode();
             System.out.println(verificationCode);
             //sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
             user.setPhoneVerificationCode(
@@ -133,8 +122,7 @@ public class UserService implements UserDetailsService {
     public String updateEmail(User user, String email) {
         try {
             user.setEmail(email);
-
-            String verificationCode = generateVerificationCode();
+            String verificationCode = RegistrationUtils.generateVerificationCode();
             sendEmailVerificationCode(email, verificationCode);
             user.setEmailVerificationCode(
                     passwordEncoder.encode(verificationCode)

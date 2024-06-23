@@ -1,30 +1,10 @@
+import moment from "moment";
+
 export const daysInMonth = (month, year) => {
     return new Date(year, month, 0).getDate();
 }
 
-export const calculateAge = (dob) => {
-    const today = new Date();
-
-    let age = today.getFullYear() - dob.getFullYear();
-    let month = today.getMonth() - (dob.getMonth()-1);
-    let days = today.getDate() - dob.getDate();
-    
-    if(month < 0) {
-        age--;
-        month += 12;
-    }
-    else if(month == 0) {
-        if(days < 0) {
-            age--;
-            days += daysInMonth(dob.getFullYear(), dob.getMonth()+1); 
-        } else {
-            age++;
-        }
-    }
-    return age;
-}
-
-export const months = [
+export const MONTHS = [
     'Enero',
     'Febrero',
     'Marzo',
@@ -38,3 +18,7 @@ export const months = [
     'Noviembre',
     'Diciembre'
 ]
+
+export const stringifyDateOfBirth = (year, month, day) => {
+    return new Date(year, month, day).toISOString().split('T')[0]
+} 

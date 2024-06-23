@@ -16,3 +16,5 @@ export function checkIfValidImage(file) {
     const validTypes = ["image/jpeg", "image/jpg", "image/png"];
     return validTypes.includes(file.type);
 }
+
+export const defaultPfpUrl = "http://localhost:8000/api/images/default-pfp";

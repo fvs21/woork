@@ -1,43 +1,33 @@
 import InputLabel from "./InputLabel";
 import InputBox from "./InputBox";
 import styles from "./ValidatedInput.module.scss";
-import { useState } from "react";
-import "../../assets/globals.scss"
+import { useEffect, useState } from "react";
+import "../../assets/globals.scss";
 import { determineInputColor } from "../../utils/authentication/DetermineStylesUtils";
 
-export default function ValidatedInput({name, value, type, label, placeholder, errorMsg, changeValue, autofocus}) {
-    const [validateState, setValidatedState] = useState({
-        active: false,
-        valid: true,
-        typedIn: false,
-        value: ''
-    });
+export default function ValidatedInput({name, value, valid, type, label, placeholder, setValue, autofocus}) {
+    const [active, setActive] = useState(false);
+    const [color, setColor] = useState("normal-border")
 
     const focus = (event) => {
-        setValidatedState({
-            ...validateState,
-            active: !validateState.active,
-        });
+        setActive(!active);
     }
 
     const updateValue = (event) => {
-        setValidatedState({
-            ...validateState,
-            typedIn: true,
-            value: event.target.value,
-            valid: event.target.value != ""
-        })
+        setValue(event.target.value);
+    } 
 
-        changeValue(event.target.value);
-    }
+    useEffect(() => {
+        setColor(determineInputColor(active, valid));
+    }, [value, valid, active]);
 
     return (
         <>
-            {label && <InputLabel>{label}</InputLabel>}
             <InputBox>
-                <input className={`${styles['form-input']} ${determineInputColor(validateState)}`} name={name} type={type} placeholder={placeholder} defaultValue={value}
-                    onChange={(e) => updateValue(e)} onFocus={focus} onBlur={focus} autoFocus={autofocus} required/>
-                {errorMsg && <span className={styles['error-msg']}>{errorMsg}</span>}
+                {label && <InputLabel>{label}</InputLabel>}
+                <input className={`${styles['form-input']} ${color}`} 
+                    name={name} type={type} placeholder={placeholder} defaultValue={value}
+                    onChange={updateValue} onFocus={focus} onBlur={focus} autoFocus={autofocus} required/>
             </InputBox>
         </>
     )
