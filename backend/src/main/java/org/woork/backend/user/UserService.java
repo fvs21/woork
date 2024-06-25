@@ -24,7 +24,6 @@ import org.woork.backend.sms.SMSService;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.utils.RegistrationUtils;
 
-import java.sql.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -80,6 +79,9 @@ public class UserService implements UserDetailsService {
 
 
     public String updatePhoneNumber(User user, String countryCode, String phoneNumber) {
+        if(user.isPhoneVerificationCodeValid()) {
+            throw new UnableToGenerateVerificationCodeException("Code hasn't expired");
+        }
         try {
             user.setPhone(countryCode + phoneNumber);
             user.setCountryCode(Integer.parseInt(countryCode));
@@ -110,6 +112,9 @@ public class UserService implements UserDetailsService {
     }
 
     public User checkPhoneVerificationCode(User user, String verificationCode) {
+        if(!user.isPhoneVerificationCodeValid()) {
+            throw new VerificationCodeExpiredException();
+        }
         String storedVerificationCode = user.getPhoneVerificationCode();
         if(!passwordEncoder.matches(verificationCode, storedVerificationCode)) {
             throw new IncorrectVerificationCodeException();
@@ -119,10 +124,36 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public String generatePhoneVerificationCode(User user) {
+        if(user.isPhoneVerificationCodeValid()) {
+            throw new UnableToGenerateVerificationCodeException("Previous phone verification code is still valid");
+        }
+        if(user.isVerified()) {
+            throw new UnableToGenerateVerificationCodeException("User is verified");
+        }
+        try {
+            String verificationCode = RegistrationUtils.generateVerificationCode();
+            System.out.println(verificationCode);
+
+            user.setPhoneVerificationCode(
+                    passwordEncoder.encode(verificationCode)
+            );
+            //sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
+            userRepository.save(user);
+            return "Verification code successfully sent";
+        } catch (Exception e) {
+            throw new UnableToGenerateVerificationCodeException();
+        }
+    }
+
     public String updateEmail(User user, String email) {
+        if(user.isEmailVerificationCodeValid()) {
+            throw new UnableToGenerateVerificationCodeException("Code hasn't expired");
+        }
         try {
             user.setEmail(email);
             String verificationCode = RegistrationUtils.generateVerificationCode();
+            System.out.println("Email code: " + verificationCode);
             sendEmailVerificationCode(email, verificationCode);
             user.setEmailVerificationCode(
                     passwordEncoder.encode(verificationCode)
@@ -145,15 +176,17 @@ public class UserService implements UserDetailsService {
         System.out.println("Your one time generated password: " + verificationCode);
     }
 
-    public User checkEmailVerificationCode(String email, String verificationCode) {
-        User user = userRepository.findByEmail(email).orElseThrow(UserDoesNotExistException::new);
-
-        //TODO: Check verification code expiration
-
+    public User checkEmailVerificationCode(User user, String verificationCode) {
+        if(user.getEmail() == null) {
+            throw new EmailNotAddedException();
+        }
+        if(!user.isEmailVerificationCodeValid()) {
+            throw new VerificationCodeExpiredException();
+        }
         if(passwordEncoder.matches(verificationCode, user.getEmailVerificationCode())) {
             user.setEmailCodeGenerationDate(null);
-            userRepository.save(user);
-            return user;
+            user.setEmailVerificationCode(null);
+            return userRepository.save(user);
         } else {
             throw new IncorrectVerificationCodeException();
         }

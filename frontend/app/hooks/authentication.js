@@ -114,7 +114,7 @@ export function useUpdatePfp(body) {
                 formData
             );
         },
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries(['user-info']);
         }
     });
@@ -122,7 +122,7 @@ export function useUpdatePfp(body) {
     return { updatePfpFn };
 }
 
-export function useLogout() {
+export function useLogoutUser() {
     const axiosPrivate = useAxiosPrivate();
     const queryClient = useQueryClient();
 
@@ -136,4 +136,22 @@ export function useLogout() {
     });
 
     return { logoutFn };
+}
+
+export function useLoginUser() {
+    const queryClient = useQueryClient();
+    
+    const { mutateAsync: loginUserFn } = useMutation({
+        mutationFn: async (body) => {
+            return await axios.post(
+                '/auth/login',
+                body
+            );
+        },
+        onSuccess: (data) => {
+            queryClient.setQueryData(['user-info'], data.user); 
+        }
+    });
+
+    return { loginUserFn };
 }

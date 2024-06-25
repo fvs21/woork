@@ -6,14 +6,13 @@ import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import { useUser } from "../../hooks/useUser";
 import { useUpdatePhone, useVerifyPhone } from "../../hooks/authentication";
 import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
-import PhoneNotVerified from "./PhoneNotVerifiedModal";
+import { parsePhoneNumber } from "../../utils/authentication/RegisterUtils";
 
 export default function PhoneNumberModal({changeDisplayModal}) {
     const user = useUser();
     
     const defaultCountryCode = String(user.countryCode);
-    const length = defaultCountryCode.length + String(user.phone).length;
-    const defaultPhoneNumber = String(user.phone).slice(defaultCountryCode.length, length);
+    const defaultPhoneNumber = parsePhoneNumber(defaultCountryCode, user.phone);
 
     const [phoneNumber, setPhoneNumber] = useState(defaultPhoneNumber);
     const [countryCode, setCountryCode] = useState(defaultCountryCode);
@@ -86,7 +85,7 @@ export default function PhoneNumberModal({changeDisplayModal}) {
                 <div className={styles['information-modal']}>
                     <button className={styles['return-btn']} 
                         onClick={() => setStep(0)}>
-                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        <i className="fa fa-arrow-left" aria-hidden="true"></i>
                     </button>
                     <div className={styles['phone-modal-title']}>
                         <h2>Verifica tu número de teléfono</h2>

@@ -12,6 +12,8 @@ export default function ProfilePictureModal({changeDisplayModal}) {
     const [step, setStep] = useState(0);
     const pfpInput = useRef(null);
 
+    const pfpUrl = user?.profilePicture?.imageUrl || "http://localhost:8000/api/images/default-pfp";
+
     const { updatePfpFn } = useUpdatePfp(image);
 
     function onImageChange(event) {
@@ -47,7 +49,7 @@ export default function ProfilePictureModal({changeDisplayModal}) {
                     </div>
                     <br/>
                     <div className={styles['pfp-modal-pfp-container']}>
-                        <img src={user.profilePicture.imageUrl} className={styles['pfp-viewer']} />
+                        <img src={pfpUrl} className={styles['pfp-viewer']} />
                     </div>
                     <br/>
                     <br/>

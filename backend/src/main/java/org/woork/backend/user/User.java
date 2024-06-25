@@ -14,6 +14,8 @@ import org.woork.backend.utils.RegistrationUtils;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +37,8 @@ public class User {
     @JsonIgnore
     @Column(name = "user_id")
     private Long id;
+
+    //Basic information
     private String first_name;
     private String last_name;
 
@@ -66,6 +70,8 @@ public class User {
     )
     private Set<Role> authorities;
 
+    //Verification
+
     @Column(name = "verified")
     private boolean verified;
 
@@ -75,7 +81,7 @@ public class User {
 
     @Column(name = "phone_code_generation_date")
     @JsonIgnore
-    private Date phoneCodeGenerationDate;
+    private LocalDateTime phoneCodeGenerationDate;
 
 
     @Column(name = "email_verification_code")
@@ -84,7 +90,9 @@ public class User {
 
     @Column(name = "email_code_generation_date")
     @JsonIgnore
-    private Date emailCodeGenerationDate;
+    private LocalDateTime emailCodeGenerationDate;
+
+    //Else
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_picture", referencedColumnName = "image_id")
@@ -208,14 +216,25 @@ public class User {
 
     public void setPhoneVerificationCode(String phoneVerificationCode) {
         this.phoneVerificationCode = phoneVerificationCode;
+        if(!isPhoneVerificationCodeValid()) {
+            setPhoneCodeGenerationDate(LocalDateTime.now());
+        }
     }
 
-    public Date getPhoneCodeGenerationDate() {
+    public LocalDateTime getPhoneCodeGenerationDate() {
         return phoneCodeGenerationDate;
     }
 
-    public void setPhoneCodeGenerationDate(Date phoneCodeGenerationDate) {
+    public void setPhoneCodeGenerationDate(LocalDateTime phoneCodeGenerationDate) {
         this.phoneCodeGenerationDate = phoneCodeGenerationDate;
+    }
+
+    public boolean isPhoneVerificationCodeValid() {
+        if(getPhoneCodeGenerationDate() == null) {
+            return false;
+        }
+        long seconds = ChronoUnit.SECONDS.between(getPhoneCodeGenerationDate(), LocalDateTime.now());
+        return seconds <= 60;
     }
 
     public String getEmailVerificationCode() {
@@ -224,14 +243,23 @@ public class User {
 
     public void setEmailVerificationCode(String emailVerificationCode) {
         this.emailVerificationCode = emailVerificationCode;
+        setEmailCodeGenerationDate(LocalDateTime.now());
     }
 
-    public Date getEmailCodeGenerationDate() {
+    public LocalDateTime getEmailCodeGenerationDate() {
         return emailCodeGenerationDate;
     }
 
-    public void setEmailCodeGenerationDate(Date emailCodeGenerationDate) {
+    public void setEmailCodeGenerationDate(LocalDateTime emailCodeGenerationDate) {
         this.emailCodeGenerationDate = emailCodeGenerationDate;
+    }
+
+    public boolean isEmailVerificationCodeValid() {
+        if(getEmailCodeGenerationDate() == null) {
+            return false;
+        }
+        long seconds = ChronoUnit.SECONDS.between(getEmailCodeGenerationDate(), LocalDateTime.now());
+        return seconds <= 60;
     }
 
     public Set<Posting> getPostings() {

@@ -4,10 +4,10 @@ import PhoneVerification from "../../../../features/PhoneVerification/PhoneVerif
 import styles from "../Register.module.scss";
 import Form from "../../../../components/Form/Form";
 import Logotype from "../../../../components/Logotype/Logotype"
-import { useLogout } from "../../../../hooks/authentication";
+import { useLogoutUser } from "../../../../hooks/authentication";
 
 export default function VerificationPage() {
-    const {logoutFn} = useLogout();
+    const {logoutFn} = useLogoutUser();
 
     async function logoutUser() {
         try {

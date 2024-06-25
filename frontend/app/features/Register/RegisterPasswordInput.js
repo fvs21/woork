@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import ValidatedInput from "../../components/ValidatedInput/ValidatedInput"
 import "../../assets/globals.scss";
 import { validatePassword } from "../../services/Validators";
 
-export default function RegisterPasswordInput({password, setPassword}) {
+export default function RegisterPasswordInput({password, setPassword, errorMsg}) {
     const [passwordValid, setPasswordValid] = useState(true);
 
     const changePassword = (value) => {
@@ -19,6 +19,7 @@ export default function RegisterPasswordInput({password, setPassword}) {
         <>
             <ValidatedInput name={"password"} valid={passwordValid} value={password.value} type={"password"} label={"Contraseña"} placeholder={"Contraseña"} 
                 setValue={changePassword} />
+            {errorMsg && <span className="error-msg">{errorMsg}</span>}
         </>
     )
 } 

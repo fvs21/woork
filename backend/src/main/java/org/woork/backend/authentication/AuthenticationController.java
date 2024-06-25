@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.woork.backend.annotations.Verified;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
@@ -85,6 +85,20 @@ public class AuthenticationController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({UnableToGenerateVerificationCodeException.class})
+    public ResponseEntity<String> handleUnableToGenerateVerificationCode(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({UserNotVerifiedException.class})
+    public ResponseEntity<String> handleUserNotVerifiedException(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({EmailNotAddedException.class})
+    public ResponseEntity<String> handleEmailNotAddedException(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
 
     //Mappings
 
@@ -131,6 +145,12 @@ public class AuthenticationController {
         return userService.updatePhoneNumber(user, countryCode, phoneNumber);
     }
 
+    @GetMapping("/phone/code")
+    public String generatePhoneVerificationCode(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        User user = userService.getUserFromAccessToken(token);
+        return userService.generatePhoneVerificationCode(user);
+    }
+
     @PostMapping("/phone/verify")
     public User verifyPhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                     @RequestBody LinkedHashMap<String, String> body, HttpServletResponse response) {
@@ -146,6 +166,7 @@ public class AuthenticationController {
         return user;
     }
 
+    @Verified
     @PutMapping("/email/update")
     public String updateEmail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestBody LinkedHashMap<String, String> body) {
@@ -155,12 +176,15 @@ public class AuthenticationController {
         return userService.updateEmail(user, email);
     }
 
+    @Verified
     @PostMapping("/email/verify")
-    public User verifyEmail(@RequestBody LinkedHashMap<String, String> body) {
-        String email = body.get("email");
+    public User verifyEmail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                            @RequestBody LinkedHashMap<String, String> body) {
+
+        User user = userService.getUserFromAccessToken(token);
         String code = body.get("otp");
 
-        return userService.checkEmailVerificationCode(email, code);
+        return userService.checkEmailVerificationCode(user, code);
     }
 
     @PostMapping("/login")
@@ -183,7 +207,7 @@ public class AuthenticationController {
                     user,
                     token
             );
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | UserDoesNotExistException e) {
             throw new IncorrectCredentialsException();
         }
     }

@@ -1,7 +1,6 @@
 import moment from "moment";
-import { stringifyDateOfBirth } from "../utils/authentication/RegisterUtils";
 
-const validCountryCodes = [52, 1];
+const validCountryCodes = ["52", "1"];
 
 export const validateName = (name) => {
     return name != "";
@@ -27,10 +26,12 @@ export const validateAge = (dob) => {
 }
 
 export const validateRegisterBody = (body) => {
-    if(!validateName(body.firstName)) {return false};
-    if(!validateName(body.lastName)) {return false};
-    if(!validatePassword(body.password)) {return false};
-    if(!validateCountryCode(body.countryCode)) {return false};
-    if(!validatePhoneNumber(body.phone)) {return false};
-    if(!validateAge(body.dateOfBirth)) {return false}; 
+    if(!validateName(body.firstName)) {return false;}
+    if(!validateName(body.lastName)) {return false;}
+    if(!validatePassword(body.password)) {return false;}
+    if(!validateCountryCode(body.countryCode)) {return false;}
+    if(!validatePhoneNumber(body.phone)) {return false;}
+    if(!validateAge(body.dateOfBirth)) {return false;}
+
+    return true;
 }

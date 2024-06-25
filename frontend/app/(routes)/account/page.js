@@ -4,16 +4,14 @@ import { useState } from "react";
 import styles from "./Account.module.scss";
 import { determineOptionPanel } from "../../utils/account/AccountUtils";
 import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
-import { useFetchUser, useLogout } from "../../hooks/authentication";
+import { useFetchUser, useLogoutUser } from "../../hooks/authentication";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function AccountPage() {
     const [option, setOption] = useState(0);
-    const router = useRouter();
-    const { data, isLoading } = useFetchUser();
+    const { isLoading } = useFetchUser();
 
-    const { logoutFn } = useLogout();
+    const { logoutFn } = useLogoutUser();
 
     function determineIfClicked(clicked) {
         if(clicked) {

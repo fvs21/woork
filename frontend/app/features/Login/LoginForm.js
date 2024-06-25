@@ -5,33 +5,28 @@ import styles from './LoginForm.module.scss'
 import InputEmailOrPhone from "./InputEmailOrPhone";
 import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
-import axios from '../../api/axios';
-import { useMutation } from "react-query";
 import { DetermineEmailOrPhone } from "../../utils/authentication/LoginUtils";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../hooks/useAuth";
 import Link from "next/link";
+import { useLoginUser } from "../../hooks/authentication";
+import { INCORRECT_CREDENTIALS_ERROR } from "../../utils/authentication/LoginErrorResponses";
+import "../../assets/globals.scss";
 
 export default function LoginForm() {
     const [credential, setCredential] = useState("");
     const [countryCode, setCountryCode] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
 
     const router = useRouter();
     const { setAuth } = useAuth();
 
     const body = {
         "password": password
-    }
+    };
 
-    const { mutateAsync: loginUserMutation } = useMutation({
-        mutationFn: async () => {
-            return await axios.post(
-                '/auth/login',
-                body
-            );
-        }
-    })
+    const { loginUserFn } = useLoginUser();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -43,7 +38,7 @@ export default function LoginForm() {
         }
 
         try {
-            const request = await loginUserMutation();
+            const request = await loginUserFn(body);
             console.log(request);
 
             if(request.status == 200) {
@@ -52,10 +47,19 @@ export default function LoginForm() {
                     "loggedIn": true
                 });
                 
-                router.push("/account");
+                if(request.data.user.verified) {
+                    router.push("/account");
+                } else {
+                    router.push("/register/verify");
+                }
+                
             }
         } catch(error) {
-            console.log(error);
+            switch(error.response.data) {
+                case INCORRECT_CREDENTIALS_ERROR:
+                    setErrorMsg("La contraseña no es correcta.");
+                    break;
+            }
         }
     }
 
@@ -72,8 +76,9 @@ export default function LoginForm() {
                 <br/>
                 <ValidatedInput valid={true} name={"password"} type={"password"} label={"Contraseña"} placeholder={"Contraseña"} 
                     setValue={setPassword} autofocus={false} />
-                <br/>
-                <SubmitButton>Iniciar sesión</SubmitButton>
+                {errorMsg && <span className="error-msg">{errorMsg}</span>}
+                <br/><br/>
+                <SubmitButton active={true}>Iniciar sesión</SubmitButton>
             </form>
             <br/>
             <div className={styles['div-center']}>

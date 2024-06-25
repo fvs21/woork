@@ -4,11 +4,13 @@ import { useState } from 'react'
 import styles from './InformationPanel.module.scss'
 import ProfilePictureModal from './ProfilePictureModal';
 import LabeledButton from '../../components/LabeledButton/LabeledButton';
-import PhoneNumberModal from './PhoneNumberModal';
-import EmailModal from './EmailModal';
-import AddressModal from './AddressModal';
 import { defaultPfpUrl } from '../../utils/account/AccountUtils';
 import { useUser } from '../../hooks/useUser';
+import dynamic from 'next/dynamic';
+
+const PhoneNumberModal = dynamic(() => import("./PhoneNumberModal"));
+const EmailModal = dynamic(() => import("./EmailModal"));
+const AddressModal = dynamic(() => import("./AddressModal"));
 
 export default function InformationPanel() {
     const user = useUser();
@@ -16,8 +18,8 @@ export default function InformationPanel() {
     const [displayPhoneModal, setDisplayPhoneModal] = useState(false);
     const [displayEmailModal, setDisplayEmailModal] = useState(false);
     const [displayAddressModal, setDisplayAddressModal] = useState(false);
-    const [displayDobModal, setDisplayDobModal] = useState(false);
-    const [displayGenderModal, setDisplayGenderModal] = useState(false);
+    //const [displayDobModal, setDisplayDobModal] = useState(false);
+    //const [displayGenderModal, setDisplayGenderModal] = useState(false);
     
     const dob = new Date(user?.dateOfBirth + " ");
 

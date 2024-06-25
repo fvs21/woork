@@ -1,27 +1,27 @@
 @use "/app/assets/variables" as var;
 
-.btn-container {
-    display: grid;
-    grid-auto-flow: column;
-    column-gap: 10px;
-    padding-top: 5px;
-}
-
-.btn-input {
+.submit-btn {
+    border: none;
+    color: white;
+    transition: 0.3s;
     padding: 15px 0px 15px 10px;
     border-radius: 8px;
     border: 0.2px solid gray;
     font-size: 16px;
-    width: 100%;
 }
 
-.submit-btn {
-    background-color: var.$primary-color;
-    border: none;
+.active {
     color: white;
+    background-color: var.$primary-color;
     cursor: pointer;
-    transition: 0.3s;
 }
-.submit-btn:hover {
+
+.inactive {
+    opacity: 0.5;
+    background-color: rgb(163, 163, 163);
+    color: black;
+}
+
+.active:hover {
     background-color: var.$secondary-color;
 }

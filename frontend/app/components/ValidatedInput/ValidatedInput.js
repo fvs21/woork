@@ -9,7 +9,7 @@ export default function ValidatedInput({name, value, valid, type, label, placeho
     const [active, setActive] = useState(false);
     const [color, setColor] = useState("normal-border")
 
-    const focus = (event) => {
+    const focus = () => {
         setActive(!active);
     }
 
