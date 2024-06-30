@@ -84,6 +84,9 @@ public class User {
     private LocalDateTime phoneCodeGenerationDate;
 
 
+    @Column(name = "email_verified")
+    private boolean emailVerified;
+
     @Column(name = "email_verification_code")
     @JsonIgnore
     private String emailVerificationCode;
@@ -109,6 +112,8 @@ public class User {
     public User() {
         this.authorities = new HashSet<>();
         this.postings = new HashSet<>();
+        this.verified = false;
+        this.emailVerified = false;
     }
 
     public User(String first_name, String last_name, int countryCode, String phone, String email, Date dateOfBirth, String password, Set<Role> authorities ) {
@@ -119,6 +124,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.verified = false;
+        this.emailVerified = false;
         this.dateOfBirth = dateOfBirth;
         this.authorities = authorities;
         this.postings = new HashSet<>();
@@ -216,9 +222,7 @@ public class User {
 
     public void setPhoneVerificationCode(String phoneVerificationCode) {
         this.phoneVerificationCode = phoneVerificationCode;
-        if(!isPhoneVerificationCodeValid()) {
-            setPhoneCodeGenerationDate(LocalDateTime.now());
-        }
+        setPhoneCodeGenerationDate(LocalDateTime.now());
     }
 
     public LocalDateTime getPhoneCodeGenerationDate() {
@@ -229,12 +233,30 @@ public class User {
         this.phoneCodeGenerationDate = phoneCodeGenerationDate;
     }
 
+    //Method to check if code is still valid. A code expires 90 seconds after its creation.
     public boolean isPhoneVerificationCodeValid() {
         if(getPhoneCodeGenerationDate() == null) {
             return false;
         }
         long seconds = ChronoUnit.SECONDS.between(getPhoneCodeGenerationDate(), LocalDateTime.now());
-        return seconds <= 60;
+        return seconds <= 90;
+    }
+
+    //Method to check if 20 seconds have passed since last code generation request.
+    public boolean requestPhoneCodeRefreshTime() {
+        if(getPhoneCodeGenerationDate() == null) {
+            return true;
+        }
+        long seconds = ChronoUnit.SECONDS.between(getPhoneCodeGenerationDate(), LocalDateTime.now());
+        return seconds >= 20;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
     public String getEmailVerificationCode() {
@@ -259,7 +281,15 @@ public class User {
             return false;
         }
         long seconds = ChronoUnit.SECONDS.between(getEmailCodeGenerationDate(), LocalDateTime.now());
-        return seconds <= 60;
+        return seconds <= 90;
+    }
+
+    public boolean requestEmailCodeRefreshTime() {
+        if(getEmailCodeGenerationDate() == null) {
+            return true;
+        }
+        long seconds = ChronoUnit.SECONDS.between(getEmailCodeGenerationDate(), LocalDateTime.now());
+        return seconds >= 20;
     }
 
     public Set<Posting> getPostings() {

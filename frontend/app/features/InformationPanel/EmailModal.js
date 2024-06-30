@@ -4,38 +4,58 @@ import { useState } from "react";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
 import EmailVerification from "../EmailVerification/EmailVerification";
-import { useMutation } from "react-query";
-import { useAxiosPrivate } from "../../hooks/useAxiosPrivate";
+import { useUpdateEmail } from "../../hooks/authentication";
 import { useUser } from "../../hooks/useUser";
+import CloseSVG from "../../components/SVGs/Close";
+import { validateEmail } from "../../services/Validators";
 
 export default function EmailModal({changeDisplayModal}) {
     const user = useUser();
-    const [email, setEmail] = useState(user.email);
-    const [step, setStep] = useState(0);
-    const axiosPrivate = useAxiosPrivate();
+    const [email, setEmail] = useState(user?.email);
+    const [emailValid, setEmailValid] = useState(true);
+    const notVerified = user?.email && !user?.emailVerified;
+    const [step, setStep] = useState(notVerified ? 1 : 0);
 
-    const { mutateAsync: updateEmailFn } = useMutation({
-        mutationFn: async () => {
-            return await axiosPrivate.post(
-                '/auth/email/update',
-                email
-            )
-        }
-    })
+    const body = {
+        "email": email
+    }
 
-    function handleSubmit(event) {
+    const { updateEmailFn } = useUpdateEmail(body);
+
+
+    function changeEmail(email) {
+        setEmail(email);
+        setEmailValid(validateEmail(email));
+    }
+
+    async function handleSubmit(event) {
         event.preventDefault();
 
-        if(user.email !== email) {
-            setStep(1);
+        if(user.email === email) {
+            return;
         }
+
+        try {
+            await updateEmailFn();
+            setStep(1);
+        } catch(error) {
+            console.log(error);
+        }
+    }
+
+    async function reSendCode() {
+        return;
     }
 
     if(step == 0) {
         return (
             <Modal>
-                <div className={styles['information-modal']}>
-                    <div className={styles['email-modal-title']}>
+                <div className={styles['contact-modal']}>
+                    <div className={styles['contact-modal-title']}>
+                        <button className={styles['cancel-btn']}
+                            onClick={() => changeDisplayModal(false)}>
+                            <CloseSVG width={"20px"} />
+                        </button>
                         <h2>Actualizar correo electrónico</h2>
                     </div>
                     <div className={styles['modal-desc']}>
@@ -43,27 +63,34 @@ export default function EmailModal({changeDisplayModal}) {
                     </div>
                     <br/>
                     <form onSubmit={handleSubmit}>
-                        <ValidatedInput type={"email"} value={email} changeValue={setEmail} placeholder={"Correo electrónico"} autofocus={false}/>
+                        <ValidatedInput valid={emailValid} type={"email"} value={email} setValue={changeEmail} placeholder={"Correo electrónico"} autofocus={false}/>
                         <br/>
                         <br/>
-                        <SubmitButton>Guardar</SubmitButton>
+                        <SubmitButton active={emailValid && email !== user.email}>Guardar</SubmitButton>
                     </form>
-                    <button className={styles['cancel-btn']}
-                            onClick={() => changeDisplayModal(false)}>Cancelar</button>
                 </div>
             </Modal>
         )
-    } else {
+    } else if(step == 1) {
         return (
             <Modal>
-                <div className={styles['information-modal']}>
-                    <button className={styles['return-btn']} 
-                        onClick={() => setStep(0)}>
-                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                    </button>
-                    <EmailVerification />
-                    <button className={styles['cancel-btn']}
-                            onClick={() => changeDisplayModal(false)}>Cancelar</button>
+                <div className={styles['contact-modal']}>
+                    <div className={styles['contact-modal-title']}>
+                        <button className={styles['cancel-btn']}
+                            onClick={() => changeDisplayModal(false)}>
+                            <CloseSVG width={"20px"} />
+                        </button>
+                        <h2>Verifica tu correo electrónico</h2>
+                    </div>
+                    <div className={styles['modal-desc']}>
+                        <span>
+                            Ingresa el código de verificación que enviamos a {email}.&nbsp;
+                            <button onClick={reSendCode()} className={styles['edit-email-btn']}>Re-enviar</button>
+                            {" - "} { notVerified && <button className={styles['edit-email-btn']} onClick={() => {setStep(0); setEmail("")}}>Cambiar correo electrónico.</button>}
+                        </span>
+                    </div>
+                    <br/>
+                    <EmailVerification changeDisplayModal={changeDisplayModal} />
                 </div>
             </Modal>
         )

@@ -1,10 +1,11 @@
-import styles from "./LoadingScreen.module.scss"
+import styles from "./LoadingScreen.module.scss";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 export default function LoadingScreen() {
     return (
         <div className={styles["loading-screen-overlay"]}>
            <div className={styles["loading-screen-content"]}>
-                <h1>Cargando...</h1>
+                <LoadingSpinner width={"100px"} />
             </div> 
         </div>
     )

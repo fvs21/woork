@@ -50,7 +50,7 @@ export default function LoginForm() {
                 if(request.data.user.verified) {
                     router.push("/account");
                 } else {
-                    router.push("/register/verify");
+                    window.location.replace("/register/verify");
                 }
                 
             }

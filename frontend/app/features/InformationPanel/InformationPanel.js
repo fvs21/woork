@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import styles from './InformationPanel.module.scss'
-import ProfilePictureModal from './ProfilePictureModal';
 import LabeledButton from '../../components/LabeledButton/LabeledButton';
 import { defaultPfpUrl } from '../../utils/account/AccountUtils';
 import { useUser } from '../../hooks/useUser';
@@ -11,6 +10,7 @@ import dynamic from 'next/dynamic';
 const PhoneNumberModal = dynamic(() => import("./PhoneNumberModal"));
 const EmailModal = dynamic(() => import("./EmailModal"));
 const AddressModal = dynamic(() => import("./AddressModal"));
+const ProfilePictureModal = dynamic(() => import("./ProfilePictureModal"));
 
 export default function InformationPanel() {
     const user = useUser();

@@ -1,12 +1,9 @@
 @use "/app/assets/variables" as var;
 
 .submit-btn {
-    border: none;
-    color: white;
+    @include var.primary-button;
     transition: 0.3s;
     padding: 15px 0px 15px 10px;
-    border-radius: 8px;
-    border: 0.2px solid gray;
     font-size: 16px;
 }
 

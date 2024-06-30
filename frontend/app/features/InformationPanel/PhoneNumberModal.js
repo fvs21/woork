@@ -4,100 +4,84 @@ import styles from "./InformationPanel.module.scss";
 import InputPhone from "../../components/InputPhone/InputPhone";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import { useUser } from "../../hooks/useUser";
-import { useUpdatePhone, useVerifyPhone } from "../../hooks/authentication";
-import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
+import { useUpdatePhone } from "../../hooks/authentication";
 import { parsePhoneNumber } from "../../utils/authentication/RegisterUtils";
+import { validatePhoneNumber } from "../../services/Validators";
+import CloseSVG from "../../components/SVGs/Close";
 
 export default function PhoneNumberModal({changeDisplayModal}) {
     const user = useUser();
     
-    const defaultCountryCode = String(user.countryCode);
-    const defaultPhoneNumber = parsePhoneNumber(defaultCountryCode, user.phone);
+    const defaultCountryCode = String(user?.countryCode);
+    const defaultPhoneNumber = parsePhoneNumber(defaultCountryCode, user?.phone);
 
-    const [phoneNumber, setPhoneNumber] = useState(defaultPhoneNumber);
-    const [countryCode, setCountryCode] = useState(defaultCountryCode);
-    const [code, setCode] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState({
+        phone: defaultPhoneNumber,
+        countryCode: defaultCountryCode
+    });
 
-    const [step, setStep] = useState(0);
+    const [phoneValid, setPhoneValid] = useState(true);
+
+    const changeNumber = (value) => {
+        setPhoneNumber({
+            ...phoneNumber,
+            phone: value
+        });
+
+        setPhoneValid(validatePhoneNumber(value));
+    }
+
+    const changeCountryCode = (value) => {
+        setPhoneNumber({
+            ...phoneNumber,
+            countryCode: value
+        });
+    }
 
     const phoneBody = {
-        "countryCode": countryCode,
-        "phone": phoneNumber
+        "countryCode": phoneNumber.countryCode,
+        "phone": phoneNumber.phone
     }
 
-    const codeBody = {
-        "otp": code
-    }
 
     const { updatePhoneFn } = useUpdatePhone(phoneBody);
-    const { verifyPhoneFn } = useVerifyPhone(codeBody);
 
     async function handleSubmitPhone(event) {
         event.preventDefault();
-        if(countryCode+phoneNumber !== user.phone) {
-            try {
-                await updatePhoneFn();
-                setStep(1);
-            } catch (error) {
-                console.log(error);
-            }
-        } else {
-            changeDisplayModal(false);
+        if(phoneNumber.countryCode+phoneNumber.phone === user.phone) {
+            return;
         }
-    }
-
-    async function handleVerifyPhone(event) {
-        event.preventDefault();
 
         try {
-            await verifyPhoneFn();
-            changeDisplayModal(false);
-        } catch(error) {
+            await updatePhoneFn();
+            window.location.replace("/register/verify");
+        } catch (error) {
             console.log(error);
         }
     }
 
-    if(step == 0) {
-        return (
-            <Modal>
-                <div className={styles['information-modal']}>
-                    <div className={styles['phone-modal-title']}>
-                        <h2>Actualizar número de teléfono</h2>
-                    </div>
-                    <div className={styles['modal-desc']}>
-                        <span>Al cambiar tu número de teléfono, deberas verificarlo con el código que te enviaremos.</span>
-                    </div>
-                    <br/>
-                    <form onSubmit={handleSubmitPhone}>
-                        <InputPhone countryCode={countryCode} changeCountryCode={setCountryCode} number={phoneNumber} changeNumber={setPhoneNumber} autofocus={false} /> 
-                        <br/>
-                        <br/>
-                        <SubmitButton>Guardar</SubmitButton>
-                    </form>
+    return (
+        <Modal>
+            <div className={styles['contact-modal']}>
+                <div className={styles['contact-modal-title']}>
                     <button className={styles['cancel-btn']}
-                        onClick={() => changeDisplayModal(false)}>Cancelar</button>
-                </div>
-            </Modal>
-        )
-    } else if(step == 1) {
-        return (
-            <Modal>
-                <div className={styles['information-modal']}>
-                    <button className={styles['return-btn']} 
-                        onClick={() => setStep(0)}>
-                        <i className="fa fa-arrow-left" aria-hidden="true"></i>
+                        onClick={() => changeDisplayModal(false)}>
+                        <CloseSVG width={"20px"} />
                     </button>
-                    <div className={styles['phone-modal-title']}>
-                        <h2>Verifica tu número de teléfono</h2>
-                    </div>
-                    <form onSubmit={handleVerifyPhone}>
-                        <ValidatedInput name={"verificationCode"} type={"text"} label={"Ingresa el código de verificación que enviamos a +" +countryCode+phoneNumber} 
-                            placeholder={"Código de verificación"} changeValue={setCode} autofocus={false}/>
-                        <br/>
-                        <SubmitButton>Verificar</SubmitButton>
-                    </form>
+                    <h2>Actualizar número de teléfono</h2>
                 </div>
-            </Modal>
-        )
-    }
+                <div className={styles['modal-desc']}>
+                    <span>Al cambiar tu número de teléfono, deberás verificarlo con el código que te enviaremos.</span>
+                </div>
+                <br/>
+                <form onSubmit={handleSubmitPhone}>
+                    <InputPhone valid={phoneValid} countryCode={phoneNumber.countryCode} changeCountryCode={changeCountryCode} number={phoneNumber.phone} 
+                        changeNumber={changeNumber} autofocus={false} /> 
+                    <br/>
+                    <br/>
+                    <SubmitButton active={phoneValid && phoneNumber.countryCode + phoneNumber.phone !== user.phone}>Guardar</SubmitButton>
+                </form>
+            </div>
+        </Modal>
+    )
 }

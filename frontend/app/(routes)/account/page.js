@@ -6,6 +6,7 @@ import { determineOptionPanel } from "../../utils/account/AccountUtils";
 import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
 import { useFetchUser, useLogoutUser } from "../../hooks/authentication";
 import Link from "next/link";
+import ArrowBackSVG from "../../components/SVGs/ArrowBack";
 
 export default function AccountPage() {
     const [option, setOption] = useState(0);
@@ -43,11 +44,11 @@ export default function AccountPage() {
                     <ul className={styles['account-nav-bar']}>
                         <li className={styles['nav-bar-header']}>
                             <div className={styles['header-container']}>
-                                <Link href="/">
-                                    <button className={styles['nav-bar-header-btn']}>
-                                        <i className="fa fa-arrow-left fa-1" aria-hidden="true"></i>
-                                    </button>
-                                </Link>
+                                <div style={{display: "flex", alignItems: "center"}}>
+                                    <Link href="/">
+                                        <ArrowBackSVG width={"15px"} />
+                                    </Link>
+                                </div>
                                 <h2>Configuración</h2>
                             </div>
                         </li>

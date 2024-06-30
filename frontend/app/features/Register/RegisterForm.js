@@ -13,14 +13,13 @@ import RegisterPasswordInput from "./RegisterPasswordInput";
 import RegisterPhoneInput from "./RegisterPhoneInput";
 import { validateRegisterBody } from "../../services/Validators";
 import { FIRSTNAME_NULL_ERROR, INVALID_PHONE_NUMBER_ERROR, LASTNAME_NULL_ERROR, PASSWORD_ERROR, PHONE_LENGTH_ERROR, PHONE_NUMBER_TAKEN_ERROR } from "../../utils/authentication/RegistrationErrorResponses";
-import { useRouter } from "next/navigation";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 export default function RegisterForm() {
     const day = new Date().getDate();
     const month = new Date().getMonth()+1;
     const year = new Date().getFullYear();
     const { setAuth } = useAuth();
-    const router = useRouter(); 
 
     const [fullName, setFullName] = useState({
         firstName: "",
@@ -67,7 +66,7 @@ export default function RegisterForm() {
         "password": password.value
     }
 
-    const { registerUserFn } = useRegisterUser(body);
+    const { registerUserFn, isLoading } = useRegisterUser(body);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -82,7 +81,7 @@ export default function RegisterForm() {
                 "access_token": request.data.access_token,
                 "loggedIn": true
             });
-            router.push("/register/verify");
+            window.location.replace("/register/verify");
         } catch (error) { 
             const response = error.response.data;
 
@@ -128,7 +127,10 @@ export default function RegisterForm() {
                     <span>Al hacer click en &quot;Regístrate&quot;, aceptas nuestros Términos y Condiciones...</span>
                 </div>
                 <br/>
-                <SubmitButton active={true}>Regístrate</SubmitButton>
+                <div className={styles['submit-button-container']}>
+                    <SubmitButton active={true}>Regístrate</SubmitButton>
+                    {isLoading && <LoadingSpinner width={"30px"} /> }
+                </div>
             </form>
             <br/>
             <div className={styles['div-center']}>   

@@ -100,6 +100,11 @@ public class AuthenticationController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler({VerificationCodeExpiredException.class})
+    public ResponseEntity<String> handleVerificationCodeExpiredException(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     //Mappings
 
     @PostMapping("/register")
@@ -136,19 +141,23 @@ public class AuthenticationController {
 
     @PutMapping("/phone/update")
     public String updatePhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                                  @RequestBody LinkedHashMap<String, String> body) {
+                                  @RequestBody LinkedHashMap<String, String> body, HttpServletResponse response) {
         String countryCode = body.get("countryCode");
         String phoneNumber = body.get("phone");
 
         User user = userService.getUserFromAccessToken(token);
+        String responseMsg = userService.updatePhoneNumber(user, countryCode, phoneNumber);
 
-        return userService.updatePhoneNumber(user, countryCode, phoneNumber);
+        String refreshToken = tokenService.generateRefreshToken(user);
+        response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateTokenCookie(refreshToken).toString());
+
+        return responseMsg;
     }
 
-    @GetMapping("/phone/code")
+    @PostMapping("/phone/code")
     public String generatePhoneVerificationCode(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         User user = userService.getUserFromAccessToken(token);
-        return userService.generatePhoneVerificationCode(user);
+        return userService.generateNewPhoneVerificationCode(user);
     }
 
     @PostMapping("/phone/verify")
@@ -174,6 +183,13 @@ public class AuthenticationController {
         String email = body.get("email");
 
         return userService.updateEmail(user, email);
+    }
+
+    @Verified
+    @PostMapping("/email/code")
+    public String generateEmailVerificationCode(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        User user = userService.getUserFromAccessToken(token);
+        return userService.generateNewEmailVerificationCode(user);
     }
 
     @Verified

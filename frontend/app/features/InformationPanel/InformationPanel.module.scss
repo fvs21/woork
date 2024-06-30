@@ -26,7 +26,7 @@
 
 .pfp-modal {
     width: 500px;
-    height: 460px;
+    height: 430px;
     padding: 10px 10px;
 }
 
@@ -88,18 +88,20 @@
 }
 
 .cancel-btn {
-    background-color: white;
+    background-color: transparent;
     color: black;
     border: none;
-    width: 100%;
-    padding: 12px 8px;
-    border-radius: 8px;
+    padding: 0;
+    margin: 0;
     cursor: pointer;
-    font-size: medium;
+    display: flex;
+    align-items: center;
 }
 
 .cancel-btn:hover {
-    color: rgb(97, 97, 97);
+    svg {
+        color: red;
+    }
 }
 
 .basic-info-container {
@@ -124,14 +126,18 @@
     gap: 10px;
 }
 
-.information-modal {
-    width: 500px;
-    height: 350px;
-    padding: 20px 10px 10px;
+.contact-modal {
+    width: 560px;
+    height: 285px;
+    padding: 0px 10px 0px;
 }
 
-.phone-modal-title {
+.contact-modal-title {
     text-align: left;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding: 0;
 }
 
 .modal-desc {
@@ -147,6 +153,8 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
+    padding: 0;
+    margin: 0;
 }
 
 .edit-phone-container {
@@ -154,8 +162,14 @@
     width: 100%;
 }
 
-.edit-phone-btn {
-    
+.edit-email-btn {
+    background-color: transparent;
+    color: var.$primary-color;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 0;
+    margin: 0;
 }
 
 @media only screen and (max-width: 1000px) {

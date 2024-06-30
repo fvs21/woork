@@ -11,3 +11,11 @@ $secondary-color: #8288f7;
 $gradient-color: rgb(214, 225, 238);
 
 $bg-gray: rgb(243, 243, 243);
+
+@mixin primary-button {
+    background-color: $primary-color;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+}

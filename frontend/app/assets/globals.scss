@@ -44,7 +44,7 @@ html, body {
 
 .error-msg {
     font-size: small;
-    color: red;
+    color: rgb(175, 0, 0);
 }
 
 .normal-border {
@@ -58,4 +58,19 @@ html, body {
 
 .center {
     text-align: center;
+}
+
+.global-svgs {
+    color: black;
+
+    path {
+        stroke-width: 2;
+        transition: 0.1s;
+    }
+}
+
+.global-svgs:hover {
+    path {
+        stroke-width: 4;
+    }
 }

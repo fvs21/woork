@@ -1,9 +1,10 @@
 import styles from './ValidatedInput.module.scss';
 import '../../assets/globals.scss';
-import { determineLabelColor } from '../../utils/authentication/DetermineStylesUtils';
 
-export default function InputLabel({children, color}) {
+export default function InputLabel({children}) {
     return (
-        <label className={`${styles["input-label"]}`}>{children}</label>
+        <>
+            <label className={`${styles["input-label"]}`}>{children}</label>
+        </>
     )
 }

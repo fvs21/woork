@@ -8,6 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import org.woork.backend.exceptions.InvalidTokenException;
+import org.woork.backend.exceptions.RefreshTokenExpiredException;
+import org.woork.backend.exceptions.VerificationCodeExpiredException;
 import org.woork.backend.user.User;
 
 import java.time.Instant;
@@ -107,9 +109,58 @@ public class TokenService {
         return decoded.getClaim("type").equals("access");
     }
 
-    public Long getIdFromToken(String token) {
+    public boolean isTokenRefresh(String token) {
         Jwt decoded = jwtDecoder.decode(token);
+        return decoded.getClaim("type").equals("refresh");
+    }
+
+    private boolean isTokenAccess(Jwt decoded) {
+        return decoded.getClaim("type").equals("access");
+    }
+
+    public boolean isTokenRefresh(Jwt decoded) {
+        return decoded.getClaim("type").equals("refresh");
+    }
+
+    public Long getIdFromAccessToken(String token) {
+        Jwt decoded = jwtDecoder.decode(token);
+        if(!validateToken(decoded)) {
+            throw new VerificationCodeExpiredException();
+        }
+        if(!isTokenAccess(decoded)) {
+            throw new InvalidTokenException();
+        }
         return Long.valueOf(decoded.getSubject());
+    }
+
+    public Long getIdFromRefreshToken(String token) {
+        Jwt decoded = jwtDecoder.decode(token);
+        if(!isTokenRefresh(decoded)) {
+            throw new InvalidTokenException();
+        }
+        if(!validateToken(decoded)) {
+            throw new RefreshTokenExpiredException();
+        }
+        return Long.valueOf(decoded.getSubject());
+    }
+
+    public boolean validateToken(String token) {
+        Jwt decoded = jwtDecoder.decode(token);
+        return !decoded.getExpiresAt().isBefore(Instant.now());
+    }
+
+    private boolean validateToken(Jwt decoded) {
+        return !decoded.getExpiresAt().isBefore(Instant.now());
+    }
+
+    public String getNewAccessToken(User user, String refreshToken) {
+        if(!isTokenRefresh(refreshToken)) {
+            throw new InvalidTokenException();
+        }
+        if(!validateToken(refreshToken)) {
+            throw new RefreshTokenExpiredException();
+        }
+        return generateAccessToken(user);
     }
 
     public ResponseCookie generateTokenCookie(String token) {
@@ -119,18 +170,6 @@ public class TokenService {
                 .maxAge(3600*24*7)
                 .sameSite("Lax")
                 .build();
-    }
-
-    public boolean validateRefreshToken(String token) {
-        Jwt decoded = jwtDecoder.decode(token);
-        return decoded.getClaim("type").equals("refresh") && !decoded.getExpiresAt().isBefore(Instant.now());
-    }
-
-    public String getNewAccessToken(User user, String refreshToken) {
-        if(!validateRefreshToken(refreshToken)) {
-            throw new InvalidTokenException();
-        }
-        return generateAccessToken(user);
     }
 
     public ResponseCookie generateLogoutCookie() {

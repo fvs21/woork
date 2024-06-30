@@ -9,6 +9,8 @@
 .btn-container {
     text-align: center;
     display: flex;
+    gap: 10px;
+
 
     button {
         padding: 10px;
@@ -38,6 +40,57 @@
     transition: 0.1s;
     width: 60%; 
     text-align: left;
-    font-size: 14px;
+    font-size: small;
     cursor: pointer;
+}
+
+.display-modal-btn:hover {
+    background-color: var.$bg-gray;
+}
+
+.resend-code-btn {
+    width: 40%;
+    text-align: left;
+    background-color: white;
+    border: none;
+    color: var.$primary-color;
+    font-size: small;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.resend-code-btn:hover {
+    background-color: var.$bg-gray;
+}
+
+.sms-sent-modal {
+    height: 160px;
+    width: 500px;
+    padding: 0px 5px 0px;
+}
+
+.sms-sent-modal-header {
+    height: 37.5%;
+}
+
+.sms-sent-modal-body {
+    height: 37.5%;
+}
+
+.sms-sent-modal-footer {
+    height: 25%;
+    width: 100%;
+    text-align: right;
+}
+
+.sms-sent-modal-button {
+    @include var.primary-button;
+    padding: 10px 20px 10px;
+}
+
+.loading-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }

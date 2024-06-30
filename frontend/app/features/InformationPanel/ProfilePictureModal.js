@@ -4,6 +4,8 @@ import styles from './InformationPanel.module.scss';
 import { useUser } from "../../hooks/useUser";
 import { useUpdatePfp } from "../../hooks/authentication";
 import { checkIfValidImage } from "../../utils/account/AccountUtils";
+import CloseSVG from "../../components/SVGs/Close";
+import ArrowBackSVG from "../../components/SVGs/ArrowBack";
 
 export default function ProfilePictureModal({changeDisplayModal}) {
     const user = useUser();
@@ -33,7 +35,7 @@ export default function ProfilePictureModal({changeDisplayModal}) {
         event.preventDefault();
         
         try {
-            const request = await updatePfpFn();
+            await updatePfpFn();
             changeDisplayModal(false);
         } catch(error) {
             console.log(error);
@@ -43,8 +45,12 @@ export default function ProfilePictureModal({changeDisplayModal}) {
     if(step == 0) {
         return (
             <Modal>
-                <div className={styles['pfp-modal']}>
-                    <div className={styles['pfp-modal-header']}>
+                <div style={{transition: "height 0.25s linear"}} className={styles['pfp-modal']}>
+                    <div className={styles['contact-modal-title']}>
+                        <button className={styles['cancel-btn']}
+                            onClick={() => changeDisplayModal(false)}>
+                            <CloseSVG width={"20px"} />
+                        </button>
                         <h2>Foto de perfil</h2>
                     </div>
                     <br/>
@@ -60,8 +66,6 @@ export default function ProfilePictureModal({changeDisplayModal}) {
                         <input id="pfp-form" className={styles['update-pfp-input']} type="file" onChange={onImageChange} ref={pfpInput} hidden />
                     </div>
                     <div className={styles['cancel-pfp-container']}>
-                        <button className={styles['cancel-btn']}
-                            onClick={() => changeDisplayModal(false)}>Cancelar</button>
                     </div>
                 </div>
             </Modal>
@@ -69,12 +73,12 @@ export default function ProfilePictureModal({changeDisplayModal}) {
     } else if(step == 1) {
         return (
             <Modal>
-                <div className={styles['pfp-modal']}>
-                    <button className={styles['return-btn']} 
-                        onClick={() => setStep(0)}>
-                        <i className="fa fa-arrow-left" aria-hidden="true"></i>
-                    </button>
-                    <div>
+                <div style={{transition: "height 0.25s linear"}} className={styles['pfp-modal']}>
+                    <div className={styles['contact-modal-title']}>
+                        <button className={styles['return-btn']} 
+                            onClick={() => setStep(0)}>
+                            <ArrowBackSVG width={"20px"} />
+                        </button>
                         <h2>Vista previa</h2>
                     </div>
                     <br/>
@@ -82,14 +86,11 @@ export default function ProfilePictureModal({changeDisplayModal}) {
                         <img src={imageSrc} className={styles['pfp-viewer']} />
                     </div>
                     <br/>
+                    <br/>
                     <div className={styles['update-pfp-form-container']}>
                         <button className={styles['update-pfp-btn']} onClick={handleSubmit}>
                             Guardar
                         </button>   
-                    </div>
-                    <div className={styles['cancel-pfp-container']}>
-                        <button className={styles['cancel-btn']}
-                            onClick={() => changeDisplayModal(false)}>Cancelar</button>
                     </div>
                 </div>
             </Modal> 

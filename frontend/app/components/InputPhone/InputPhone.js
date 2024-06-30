@@ -4,7 +4,7 @@ import ValidatedInput from "../ValidatedInput/ValidatedInput";
 export default function InputPhone({countryCode, number, changeCountryCode, changeNumber, autofocus, label, valid}) {
     return (
         <>
-            <label className={styles["input-label"]}>{label}</label>
+            {label && <label className={styles["input-label"]}>{label}</label>}
             <div className={styles["input-container"]}>
                 <select name="countryCode" className={`${styles['select-form']}`} required defaultValue={countryCode}
                     onChange={(e) => changeCountryCode(e.target.value)}>

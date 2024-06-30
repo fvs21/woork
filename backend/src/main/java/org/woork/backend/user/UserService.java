@@ -79,9 +79,6 @@ public class UserService implements UserDetailsService {
 
 
     public String updatePhoneNumber(User user, String countryCode, String phoneNumber) {
-        if(user.isPhoneVerificationCodeValid()) {
-            throw new UnableToGenerateVerificationCodeException("Code hasn't expired");
-        }
         try {
             user.setPhone(countryCode + phoneNumber);
             user.setCountryCode(Integer.parseInt(countryCode));
@@ -124,9 +121,9 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public String generatePhoneVerificationCode(User user) {
-        if(user.isPhoneVerificationCodeValid()) {
-            throw new UnableToGenerateVerificationCodeException("Previous phone verification code is still valid");
+    public String generateNewPhoneVerificationCode(User user) {
+        if(!user.requestPhoneCodeRefreshTime()) {
+            throw new UnableToGenerateVerificationCodeException("There is a refresh time between code generation");
         }
         if(user.isVerified()) {
             throw new UnableToGenerateVerificationCodeException("User is verified");
@@ -140,21 +137,19 @@ public class UserService implements UserDetailsService {
             );
             //sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
             userRepository.save(user);
-            return "Verification code successfully sent";
+            return "Phone verification code successfully sent";
         } catch (Exception e) {
             throw new UnableToGenerateVerificationCodeException();
         }
     }
 
     public String updateEmail(User user, String email) {
-        if(user.isEmailVerificationCodeValid()) {
-            throw new UnableToGenerateVerificationCodeException("Code hasn't expired");
-        }
         try {
             user.setEmail(email);
+            user.setEmailVerified(false);
             String verificationCode = RegistrationUtils.generateVerificationCode();
             System.out.println("Email code: " + verificationCode);
-            sendEmailVerificationCode(email, verificationCode);
+            //sendEmailVerificationCode(email, verificationCode);
             user.setEmailVerificationCode(
                     passwordEncoder.encode(verificationCode)
             );
@@ -166,13 +161,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void sendEmailVerificationCode(String email, String verificationCode) {
-        User user = userRepository.findByEmail(email).orElseThrow(UserDoesNotExistException::new);
-        user.setEmailVerificationCode(passwordEncoder.encode(verificationCode));
-
         //TODO: Add verification code generation date and datetime to check expiration
-
-        userRepository.save(user);
-
         System.out.println("Your one time generated password: " + verificationCode);
     }
 
@@ -186,9 +175,30 @@ public class UserService implements UserDetailsService {
         if(passwordEncoder.matches(verificationCode, user.getEmailVerificationCode())) {
             user.setEmailCodeGenerationDate(null);
             user.setEmailVerificationCode(null);
+            user.setEmailVerified(true);
             return userRepository.save(user);
         } else {
             throw new IncorrectVerificationCodeException();
+        }
+    }
+
+    public String generateNewEmailVerificationCode(User user) {
+        if(!user.isEmailVerificationCodeValid()) {
+            throw new UnableToGenerateVerificationCodeException("There is a refresh time between code generation");
+        }
+        if(user.isEmailVerified()) {
+            throw new UnableToGenerateVerificationCodeException("User has a verified email");
+        }
+        try {
+            String verificationCode = RegistrationUtils.generateVerificationCode();
+            System.out.println("Email code: " + verificationCode);
+            user.setEmailVerificationCode(
+                    passwordEncoder.encode(verificationCode)
+            );
+            userRepository.save(user);
+            return "Email verification code successfully sent";
+        } catch (Exception e) {
+            throw new UnableToGenerateVerificationCodeException();
         }
     }
 
@@ -222,15 +232,12 @@ public class UserService implements UserDetailsService {
             throw new InvalidBearerTokenException("Token is not a valid Bearer token");
         }
         String strippedToken = token.substring(7);
-        if(!tokenService.isTokenAccess(strippedToken)) {
-            throw new InvalidTokenException();
-        }
-        Long id = tokenService.getIdFromToken(strippedToken);
+        Long id = tokenService.getIdFromAccessToken(strippedToken);
         return getUserById(id);
     }
 
     public User getUserFromRefreshToken(String refreshToken) {
-        Long id = tokenService.getIdFromToken(refreshToken);
+        Long id = tokenService.getIdFromRefreshToken(refreshToken);
         return getUserById(id);
     }
 

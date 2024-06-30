@@ -25,6 +25,10 @@ export const validateAge = (dob) => {
     return moment().diff(moment(dob, dateFormat), 'years') >= 18;
 }
 
+export const validateEmail = (email) => {
+    return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
+}
+
 export const validateRegisterBody = (body) => {
     if(!validateName(body.firstName)) {return false;}
     if(!validateName(body.lastName)) {return false;}

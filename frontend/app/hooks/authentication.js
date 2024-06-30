@@ -2,7 +2,6 @@ import {useAxiosPrivate} from "./useAxiosPrivate";
 import axios from "../api/axios";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 
-
 export function useFetchUser() {
     const axiosPrivate = useAxiosPrivate();
 
@@ -22,7 +21,7 @@ export function useFetchUser() {
 export function useRegisterUser(body) {
     const queryClient = useQueryClient();
 
-    const { mutateAsync: registerUserFn } = useMutation({
+    const { mutateAsync: registerUserFn, isLoading } = useMutation({
         mutationFn: async () => {
             return await axios.post(
                 '/auth/register', 
@@ -34,11 +33,12 @@ export function useRegisterUser(body) {
         }
     });
 
-    return { registerUserFn };
+    return { registerUserFn, isLoading };
 }
 
 export function useUpdatePhone(body) {
     const axiosPrivate = useAxiosPrivate();
+    const queryClient = useQueryClient();
 
     const { mutateAsync: updatePhoneFn } = useMutation({
         mutationFn: async () => {
@@ -46,6 +46,9 @@ export function useUpdatePhone(body) {
                 'auth/phone/update',
                 body
             );
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['user-info']);
         }
     });
 
@@ -71,23 +74,42 @@ export function useVerifyPhone(body) {
     return { verifyPhoneFn };
 }
 
-export function useUpdateEmail(body) {
+export function useResendPhoneCode() {
     const axiosPrivate = useAxiosPrivate();
 
-    const { mutateAsync: updatePhoneFn } = useMutation({
+    const { mutateAsync: resendPhoneCodeFn, isLoading, isSuccess } = useMutation({
+        mutationFn: async () => {
+            return await axiosPrivate.post(
+                '/auth/phone/code'
+            );
+        }
+    });
+
+    return { resendPhoneCodeFn, isLoading, isSuccess };
+}
+
+export function useUpdateEmail(body) {
+    const axiosPrivate = useAxiosPrivate();
+    const queryClient = useQueryClient();
+
+    const { mutateAsync: updateEmailFn } = useMutation({
         mutationFn: async () => {
             return await axiosPrivate.put(
                 '/auth/email/update',
                 body
             );
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['user-info']);
         }
     });
 
-    return { updatePhoneFn };
+    return { updateEmailFn };
 }
 
 export function useVerifyEmail(body) {
     const axiosPrivate = useAxiosPrivate();
+    const queryClient = useQueryClient();
 
     const { mutateAsync: verifyEmailFn } = useMutation({
         mutationFn: async () => {
@@ -95,10 +117,27 @@ export function useVerifyEmail(body) {
                 '/auth/email/verify',
                 body
             );
+        },
+        onSuccess: (data) => {
+            queryClient.setQueryData(['user-info'], data);
         }
     });
 
     return { verifyEmailFn };
+}
+
+export function useResendEmailCode() {
+    const axiosPrivate = useAxiosPrivate();
+
+    const { mutateAsync: resendEmailCodeFn } = useMutation({
+        mutationFn: async () => {
+            return await axiosPrivate.post(
+                "/auth/email/code"
+            );
+        }
+    });
+
+    return { resendEmailCodeFn };
 }
 
 export function useUpdatePfp(body) {

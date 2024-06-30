@@ -15,3 +15,5 @@ export const PHONE_LENGTH_ERROR = REGISTRATION_ERROR + "Phone number cannot be n
 export const PASSWORD_ERROR = REGISTRATION_ERROR + "Password must be at least 8 characters long and maximum 16 characters long";
 
 export const INCORRECT_VERIFICATION_CODE_ERROR = "The code provided is incorrect";
+
+export const VERIFICATION_CODE_EXPIRED_ERROR = "Verification code expired";
