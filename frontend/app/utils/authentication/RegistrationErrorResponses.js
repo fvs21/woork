@@ -17,3 +17,5 @@ export const PASSWORD_ERROR = REGISTRATION_ERROR + "Password must be at least 8 
 export const INCORRECT_VERIFICATION_CODE_ERROR = "The code provided is incorrect";
 
 export const VERIFICATION_CODE_EXPIRED_ERROR = "Verification code expired";
+
+export const VERIFICATION_CODE_REFRESH_TIME_ERROR = "Unable to generate verification code: There is a refresh time between code generation";

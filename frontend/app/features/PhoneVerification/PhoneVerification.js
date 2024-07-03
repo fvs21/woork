@@ -61,11 +61,12 @@ export default function PhoneVerification() {
     }
 
     async function resendCode() {
+        setSmsSentModal(true);
+
         try {
-            setSmsSentModal(true);
             await resendPhoneCodeFn();
         } catch(error) {
-            console.log(error);
+            return;
         }
     }
 
@@ -75,7 +76,7 @@ export default function PhoneVerification() {
 
     return (
         <>
-            <h3>Verifica tu número de teléfono</h3>
+            <h2>Verifica tu número de teléfono</h2>
             <form onSubmit={handleSubmit}>
                 <ValidatedInput valid={true} name={"verificationCode"} type={"text"} label={"Ingresa el código de verificación que enviamos al +" + user?.phone + "."} 
                     placeholder={"Código de verificación"} setValue={updateCode} autofocus={false}/>

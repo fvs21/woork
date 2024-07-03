@@ -17,7 +17,7 @@ export default function InformationPanel() {
     const [displayPfpModal, setDisplayPfpModal] = useState(false);
     const [displayPhoneModal, setDisplayPhoneModal] = useState(false);
     const [displayEmailModal, setDisplayEmailModal] = useState(false);
-    const [displayAddressModal, setDisplayAddressModal] = useState(false);
+    const [displayAddressModal, setDisplayAddressModal] = useState(true);
     //const [displayDobModal, setDisplayDobModal] = useState(false);
     //const [displayGenderModal, setDisplayGenderModal] = useState(false);
     

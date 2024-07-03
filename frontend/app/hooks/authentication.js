@@ -36,6 +36,35 @@ export function useRegisterUser(body) {
     return { registerUserFn, isLoading };
 }
 
+export function useLogoutUser() {
+    const axiosPrivate = useAxiosPrivate();
+    const queryClient = useQueryClient();
+
+    const { mutateAsync: logoutFn } = useMutation({
+        mutationFn: async () => {
+            return await axiosPrivate.get('/auth/logout');
+        },
+        onSuccess: () => {
+            queryClient.removeQueries(['user-info']);
+        }
+    });
+
+    return { logoutFn };
+}
+
+export function useLoginUser() {
+    const { mutateAsync: loginUserFn } = useMutation({
+        mutationFn: async (body) => {
+            return await axios.post(
+                '/auth/login',
+                body
+            );
+        }
+    });
+
+    return { loginUserFn };
+}
+
 export function useUpdatePhone(body) {
     const axiosPrivate = useAxiosPrivate();
     const queryClient = useQueryClient();
@@ -161,36 +190,22 @@ export function useUpdatePfp(body) {
     return { updatePfpFn };
 }
 
-export function useLogoutUser() {
+export function useUpdateLocation(body) {
     const axiosPrivate = useAxiosPrivate();
     const queryClient = useQueryClient();
 
-    const { mutateAsync: logoutFn } = useMutation({
+    const { mutateAsync: updateLocationFn } = useMutation({
         mutationFn: async () => {
-            return await axiosPrivate.get('/auth/logout');
-        },
-        onSuccess: () => {
-            queryClient.removeQueries(['user-info']);
-        }
-    });
-
-    return { logoutFn };
-}
-
-export function useLoginUser() {
-    const queryClient = useQueryClient();
-    
-    const { mutateAsync: loginUserFn } = useMutation({
-        mutationFn: async (body) => {
-            return await axios.post(
-                '/auth/login',
+            return await axiosPrivate.put(
+                '/user/location/update',
                 body
             );
         },
-        onSuccess: (data) => {
-            queryClient.setQueryData(['user-info'], data.user); 
+        onSuccess: () => {
+            queryClient.invalidateQueries(['user-info']);
         }
     });
 
-    return { loginUserFn };
+    return { updateLocationFn };
 }
+

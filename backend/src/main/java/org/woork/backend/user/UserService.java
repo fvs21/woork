@@ -183,7 +183,7 @@ public class UserService implements UserDetailsService {
     }
 
     public String generateNewEmailVerificationCode(User user) {
-        if(!user.isEmailVerificationCodeValid()) {
+        if(!user.requestEmailCodeRefreshTime()) {
             throw new UnableToGenerateVerificationCodeException("There is a refresh time between code generation");
         }
         if(user.isEmailVerified()) {

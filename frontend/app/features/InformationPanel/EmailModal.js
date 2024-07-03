@@ -3,7 +3,7 @@ import styles from "./InformationPanel.module.scss";
 import { useState } from "react";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
-import EmailVerification from "../EmailVerification/EmailVerification";
+import EmailVerification from "./EmailVerification";
 import { useUpdateEmail } from "../../hooks/authentication";
 import { useUser } from "../../hooks/useUser";
 import CloseSVG from "../../components/SVGs/Close";
@@ -43,9 +43,6 @@ export default function EmailModal({changeDisplayModal}) {
         }
     }
 
-    async function reSendCode() {
-        return;
-    }
 
     if(step == 0) {
         return (
@@ -73,26 +70,7 @@ export default function EmailModal({changeDisplayModal}) {
         )
     } else if(step == 1) {
         return (
-            <Modal>
-                <div className={styles['contact-modal']}>
-                    <div className={styles['contact-modal-title']}>
-                        <button className={styles['cancel-btn']}
-                            onClick={() => changeDisplayModal(false)}>
-                            <CloseSVG width={"20px"} />
-                        </button>
-                        <h2>Verifica tu correo electrónico</h2>
-                    </div>
-                    <div className={styles['modal-desc']}>
-                        <span>
-                            Ingresa el código de verificación que enviamos a {email}.&nbsp;
-                            <button onClick={reSendCode()} className={styles['edit-email-btn']}>Re-enviar</button>
-                            {" - "} { notVerified && <button className={styles['edit-email-btn']} onClick={() => {setStep(0); setEmail("")}}>Cambiar correo electrónico.</button>}
-                        </span>
-                    </div>
-                    <br/>
-                    <EmailVerification changeDisplayModal={changeDisplayModal} />
-                </div>
-            </Modal>
+            <EmailVerification changeDisplayModal={changeDisplayModal} notVerified={notVerified} editEmail={() => setStep(0)}/>
         )
     }
 }

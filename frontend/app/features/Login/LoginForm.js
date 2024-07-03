@@ -39,7 +39,6 @@ export default function LoginForm() {
 
         try {
             const request = await loginUserFn(body);
-            console.log(request);
 
             if(request.status == 200) {
                 setAuth({

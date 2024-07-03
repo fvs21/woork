@@ -39,3 +39,32 @@ export const validateRegisterBody = (body) => {
 
     return true;
 }
+
+export const validateString = (text) => {
+    return /^[a-zA-Z]+$/.test(text) && text !== "";
+}
+
+export const validateNumber = (text) => {
+    return /^[0-9]*$/.test(text) && text !== "";
+}
+
+export const validateAddress = (address) => {
+    if(!validateString(address.country)) {
+        return false;
+    }
+    if(!validateString(address.state)) {
+        return false;
+    }
+    if(!validateString(address.city)) {
+        return false;
+    }
+    if(!validateString(address.street)) {
+       return false;
+    }
+    if(!validateNumber(address.number)) {
+        return false;
+    }
+    if(!validateNumber(address.zip_code)) {
+        return false;
+    }
+}

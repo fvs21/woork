@@ -37,6 +37,14 @@ html, body {
     background-color: var.$primary-color;
 }
 
+.border-primary {
+    border: 1px solid var.$primary-color;
+}
+
+.border-main {
+    border: 1px solid var.$border-color;
+}
+
 .error-border {
     border: 1px solid red !important;
     margin:-1.5px 0 0 -1.5px;
@@ -45,6 +53,11 @@ html, body {
 .error-msg {
     font-size: small;
     color: rgb(175, 0, 0);
+}
+
+.success-msg {
+    color: green;
+    font-size: small;
 }
 
 .normal-border {
@@ -71,6 +84,13 @@ html, body {
 
 .global-svgs:hover {
     path {
-        stroke-width: 4;
+        stroke-width: 3;
     }
+}
+
+.hr-line {
+    width: 100%;
+    border: none;
+    height: 1px;
+    background-color: var.$border-color;
 }
