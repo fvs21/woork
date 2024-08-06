@@ -1,5 +1,6 @@
 package org.woork.backend.location;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +17,7 @@ public class Location {
             generator = "user_sequence"
     )
     @Column(name = "location_id")
+    @JsonIgnore
     private Long id;
     private String city;
     private String country;
@@ -24,15 +26,17 @@ public class Location {
 
     @Column(name = "zip_code")
     private String zipCode;
+    private int number;
 
     public Location() {}
 
-    public Location(String city, String country, String state, String street, String zipCode) {
+    public Location(String city, String country, String state, String street, String zipCode, int number) {
         this.city = city;
         this.country = country;
         this.state = state;
         this.street = street;
         this.zipCode = zipCode;
+        this.number = number;
     }
 
     public Long getId() {
@@ -81,5 +85,12 @@ public class Location {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

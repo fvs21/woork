@@ -16,8 +16,8 @@ public class Image {
             strategy = GenerationType.SEQUENCE,
             generator = "image_sequence"
     )
-    @JsonIgnore
     @Column(name = "image_id")
+    @JsonIgnore
     private Long id;
 
     @Column(name = "image_name", unique = true, nullable = false)

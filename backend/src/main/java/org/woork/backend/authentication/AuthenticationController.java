@@ -35,18 +35,13 @@ public class AuthenticationController {
     }
 
     //Exceptions
-    @ExceptionHandler({EmailAlreadyTakenException.class})
+    @ExceptionHandler({
+            EmailAlreadyTakenException.class,
+            PhoneNumberAlreadyTakenException.class,
+            IncorrectVerificationCodeException.class,
+            EmailNotAddedException.class,
+            UnableToGenerateVerificationCodeException.class})
     public ResponseEntity<String> handleEmailAlreadyTaken(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler({PhoneNumberAlreadyTakenException.class})
-    public ResponseEntity<String> handlePhoneNumberAlreadyTaken(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler({IncorrectVerificationCodeException.class})
-    public ResponseEntity<String> handleIncorrectVerificationCode(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
@@ -55,7 +50,15 @@ public class AuthenticationController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({IncorrectCredentialsException.class, CredentialsNotProvidedException.class})
+    @ExceptionHandler({
+            IncorrectCredentialsException.class,
+            CredentialsNotProvidedException.class,
+            InvalidPhoneNumberException.class,
+            InvalidCountryCodeException.class,
+            InvalidTokenException.class,
+            InvalidBearerTokenException.class,
+            RegistrationException.class,
+            VerificationCodeExpiredException.class})
     public ResponseEntity<String> handleIncorrectCredentials(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -65,50 +68,15 @@ public class AuthenticationController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({InvalidPhoneNumberException.class, InvalidCountryCodeException.class})
-    public ResponseEntity<String> handleInvalidPhoneNumber(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({InvalidTokenException.class})
-    public ResponseEntity<String> handleInvalidToken(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({InvalidBearerTokenException.class})
-    public ResponseEntity<String> handleInvalidBearerToken(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({RegistrationException.class})
-    public ResponseEntity<String> handleRegistrationException(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({UnableToGenerateVerificationCodeException.class})
-    public ResponseEntity<String> handleUnableToGenerateVerificationCode(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-    }
-
     @ExceptionHandler({UserNotVerifiedException.class})
     public ResponseEntity<String> handleUserNotVerifiedException(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({EmailNotAddedException.class})
-    public ResponseEntity<String> handleEmailNotAddedException(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler({VerificationCodeExpiredException.class})
-    public ResponseEntity<String> handleVerificationCodeExpiredException(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
     //Mappings
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegistrationObject registration,
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegistrationDTO registration,
                                                            BindingResult bindingResult, HttpServletResponse response) {
         if(bindingResult.hasErrors()) {
             bindingResult.getFieldErrors().forEach(fieldError -> {
@@ -126,7 +94,9 @@ public class AuthenticationController {
                     )
             );
             String accessToken = tokenService.generateAccessToken(user);
-            AuthenticationResponse authResponse = new AuthenticationResponse(user, accessToken);
+            AuthenticationResponse authResponse = new AuthenticationResponse(
+                    userService.userToDTO(user),
+                    accessToken);
 
             String refreshToken = tokenService.generateRefreshToken(user);
 
@@ -220,7 +190,7 @@ public class AuthenticationController {
 
             String token = tokenService.generateAccessToken(user);
             return new AuthenticationResponse(
-                    user,
+                    userService.userToDTO(user),
                     token
             );
         } catch (AuthenticationException | UserDoesNotExistException e) {

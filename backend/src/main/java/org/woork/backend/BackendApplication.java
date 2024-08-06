@@ -1,5 +1,6 @@
 package org.woork.backend;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.woork.backend.config.RsaKeyProperties;
 import org.woork.backend.image.Image;
 import org.woork.backend.image.ImageRepository;
+import org.woork.backend.location.LocationService;
 import org.woork.backend.role.Role;
 import org.woork.backend.role.RoleRepository;
 

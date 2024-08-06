@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.exceptions.UserDoesNotExistException;
 import org.woork.backend.exceptions.UserNotVerifiedException;
-import org.woork.backend.location.LocationObject;
+import org.woork.backend.location.LocationDTO;
 
 import java.util.LinkedHashMap;
 
@@ -36,8 +36,8 @@ public class UserController {
     //MAPPINGS
 
     @GetMapping("/verify")
-    public User verifyUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        return userService.getUserFromAccessToken(token);
+    public UserDTO verifyUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        return userService.userToDTO(userService.getUserFromAccessToken(token));
     }
 
     @PutMapping("/gender/update")
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @PutMapping("/location/update")
-    public User updateLocation(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody LocationObject locationObject) {
+    public User updateLocation(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody LocationDTO locationObject) {
         User user = userService.getUserFromAccessToken(token);
 
         return userService.updateLocation(user, locationObject);

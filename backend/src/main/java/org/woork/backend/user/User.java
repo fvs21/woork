@@ -102,6 +102,7 @@ public class User {
     private Image profilePicture;
 
     @OneToMany(mappedBy = "author")
+    @JsonIgnore
     private Set<Posting> postings;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -234,6 +235,7 @@ public class User {
     }
 
     //Method to check if code is still valid. A code expires 90 seconds after its creation.
+    @JsonIgnore
     public boolean isPhoneVerificationCodeValid() {
         if(getPhoneCodeGenerationDate() == null) {
             return false;
@@ -276,6 +278,7 @@ public class User {
         this.emailCodeGenerationDate = emailCodeGenerationDate;
     }
 
+    @JsonIgnore
     public boolean isEmailVerificationCodeValid() {
         if(getEmailCodeGenerationDate() == null) {
             return false;
