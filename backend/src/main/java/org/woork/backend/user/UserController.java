@@ -37,11 +37,13 @@ public class UserController {
 
     @GetMapping("/verify")
     public UserDTO verifyUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        return userService.userToDTO(userService.getUserFromAccessToken(token));
+        return userService.userToDTO(
+                userService.getUserFromAccessToken(token)
+        );
     }
 
     @PutMapping("/gender/update")
-    public User updateGender(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody LinkedHashMap<String, String> body) {
+    public UserDTO updateGender(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody LinkedHashMap<String, String> body) {
         User user = userService.getUserFromAccessToken(token);
         String gender = body.get("gender");
         Gender genderEnum = Gender.valueOf(gender);
@@ -50,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/location/update")
-    public User updateLocation(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody LocationDTO locationObject) {
+    public UserDTO updateLocation(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody LocationDTO locationObject) {
         User user = userService.getUserFromAccessToken(token);
 
         return userService.updateLocation(user, locationObject);

@@ -191,6 +191,18 @@
     }
 }
 
+.countries-selector {
+    width: 100%;
+    padding: 15px 0 15px 10px;
+    border-radius: 6px;
+    border: 1px solid var.$border-color;
+    font-size: medium;
+
+    &:invalid {
+        color: rgb(172, 172, 172);
+    }
+}
+
 @media only screen and (max-width: 1000px) {
     .left-container {
         display: none !important;

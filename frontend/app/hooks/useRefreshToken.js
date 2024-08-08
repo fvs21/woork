@@ -1,6 +1,5 @@
 import axios from '../api/axios';
 import { useAuth } from './useAuth'
-import { useQuery } from 'react-query';
 
 export function useRefreshToken() {
     const { setAuth } = useAuth();
@@ -30,7 +29,7 @@ export function useRefreshToken() {
             });
             return response.data;
         } catch(error) {
-            console.log(error);
+            return;
         }
     }
 

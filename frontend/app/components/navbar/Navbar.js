@@ -11,7 +11,7 @@ export default function Navbar(props) {
         if(auth.loggedIn) {
             return (
                 <Link href='/account'>
-                   <button className={styles['profile-btn']}>Cuenta</button> 
+                   <button className={styles['profile-btn']}>Cuenta</button>
                 </Link>
             )
         } else {
@@ -34,8 +34,8 @@ export default function Navbar(props) {
                 </div>
                 <nav className={styles['nav-links-container']}>
                     <ul className={styles['nav-links']}>
-                        <li><a className={styles['nav-bar-btn']}>About</a></li>
-                        <li><a className={styles['nav-bar-btn']}>Test</a></li>
+                        <li><a className={styles['nav-bar-btn']}>Nosotros</a></li>
+                        <li><a className={styles['nav-bar-btn']}>Qué ofrecemos?</a></li>
                     </ul>
                 </nav>
                 <div>
@@ -47,7 +47,7 @@ export default function Navbar(props) {
         return (
             <header className={styles['main-nav-bar']}>
                 <div className={styles.logo}>
-                    <Logotype width={"100px"} /> 
+                    <Logotype width={"100px"} />
                 </div>
                 <nav className={`${styles['nav-links-container']} ${styles['page-loading']}`}>
                     <ul className={styles['nav-links']}>
@@ -59,7 +59,7 @@ export default function Navbar(props) {
                     <AuthenticationButtons />
                 </div>
             </header>
-        ) 
+        )
     }
-    
+
 }

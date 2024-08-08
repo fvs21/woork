@@ -3,6 +3,8 @@ package org.woork.backend.token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.time.Instant;
+
 @Entity
 @Table
 public class RefreshTokenBlacklist {
@@ -22,6 +24,8 @@ public class RefreshTokenBlacklist {
 
     @Column(length = 7000)
     private String token;
+
+    private Instant expiresAt;
 
     public RefreshTokenBlacklist() {}
 
@@ -43,6 +47,14 @@ public class RefreshTokenBlacklist {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
 }

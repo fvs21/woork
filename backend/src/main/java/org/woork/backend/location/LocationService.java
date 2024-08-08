@@ -42,10 +42,8 @@ public class LocationService {
                 JsonUtils.readFile("countries/" + StringUtils.stripAccents(country) + "/" + state + ".json"),
                 Set.class
         );
-        if (!cities.contains(city)) {
-            return false;
-        }
-        return true;
+
+        return cities.contains(city);
     }
 
     public LocationDTO toDTO(Location location) {
@@ -77,6 +75,24 @@ public class LocationService {
         location.setStreet(locationDTO.getStreet());
         location.setZipCode(locationDTO.getZip_code());
         location.setNumber(locationDTO.getNumber());
+        return locationRepository.save(location);
+    }
+
+    public Location updateLocation(Long locationId, LocationDTO locationDTO) {
+        Location location = locationRepository.findById(locationId).orElse(new Location());
+        String country = locationDTO.getCountry();
+        String state = locationDTO.getState();
+        String city = locationDTO.getCity();
+
+        if(!validateCountryStateAndCity(country, state, city)) {
+            throw new InvalidLocationException();
+        }
+        location.setCountry(country);
+        location.setCity(city);
+        location.setState(state);
+        location.setStreet(locationDTO.getStreet());
+        location.setNumber(locationDTO.getNumber());
+        location.setZipCode(locationDTO.getZip_code());
         return locationRepository.save(location);
     }
 

@@ -18,7 +18,7 @@ import org.woork.backend.image.Image;
 import org.woork.backend.image.ImageService;
 import org.woork.backend.location.Location;
 import org.woork.backend.location.LocationDTO;
-import org.woork.backend.location.LocationRepository;
+import org.woork.backend.location.LocationService;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.posting.PostingDTO;
 import org.woork.backend.posting.PostingService;
@@ -38,7 +38,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final TokenService tokenService;
-    private final LocationRepository locationRepository;
+    private final LocationService locationService;
     private final ImageService imageService;
     private final SMSService smsService;
     private final PostingService postingService;
@@ -46,13 +46,13 @@ public class UserService implements UserDetailsService {
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
                        RoleRepository roleRepository, TokenService tokenService,
-                       LocationRepository locationRepository, ImageService imageService, SMSService smsService,
+                       LocationService locationService, ImageService imageService, SMSService smsService,
                        PostingService postingService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.tokenService = tokenService;
-        this.locationRepository = locationRepository;
+        this.locationService = locationService;
         this.imageService = imageService;
         this.smsService = smsService;
         this.postingService = postingService;
@@ -73,15 +73,10 @@ public class UserService implements UserDetailsService {
         userDTO.setEmailVerified(user.isEmailVerified());
 
         Set<PostingDTO> postingsDtos = new HashSet<>();
-
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            for(Posting posting : user.getPostings()) {
-                PostingDTO dto = objectMapper.convertValue(posting, PostingDTO.class);
-                postingsDtos.add(dto);
-            }
-        } catch (Exception ignore) {}
+        for(Posting posting : user.getPostings()) {
+            PostingDTO dto = postingService.toDTO(posting);
+            postingsDtos.add(dto);
+        }
 
         userDTO.setPostings(postingsDtos);
 
@@ -285,27 +280,17 @@ public class UserService implements UserDetailsService {
         return getUserById(id);
     }
 
-    public User updateGender(User user, Gender gender) {
+    public UserDTO updateGender(User user, Gender gender) {
         user.setGender(gender);
-        return userRepository.save(user);
+        return userToDTO(userRepository.save(user));
     }
 
-    public User updateLocation(User user, LocationDTO location) {
-        Location newLocation;
-        if(user.getLocation() == null) {
-            newLocation = new Location();
-        } else {
-            newLocation = user.getLocation();
-        }
-        newLocation.setCity(location.getCity());
-        newLocation.setCountry(location.getCountry());
-        newLocation.setState(location.getState());
-        newLocation.setStreet(location.getStreet());
-        newLocation.setZipCode(location.getZip_code());
-        locationRepository.save(newLocation);
-        user.setLocation(newLocation);
+    public UserDTO updateLocation(User user, LocationDTO locationDTO) {
+        Long locationId = user.getLocation().getId();
+        Location location = locationService.updateLocation(locationId, locationDTO);
+        user.setLocation(location);
 
-        return userRepository.save(user);
+        return userToDTO(userRepository.save(user));
     }
 
     public String uploadProfilePicture(User user, MultipartFile file) {

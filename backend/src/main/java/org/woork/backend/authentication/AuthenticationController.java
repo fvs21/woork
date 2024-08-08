@@ -209,6 +209,7 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public String logout(@CookieValue("refresh_token") String token, HttpServletResponse response) {
         userService.getUserFromRefreshToken(token);
+        tokenService.blackListRefreshToken(token);
         response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateLogoutCookie().toString());
 
         return "Logged out successfully";

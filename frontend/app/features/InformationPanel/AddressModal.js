@@ -6,16 +6,23 @@ import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import { useUpdateLocation } from "../../hooks/authentication";
 import { validateAddress } from "../../services/Validators";
+import CountriesSelector from "../../components/CountriesSelector/CountriesSelector";
+import { loadCities, loadStates } from "../../utils/location/LocationUtils";
 
 export default function AddressModal({changeDisplayModal}) {
     const [address, setAddress] = useState({
-        country: "México",
+        country: "",
         state: "",
         city: "",
         zip_code: "",
         street: "",
         number: ""
     });
+
+    const [states, setStates] = useState([]);
+    const [cities, setCities] = useState([]);
+
+    const countries = require("../../services/countries/countries.json");
 
     const { updateLocationFn } = useUpdateLocation(address);
 
@@ -24,6 +31,7 @@ export default function AddressModal({changeDisplayModal}) {
             ...address,
             country: value
         });
+        setStates(loadStates(value));
     }
 
     function changeState(value) {
@@ -31,6 +39,7 @@ export default function AddressModal({changeDisplayModal}) {
             ...address,
             state: value
         });
+        setCities(loadCities(address.country, value));
     }
 
     function changeCity(value) {
@@ -84,9 +93,12 @@ export default function AddressModal({changeDisplayModal}) {
                 <form onSubmit={handleSubmit}>
                     <div className={styles['address-container']}>
                         <div className={styles['address-fields']}>
-                            <ValidatedInput valid={true} placeholder={"País"} label={"País"} value={address.country} setValue={changeCountry}/>
-                            <ValidatedInput valid={true} placeholder={"Estado"} label={"Estado"} value={address.state} setValue={changeState}/>
-                            <ValidatedInput valid={true} placeholder={"Ciudad"} label={"Ciudad"} value={address.city} setValue={changeCity}/>
+                            <CountriesSelector name={"country"} clsName={styles['countries-selector']} list={countries} 
+                                value={address.country} setValue={(e) => changeCountry(e.target.value)} disabled={"País"}/>
+                            <CountriesSelector name={"state"} clsName={styles['countries-selector']} list={states} 
+                                value={address.state} setValue={(e) => changeState(e.target.value)} disabled={"Estado"}/>
+                            <CountriesSelector name={"city"} clsName={styles['countries-selector']} list={cities} 
+                                value={address.city} setValue={(e) => changeCity(e.target.value)} disabled={"Ciudad"}/>
                         </div>
                         <br/>
                         <ValidatedInput valid={true} label={"Calle"} placeholder={"Calle"} value={address.street} setValue={changeStreet}/>

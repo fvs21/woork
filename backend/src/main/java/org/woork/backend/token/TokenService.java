@@ -124,7 +124,7 @@ public class TokenService {
 
     public Long getIdFromAccessToken(String token) {
         Jwt decoded = jwtDecoder.decode(token);
-        if(!validateToken(decoded)) {
+        if(isTokenValid(decoded)) {
             throw new VerificationCodeExpiredException();
         }
         if(!isTokenAccess(decoded)) {
@@ -138,26 +138,26 @@ public class TokenService {
         if(!isTokenRefresh(decoded)) {
             throw new InvalidTokenException();
         }
-        if(!validateToken(decoded)) {
+        if(isTokenValid(decoded)) {
             throw new RefreshTokenExpiredException();
         }
         return Long.valueOf(decoded.getSubject());
     }
 
-    public boolean validateToken(String token) {
+    public boolean isTokenValid(String token) {
         Jwt decoded = jwtDecoder.decode(token);
-        return !decoded.getExpiresAt().isBefore(Instant.now());
+        return decoded.getExpiresAt().isBefore(Instant.now());
     }
 
-    private boolean validateToken(Jwt decoded) {
-        return !decoded.getExpiresAt().isBefore(Instant.now());
+    private boolean isTokenValid(Jwt decoded) {
+        return decoded.getExpiresAt().isBefore(Instant.now());
     }
 
     public String getNewAccessToken(User user, String refreshToken) {
         if(!isTokenRefresh(refreshToken)) {
             throw new InvalidTokenException();
         }
-        if(!validateToken(refreshToken)) {
+        if(!isTokenValid(refreshToken)) {
             throw new RefreshTokenExpiredException();
         }
         return generateAccessToken(user);
@@ -179,5 +179,17 @@ public class TokenService {
                 .maxAge(0)
                 .sameSite("Lax")
                 .build();
+    }
+
+    public void blackListRefreshToken(String token) {
+        Jwt decoded = jwtDecoder.decode(token);
+        if(!isTokenRefresh(decoded)) {
+            throw new InvalidTokenException();
+        }
+        Instant expiresAt = decoded.getExpiresAt();
+        RefreshTokenBlacklist refreshToken = new RefreshTokenBlacklist();
+        refreshToken.setToken(token);
+        refreshToken.setExpiresAt(expiresAt);
+        refreshTokenRepository.save(refreshToken);
     }
 }

@@ -1,0 +1,22 @@
+@use "/app/assets/variables" as var;
+
+.location-selector-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.location-selector {
+    display: flex;
+    gap: 10px;
+}
+
+.selector {
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid var.$border-color;
+
+    &:invalid {
+        color: rgb(172, 172, 172);
+    }
+}

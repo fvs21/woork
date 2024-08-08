@@ -9,10 +9,8 @@ import org.woork.backend.exceptions.UnableToCreatePostingException;
 import org.woork.backend.image.Image;
 import org.woork.backend.image.ImageService;
 import org.woork.backend.location.Location;
-import org.woork.backend.location.LocationDTO;
 import org.woork.backend.location.LocationService;
 import org.woork.backend.user.User;
-import org.woork.backend.user.UserService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -86,24 +84,20 @@ public class PostingService {
     public Set<PostingDTO> getPostingByLocation(Location location) {
         Set<Posting> postings = postingRepository.findAllByLocation(location).orElse(new HashSet<>());
 
-        Set<PostingDTO> postingDTOs = postings
+        return postings
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toSet());
-
-        return postingDTOs;
     }
 
-    public Set<PostingDTO> getPostingByLocationAndCategory(Location location, Category category) {
+    public Set<PostingDTO> getPostingByLocationAndCategory(Location  location, Category category) {
         Set<Posting> postings = postingRepository.findAllByLocationAndCategory(location, category)
                 .orElseThrow(PostingDoesNotExistException::new);
 
-        Set<PostingDTO> postingDTOs = postings
+        return postings
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toSet());
-
-        return postingDTOs;
     }
 
     public List<PostingDTO> getPostingsByState(String country, String state) {
