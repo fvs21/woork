@@ -1,9 +1,11 @@
 package org.woork.backend.posting;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.woork.backend.exceptions.InvalidLocationException;
 import org.woork.backend.exceptions.PostingDoesNotExistException;
 import org.woork.backend.exceptions.UnableToCreatePostingException;
 import org.woork.backend.image.Image;
@@ -43,36 +45,40 @@ public class PostingService {
         return postingDTO;
     }
 
-    public PostingDTO createPosting(User author, String body, List<MultipartFile> images) {
+    private PostingDTO mapStringToDTO(String body) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            PostingDTO postingDTO = objectMapper.readValue(body, PostingDTO.class);
-
-            Posting posting = new Posting();
-            Location location = locationService.createLocation(postingDTO.getLocation());
-            posting.setTitle(postingDTO.getTitle());
-            posting.setDescription(postingDTO.getDescription());
-            posting.setPrice(postingDTO.getPrice());
-            posting.setCategory(postingDTO.getCategory());
-            posting.setLocation(location);
-            posting.setAuthor(author);
-
-            Set<Image> imageSet = new HashSet<>();
-
-            for (MultipartFile file : images) {
-                Image image = imageService.uploadImage(file, "posting");
-                imageSet.add(image);
-            }
-            posting.setImages(imageSet);
-            postingRepository.save(posting);
-            //userService.addPosting(author, posting);
-
-            postingDTO.setAuthor(author.getFirst_name() + " " + author.getLast_name());
-            postingDTO.setImages(imageSet);
-            return postingDTO;
-        } catch (Exception e) {
+            return objectMapper.readValue(body, PostingDTO.class);
+        } catch (JsonProcessingException e) {
             throw new UnableToCreatePostingException();
         }
+    }
+
+    public PostingDTO createPosting(User author, String body, List<MultipartFile> images) {
+        Posting posting = new Posting();
+        PostingDTO postingDTO = mapStringToDTO(body);
+
+        Location location = locationService.createLocation(postingDTO.getLocation());
+        posting.setTitle(postingDTO.getTitle());
+        posting.setDescription(postingDTO.getDescription());
+        posting.setPrice(postingDTO.getPrice());
+        posting.setCategory(postingDTO.getCategory());
+        posting.setLocation(location);
+        posting.setAuthor(author);
+
+        Set<Image> imageSet = new HashSet<>();
+
+        for (MultipartFile file : images) {
+            Image image = imageService.uploadImage(file, "posting");
+            imageSet.add(image);
+        }
+        posting.setImages(imageSet);
+        postingRepository.save(posting);
+        //userService.addPosting(author, posting);
+
+        postingDTO.setAuthor(author.getFirst_name() + " " + author.getLast_name());
+        postingDTO.setImages(imageSet);
+        return postingDTO;
     }
 
     public PostingDTO getPosting(Long id) {

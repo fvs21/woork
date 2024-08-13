@@ -7,7 +7,7 @@ function parseJwt(token) {
 }
 
 export function middleware(request) {
-    const token = request.cookies.get('refresh_token');
+    const token = request.cookies.get('user_r');
     const path = request.nextUrl.pathname;
     const baseUrl = "http://localhost:3000"
 

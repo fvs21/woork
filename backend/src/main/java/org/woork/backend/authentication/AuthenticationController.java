@@ -16,6 +16,7 @@ import org.woork.backend.annotations.Verified;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
+import org.woork.backend.user.UserDTO;
 import org.woork.backend.user.UserService;
 
 import java.util.LinkedHashMap;
@@ -41,12 +42,12 @@ public class AuthenticationController {
             IncorrectVerificationCodeException.class,
             EmailNotAddedException.class,
             UnableToGenerateVerificationCodeException.class})
-    public ResponseEntity<String> handleEmailAlreadyTaken(Exception e) {
+    public ResponseEntity<String> handleConflictedRequest(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({UserDoesNotExistException.class})
-    public ResponseEntity<String> handleUserDoesNotExist(Exception e) {
+    public ResponseEntity<String> handleNotFoundRequest(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -58,18 +59,23 @@ public class AuthenticationController {
             InvalidTokenException.class,
             InvalidBearerTokenException.class,
             RegistrationException.class,
-            VerificationCodeExpiredException.class})
-    public ResponseEntity<String> handleIncorrectCredentials(Exception e) {
+            VerificationCodeExpiredException.class
+    })
+    public ResponseEntity<String> handleBadRequest(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({AuthenticationErrorException.class})
-    public ResponseEntity<String> handleAuthenticationError(Exception e) {
+    public ResponseEntity<String> handleInternalServerError(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({UserNotVerifiedException.class})
-    public ResponseEntity<String> handleUserNotVerifiedException(Exception e) {
+    @ExceptionHandler({
+            UserNotVerifiedException.class,
+            RefreshTokenExpiredException.class,
+            AccessTokenExpiredException.class,
+    })
+    public ResponseEntity<String> handleUnauthorizedRequest(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
@@ -131,18 +137,20 @@ public class AuthenticationController {
     }
 
     @PostMapping("/phone/verify")
-    public User verifyPhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+    public UserDTO verifyPhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                     @RequestBody LinkedHashMap<String, String> body, HttpServletResponse response) {
         String verificationCode = body.get("otp");
 
-        User user = userService.checkPhoneVerificationCode(
-                userService.getUserFromAccessToken(token),
+        User user = userService.getUserFromAccessToken(token);
+
+        UserDTO userDTO = userService.checkPhoneVerificationCode(
+                user,
                 verificationCode
         );
 
         String refreshToken = tokenService.generateRefreshToken(user);
         response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateTokenCookie(refreshToken).toString());
-        return user;
+        return userDTO;
     }
 
     @Verified
@@ -164,8 +172,8 @@ public class AuthenticationController {
 
     @Verified
     @PostMapping("/email/verify")
-    public User verifyEmail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                            @RequestBody LinkedHashMap<String, String> body) {
+    public UserDTO verifyEmail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                               @RequestBody LinkedHashMap<String, String> body) {
 
         User user = userService.getUserFromAccessToken(token);
         String code = body.get("otp");
@@ -199,7 +207,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/refresh")
-    public String refresh(@CookieValue("refresh_token") String token) {
+    public String refresh(@CookieValue("user_r") String token) {
         User user = userService.getUserFromRefreshToken(token);
         String access_token = tokenService.getNewAccessToken(user, token);
 
@@ -207,7 +215,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/logout")
-    public String logout(@CookieValue("refresh_token") String token, HttpServletResponse response) {
+    public String logout(@CookieValue("user_r") String token, HttpServletResponse response) {
         userService.getUserFromRefreshToken(token);
         tokenService.blackListRefreshToken(token);
         response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateLogoutCookie().toString());

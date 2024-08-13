@@ -203,6 +203,30 @@
     }
 }
 
+.dob-modal {
+    width: 600px;
+    height: 250px;
+    padding: 0px 10px 0px;
+}
+
+.gender-modal {
+    width: 500px;
+    height: 220px;
+    padding: 0px 10px 0px;
+}
+
+.gender-select {
+    width: 100%;
+    border: 1px solid var.$border-color;
+    padding: 14px;
+    border-radius: 6px;
+    font-size: medium;
+
+    &:invalid {
+        color: rgb(172, 172, 172);
+    }
+}
+
 @media only screen and (max-width: 1000px) {
     .left-container {
         display: none !important;

@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
+import org.woork.backend.exceptions.AccessTokenExpiredException;
 import org.woork.backend.exceptions.InvalidTokenException;
 import org.woork.backend.exceptions.RefreshTokenExpiredException;
 import org.woork.backend.exceptions.VerificationCodeExpiredException;
@@ -14,7 +15,10 @@ import org.woork.backend.user.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.stream.Collectors;
+
+//Refresh token cookie name is "user_r"
 
 @Service
 public class TokenService {
@@ -124,11 +128,11 @@ public class TokenService {
 
     public Long getIdFromAccessToken(String token) {
         Jwt decoded = jwtDecoder.decode(token);
-        if(isTokenValid(decoded)) {
-            throw new VerificationCodeExpiredException();
-        }
         if(!isTokenAccess(decoded)) {
             throw new InvalidTokenException();
+        }
+        if(!isTokenValid(decoded)) {
+            throw new AccessTokenExpiredException();
         }
         return Long.valueOf(decoded.getSubject());
     }
@@ -138,7 +142,7 @@ public class TokenService {
         if(!isTokenRefresh(decoded)) {
             throw new InvalidTokenException();
         }
-        if(isTokenValid(decoded)) {
+        if(!isTokenValid(decoded)) {
             throw new RefreshTokenExpiredException();
         }
         return Long.valueOf(decoded.getSubject());
@@ -146,11 +150,11 @@ public class TokenService {
 
     public boolean isTokenValid(String token) {
         Jwt decoded = jwtDecoder.decode(token);
-        return decoded.getExpiresAt().isBefore(Instant.now());
+        return decoded.getExpiresAt().isAfter(Instant.now());
     }
 
     private boolean isTokenValid(Jwt decoded) {
-        return decoded.getExpiresAt().isBefore(Instant.now());
+        return decoded.getExpiresAt().isAfter(Instant.now());
     }
 
     public String getNewAccessToken(User user, String refreshToken) {
@@ -164,7 +168,7 @@ public class TokenService {
     }
 
     public ResponseCookie generateTokenCookie(String token) {
-        return ResponseCookie.from("refresh_token", token)
+        return ResponseCookie.from("user_r", token)
                 .path("/")
                 .httpOnly(true)
                 .maxAge(3600*24*7)
@@ -173,7 +177,7 @@ public class TokenService {
     }
 
     public ResponseCookie generateLogoutCookie() {
-        return ResponseCookie.from("refresh_token", "")
+        return ResponseCookie.from("user_r", "")
                 .path("/")
                 .httpOnly(true)
                 .maxAge(0)
@@ -191,5 +195,14 @@ public class TokenService {
         refreshToken.setToken(token);
         refreshToken.setExpiresAt(expiresAt);
         refreshTokenRepository.save(refreshToken);
+    }
+
+    public void flushExpiredBlackListRefreshTokens() {
+        List<RefreshTokenBlacklist> refreshTokenBlacklist = refreshTokenRepository.findAll();
+        for(RefreshTokenBlacklist refreshTokenBlacklistItem : refreshTokenBlacklist) {
+            if(refreshTokenBlacklistItem.getExpiresAt().isAfter(Instant.now())) {
+                refreshTokenRepository.delete(refreshTokenBlacklistItem);
+            }
+        }
     }
 }

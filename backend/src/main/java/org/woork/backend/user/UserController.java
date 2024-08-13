@@ -59,11 +59,10 @@ public class UserController {
     }
 
     @PutMapping("/pfp/update")
-    public ResponseEntity<String> updateProfilePicture(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+    public UserDTO updateProfilePicture(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                                        @RequestParam("image") MultipartFile multipartFile) {
         User user = userService.getUserFromAccessToken(token);
 
-        String uploadImage = userService.uploadProfilePicture(user, multipartFile);
-        return new ResponseEntity<>(uploadImage, HttpStatus.OK);
+        return userService.uploadProfilePicture(user, multipartFile);
     }
 }

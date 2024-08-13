@@ -14,7 +14,7 @@ export default function ProfilePictureModal({changeDisplayModal}) {
     const [step, setStep] = useState(0);
     const pfpInput = useRef(null);
 
-    const pfpUrl = user?.profilePicture?.imageUrl || "http://localhost:8000/api/images/default-pfp";
+    const pfpUrl = user?.pfpUrl || "http://localhost:8000/api/images/default-pfp";
 
     const { updatePfpFn } = useUpdatePfp(image);
 

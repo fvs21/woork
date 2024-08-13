@@ -40,12 +40,17 @@ export const validateRegisterBody = (body) => {
     return true;
 }
 
+//string of only characters
 export const validateString = (text) => {
-    return /^[a-zA-Z]+$/.test(text) && text !== "";
+    return /^([^0-9]*)$/.test(text) && text !== "";
 }
 
 export const validateNumber = (text) => {
     return /^[0-9]*$/.test(text) && text !== "";
+}
+
+export const validateStreet = (text) => {
+    return /^[0-9]*[a-zA-Z]+[a-zA-Z0-9, ]*$/.test(text) && text !== "";
 }
 
 export const validateAddress = (address) => {
@@ -58,7 +63,7 @@ export const validateAddress = (address) => {
     if(!validateString(address.city)) {
         return false;
     }
-    if(!validateString(address.street)) {
+    if(!validateStreet(address.street)) {
        return false;
     }
     if(!validateNumber(address.number)) {
@@ -67,4 +72,5 @@ export const validateAddress = (address) => {
     if(!validateNumber(address.zip_code)) {
         return false;
     }
+    return true;
 }

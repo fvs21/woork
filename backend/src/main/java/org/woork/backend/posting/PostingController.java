@@ -7,7 +7,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.woork.backend.annotations.Verified;
+import org.woork.backend.exceptions.InvalidLocationException;
 import org.woork.backend.exceptions.PostingDoesNotExistException;
+import org.woork.backend.exceptions.UnableToCreatePostingException;
+import org.woork.backend.exceptions.UserNotVerifiedException;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;
 
@@ -25,11 +29,27 @@ public class PostingController {
         this.userService = userService;
     }
 
+    @ExceptionHandler({UserNotVerifiedException.class})
+    public ResponseEntity<String> handleForbiddenRequest(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler({PostingDoesNotExistException.class})
-    public ResponseEntity<String> handlePostingDoesNotExistException(PostingDoesNotExistException e) {
+    public ResponseEntity<String> handleNotFoundRequest(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({InvalidLocationException.class})
+    public ResponseEntity<String> handleBadRequest(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UnableToCreatePostingException.class})
+    public ResponseEntity<String> handleInternalServerError(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Verified
     @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public PostingDTO createPosting(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,

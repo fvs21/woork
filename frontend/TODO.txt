@@ -1,4 +1,8 @@
 -implement age check. DONE
 -refactor register form inputs. DONE
 -implement error handling on registration and account forms.
--logout.
+    -Profile picture modal: Implement error handling.
+    -Wrong picture format.
+-logout. DONE 
+-implement update gender form. DONE
+-implement create posting form.

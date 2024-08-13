@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import styles from './InformationPanel.module.scss'
 import LabeledButton from '../../components/LabeledButton/LabeledButton';
-import { defaultPfpUrl } from '../../utils/account/AccountUtils';
+import { defaultPfpUrl, formatGender } from '../../utils/account/AccountUtils';
 import { useUser } from '../../hooks/useUser';
 import dynamic from 'next/dynamic';
 
@@ -11,21 +11,25 @@ const PhoneNumberModal = dynamic(() => import("./PhoneNumberModal"));
 const EmailModal = dynamic(() => import("./EmailModal"));
 const AddressModal = dynamic(() => import("./AddressModal"));
 const ProfilePictureModal = dynamic(() => import("./ProfilePictureModal"));
+const DateOfBirthModal = dynamic(() => import("./DateOfBirthModal"));
+const GenderModal = dynamic(() => import("./GenderModal"));
 
 export default function InformationPanel() {
     const user = useUser();
     const [displayPfpModal, setDisplayPfpModal] = useState(false);
     const [displayPhoneModal, setDisplayPhoneModal] = useState(false);
     const [displayEmailModal, setDisplayEmailModal] = useState(false);
-    const [displayAddressModal, setDisplayAddressModal] = useState(true);
-    //const [displayDobModal, setDisplayDobModal] = useState(false);
-    //const [displayGenderModal, setDisplayGenderModal] = useState(false);
+    const [displayAddressModal, setDisplayAddressModal] = useState(!user?.location);
+    const [displayDobModal, setDisplayDobModal] = useState(false);
+    const [displayGenderModal, setDisplayGenderModal] = useState(false);
     
     const dob = new Date(user?.dateOfBirth + " ");
 
     const formattedDate = `${dob.getDate()}/${dob.getMonth()}/${dob.getFullYear()}`;
 
-    const pfpUrl = user?.profilePicture?.imageUrl || defaultPfpUrl;
+    const pfpUrl = user?.pfpUrl || defaultPfpUrl;
+
+    const formattedStreet = `${user?.location?.street}, ${user?.location?.number}. C.P. ${user?.location?.zipCode} - ${user?.location?.city}, ${user?.location?.state}, ${user?.location?.country}`; 
 
     
     return (
@@ -36,8 +40,8 @@ export default function InformationPanel() {
                         className={styles['profile-picture']} onClick={() => setDisplayPfpModal(true)}/>
                 </div>
                 <div className={styles['name-container']}>
-                    <h1>{user?.first_name}</h1>
-                    <h1>{user?.last_name}</h1>
+                    <h1>{user?.firstName}</h1>
+                    <h1>{user?.lastName}</h1>
                 </div>
             </div>
             <br/>
@@ -51,21 +55,23 @@ export default function InformationPanel() {
                 </div>
                 <br/>
                 <div>
-                    <LabeledButton label={"Dirección"} text={"47 W 13th St, New York, NY 10011, USA"} clickedFn={() => setDisplayAddressModal(true)} />  
+                    <LabeledButton label={"Dirección"} text={user?.location ? formattedStreet : "No agregado"} clickedFn={() => setDisplayAddressModal(true)} />  
                 </div>
                 <br/>
                 <div>
-                    <LabeledButton label={"Fecha de nacimiento"} text={formattedDate} clickedFn={() => {}} />
+                    <LabeledButton label={"Fecha de nacimiento"} text={formattedDate} clickedFn={() => {setDisplayDobModal(true)}} />
                 </div>
                 <br/>
                 <div>
-                    <LabeledButton label={"Género"} text={user?.gender != null ? user.gender : "No especificado"} clickedFn={() => {}} />
+                    <LabeledButton label={"Género"} text={user?.gender != null ? formatGender(user.gender) : "No especificado"} clickedFn={() => {setDisplayGenderModal(true)}} />
                 </div>
             </div>
             {displayPfpModal && <ProfilePictureModal changeDisplayModal={setDisplayPfpModal} />}
             {displayPhoneModal && <PhoneNumberModal changeDisplayModal={setDisplayPhoneModal}/>}
             {displayEmailModal && <EmailModal changeDisplayModal={setDisplayEmailModal} />}
             {displayAddressModal && <AddressModal changeDisplayModal={setDisplayAddressModal} />}
+            {displayDobModal && <DateOfBirthModal changeDisplayModal={setDisplayDobModal} />}
+            {displayGenderModal && <GenderModal changeDisplayModal={setDisplayGenderModal} />}
         </div>
     )
 }

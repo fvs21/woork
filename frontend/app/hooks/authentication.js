@@ -182,8 +182,8 @@ export function useUpdatePfp(body) {
                 formData
             );
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['user-info']);
+        onSuccess: (data) => {
+            queryClient.setQueryData(['user-info'], data);
         }
     });
 
@@ -201,11 +201,29 @@ export function useUpdateLocation(body) {
                 body
             );
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['user-info']);
+        onSuccess: (data) => {
+            queryClient.setQueryData(['user-info'], data);
         }
     });
 
     return { updateLocationFn };
 }
 
+export function useUpdateGender(body) {
+    const axiosPrivate = useAxiosPrivate();
+    const queryClient = useQueryClient();
+
+    const { mutateAsync: updateGenderFn } = useMutation({
+        mutationFn: async () => {
+            return await axiosPrivate.put(
+                '/user/gender/update',
+                body
+            );
+        },
+        onSuccess: (data) => {
+            queryClient.setQueryData(['user-info'], data);
+        }
+    });
+
+    return { updateGenderFn };
+}

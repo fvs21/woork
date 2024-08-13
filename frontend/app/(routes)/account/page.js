@@ -65,6 +65,10 @@ export default function AccountPage() {
                                 onClick={() => setOption(2)}>Métodos de pago</button>
                         </li>
                         <li>
+                            <button className={`${styles['option-btn']} ${determineIfClicked(option==2)}`}
+                                onClick={() => setOption(3)}>Crear anuncio de trabajo</button>
+                        </li>
+                        <li>
                             <button onClick={logoutUser} className={`${styles['option-btn']}`}>Cerrar sesión</button>
                         </li>
                     </ul>

@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.woork.backend.config.RsaKeyProperties;
 import org.woork.backend.image.Image;
 import org.woork.backend.image.ImageRepository;
@@ -17,6 +18,7 @@ import org.woork.backend.role.RoleRepository;
 
 @EnableConfigurationProperties({RsaKeyProperties.class})
 @SpringBootApplication
+@EnableScheduling
 public class BackendApplication {
 
     public static void main(String[] args) {

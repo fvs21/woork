@@ -10,9 +10,12 @@ export default function Navbar(props) {
     function AuthenticationButtons() {
         if(auth.loggedIn) {
             return (
-                <Link href='/account'>
-                   <button className={styles['profile-btn']}>Cuenta</button>
-                </Link>
+                <div className={styles['auth-buttons-container']}>
+                    <button>+</button>
+                    <Link href='/account'>
+                        <button className={styles['profile-btn']}>Cuenta</button>
+                    </Link> 
+                </div>
             )
         } else {
             return (

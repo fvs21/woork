@@ -5,24 +5,32 @@ import CloseSVG from "../../components/SVGs/Close";
 import ValidatedInput from "../../components/ValidatedInput/ValidatedInput";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import { useUpdateLocation } from "../../hooks/authentication";
-import { validateAddress } from "../../services/Validators";
+import { validateAddress, validateNumber, validateStreet } from "../../services/Validators";
 import CountriesSelector from "../../components/CountriesSelector/CountriesSelector";
 import { loadCities, loadStates } from "../../utils/location/LocationUtils";
+import { useUser } from "../../hooks/useUser";
 
 export default function AddressModal({changeDisplayModal}) {
+    const user = useUser();
+
+    const location = user?.location;
+
     const [address, setAddress] = useState({
-        country: "",
-        state: "",
-        city: "",
-        zip_code: "",
-        street: "",
-        number: ""
+        country: location?.country || "",
+        state: location?.state || "",
+        city: location?.city || "",
+        zip_code: location?.zipCode || "",
+        street: location?.street || "",
+        number: location?.number || ""
     });
 
-    const [states, setStates] = useState([]);
-    const [cities, setCities] = useState([]);
+    const [zipCodeValid, setZipCodeValid] = useState(true);
+    const [streetValid, setStreetValid] = useState(true);
+    const [numberValid, setNumberValid] = useState(true);
 
     const countries = require("../../services/countries/countries.json");
+    const [states, setStates] = useState(address.country ? loadStates(address.country) : []);
+    const [cities, setCities] = useState(address.state ? loadCities(address.country, address.state) : []);
 
     const { updateLocationFn } = useUpdateLocation(address);
 
@@ -54,6 +62,7 @@ export default function AddressModal({changeDisplayModal}) {
             ...address,
             zip_code: value
         });
+        setZipCodeValid(validateNumber(value));
     }
 
     function changeStreet(value) {
@@ -61,13 +70,15 @@ export default function AddressModal({changeDisplayModal}) {
             ...address,
             street: value
         });
+        setStreetValid(validateStreet(value))
     }
 
     function changeHouseNumber(value) {
         setAddress({
             ...address,
             number: value
-        })
+        });
+        setNumberValid(validateNumber(value));
     }
 
     async function handleSubmit(event) {
@@ -75,6 +86,7 @@ export default function AddressModal({changeDisplayModal}) {
 
         try {
             await updateLocationFn();
+            changeDisplayModal(false);
         } catch(error) {
             console.log(error);
         }
@@ -101,11 +113,11 @@ export default function AddressModal({changeDisplayModal}) {
                                 value={address.city} setValue={(e) => changeCity(e.target.value)} disabled={"Ciudad"}/>
                         </div>
                         <br/>
-                        <ValidatedInput valid={true} label={"Calle"} placeholder={"Calle"} value={address.street} setValue={changeStreet}/>
+                        <ValidatedInput valid={streetValid} label={"Calle"} placeholder={"Calle"} value={address.street} setValue={changeStreet}/>
                         <br/>
                         <div className={styles['address-fields']}>
-                            <ValidatedInput valid={true} placeholder={"#"} label={"Departamento/Número de casa"} value={address.number} setValue={changeHouseNumber}/>
-                            <ValidatedInput valid={true} placeholder={"Código postal"} label={"Código postal"} value={address.zip_code} setValue={changeZipCode}/>
+                            <ValidatedInput valid={numberValid} placeholder={"#"} label={"Departamento/Número de casa"} value={address.number} setValue={changeHouseNumber}/>
+                            <ValidatedInput valid={zipCodeValid} placeholder={"Código postal"} label={"Código postal"} value={address.zip_code} setValue={changeZipCode}/>
                         </div>
                     </div>
                     <br/><br/>

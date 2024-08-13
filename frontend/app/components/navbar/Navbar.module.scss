@@ -59,12 +59,19 @@
 
 .nav-links {
     list-style: none;
+    position: relative;
 
     li {
         display: inline-block;
         color: white;
         padding: 0 20px;
     }
+}
+
+.auth-buttons-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
 }
 
 @media (max-width: 1000px) {

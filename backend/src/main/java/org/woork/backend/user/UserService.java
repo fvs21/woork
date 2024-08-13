@@ -147,7 +147,7 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    public User checkPhoneVerificationCode(User user, String verificationCode) {
+    public UserDTO checkPhoneVerificationCode(User user, String verificationCode) {
         if(!user.isPhoneVerificationCodeValid()) {
             throw new VerificationCodeExpiredException();
         }
@@ -157,7 +157,7 @@ public class UserService implements UserDetailsService {
         }
         user.setPhoneVerificationCode(null);
         user.setVerified(true);
-        return userRepository.save(user);
+        return userToDTO(userRepository.save(user));
     }
 
     public String generateNewPhoneVerificationCode(User user) {
@@ -204,7 +204,7 @@ public class UserService implements UserDetailsService {
         System.out.println("Your one time generated password: " + verificationCode);
     }
 
-    public User checkEmailVerificationCode(User user, String verificationCode) {
+    public UserDTO checkEmailVerificationCode(User user, String verificationCode) {
         if(user.getEmail() == null) {
             throw new EmailNotAddedException();
         }
@@ -215,7 +215,7 @@ public class UserService implements UserDetailsService {
             user.setEmailCodeGenerationDate(null);
             user.setEmailVerificationCode(null);
             user.setEmailVerified(true);
-            return userRepository.save(user);
+            return userToDTO(userRepository.save(user));
         } else {
             throw new IncorrectVerificationCodeException();
         }
@@ -286,19 +286,22 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDTO updateLocation(User user, LocationDTO locationDTO) {
-        Long locationId = user.getLocation().getId();
-        Location location = locationService.updateLocation(locationId, locationDTO);
-        user.setLocation(location);
+        if(user.getLocation() != null) {
+            Long locationId = user.getLocation().getId();
+            Location location = locationService.updateLocation(locationId, locationDTO);
+            user.setLocation(location);
+        } else {
+            Location location = locationService.createLocation(locationDTO);
+            user.setLocation(location);
+        }
 
         return userToDTO(userRepository.save(user));
     }
 
-    public String uploadProfilePicture(User user, MultipartFile file) {
+    public UserDTO uploadProfilePicture(User user, MultipartFile file) {
         Image image = imageService.uploadImage(file, "pfp");
         user.setProfilePicture(image);
-        userRepository.save(user);
-
-        return "Profile picture saved successfully";
+        return userToDTO(userRepository.save(user));
     }
 
     public User addPosting(User author, Posting posting) {

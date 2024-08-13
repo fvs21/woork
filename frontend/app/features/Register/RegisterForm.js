@@ -62,7 +62,7 @@ export default function RegisterForm() {
         "lastName": fullName.lastName,
         "countryCode": phoneNumber.countryCode,
         "phone": phoneNumber.phone,
-        "dateOfBirth": stringifyDateOfBirth(dateOfBirth.year, dateOfBirth.month-1, dateOfBirth.day),
+        "dateOfBirth": stringifyDateOfBirth(dateOfBirth.year, dateOfBirth.month, dateOfBirth.day),
         "password": password.value
     }
 
