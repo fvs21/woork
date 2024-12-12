@@ -2,13 +2,20 @@ package org.woork.backend.posting;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
+import lombok.Getter;
+import lombok.Setter;
 import org.woork.backend.image.Image;
-import org.woork.backend.location.Location;
+import org.woork.backend.address.Address;
+import org.woork.backend.postingapplication.PostingApplication;
 import org.woork.backend.user.User;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "postings")
 public class Posting {
@@ -27,99 +34,42 @@ public class Posting {
     private Long id;
 
     private String title;
+
     private String description;
-    private Double price;
+
+    @Digits(integer = 5, fraction = 2)
+    private BigDecimal price;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "location_id", referencedColumnName = "location_id", nullable = false)
-    private Location location;
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
+    private Address address;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "author_id", nullable = false)
     @JsonIgnore
     private User author;
 
-    @Enumerated(EnumType.STRING)
-    private Category category;
+    private String category;
 
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Image> images;
 
+    @OneToMany(mappedBy = "posting_application")
+    Set<PostingApplication> postingApplications;
+
     public Posting() {
         images = new HashSet<>();
+        postingApplications = new HashSet<>();
     }
 
-    public Posting(String title, String description, Double price, Category category, Location location,
+    public Posting(String title, String description, BigDecimal price, String category, Address address,
                    User author, Set<Image> images) {
         this.title = title;
         this.description = description;
         this.price = price;
         this.author = author;
-        this.location = location;
+        this.address = address;
         this.category = category;
-        this.images = images;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Set<Image> getImages() {
-        return images;
-    }
-    public void setImages(Set<Image> images) {
         this.images = images;
     }
 }

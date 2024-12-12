@@ -6,31 +6,41 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.stereotype.Service;
 import org.woork.backend.exceptions.AccessTokenExpiredException;
 import org.woork.backend.exceptions.InvalidTokenException;
 import org.woork.backend.exceptions.RefreshTokenExpiredException;
-import org.woork.backend.exceptions.VerificationCodeExpiredException;
+import org.woork.backend.exceptions.UserDoesNotExistException;
 import org.woork.backend.user.User;
+import org.woork.backend.user.UserRepository;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 //Refresh token cookie name is "user_r"
 
 @Service
 public class TokenService {
-    private JwtEncoder jwtEncoder;
-    private JwtDecoder jwtDecoder;
+    private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public TokenService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder, RefreshTokenRepository refreshTokenRepository) {
+    public TokenService(
+            JwtEncoder jwtEncoder,
+            JwtDecoder jwtDecoder,
+            RefreshTokenRepository refreshTokenRepository,
+            UserRepository userRepository
+    ) {
         this.jwtEncoder = jwtEncoder;
         this.jwtDecoder = jwtDecoder;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.userRepository = userRepository;
     }
 
     public String generateRefreshToken(User user) {
@@ -45,26 +55,7 @@ public class TokenService {
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(24*7, ChronoUnit.HOURS))
-                .subject(user.getId().toString())
-                .claim("scope", scope)
-                .claim("type", "refresh")
-                .claim("verified", user.isVerified())
-                .build();
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-    }
-
-    public String generateRefreshToken(Authentication authentication) {
-        Instant now = Instant.now();
-
-        String scope = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
-
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plus(24*7, ChronoUnit.HOURS))
-                .subject(authentication.getName())
+                .subject(user.getUsername())
                 .claim("scope", scope)
                 .claim("type", "refresh")
                 .build();
@@ -83,28 +74,11 @@ public class TokenService {
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(24*7, ChronoUnit.HOURS))
-                .subject(user.getId().toString())
+                .subject(user.getUsername())
                 .claim("scope", scope)
                 .claim("type", "access")
                 .build();
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-    }
 
-    public String generateAccessToken(Authentication authentication) {
-        Instant now = Instant.now();
-
-        String scope = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
-
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plus(5, ChronoUnit.MINUTES))
-                .subject(authentication.getName())
-                .claim("scope", scope)
-                .claim("type", "access")
-                .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
@@ -118,43 +92,22 @@ public class TokenService {
         return decoded.getClaim("type").equals("refresh");
     }
 
-    private boolean isTokenAccess(Jwt decoded) {
-        return decoded.getClaim("type").equals("access");
-    }
-
     public boolean isTokenRefresh(Jwt decoded) {
         return decoded.getClaim("type").equals("refresh");
     }
 
-    public Long getIdFromAccessToken(String token) {
+    public String extractUsername(String token) {
         Jwt decoded = jwtDecoder.decode(token);
-        if(!isTokenAccess(decoded)) {
-            throw new InvalidTokenException();
-        }
-        if(!isTokenValid(decoded)) {
-            throw new AccessTokenExpiredException();
-        }
-        return Long.valueOf(decoded.getSubject());
-    }
-
-    public Long getIdFromRefreshToken(String token) {
-        Jwt decoded = jwtDecoder.decode(token);
-        if(!isTokenRefresh(decoded)) {
-            throw new InvalidTokenException();
-        }
-        if(!isTokenValid(decoded)) {
-            throw new RefreshTokenExpiredException();
-        }
-        return Long.valueOf(decoded.getSubject());
+        return decoded.getSubject();
     }
 
     public boolean isTokenValid(String token) {
         Jwt decoded = jwtDecoder.decode(token);
-        return decoded.getExpiresAt().isAfter(Instant.now());
-    }
 
-    private boolean isTokenValid(Jwt decoded) {
-        return decoded.getExpiresAt().isAfter(Instant.now());
+        if(refreshTokenRepository.findByToken(decoded.getTokenValue()).isPresent())
+            return false;
+
+        return Objects.requireNonNull(decoded.getExpiresAt()).isAfter(Instant.now());
     }
 
     public String getNewAccessToken(User user, String refreshToken) {
@@ -191,18 +144,29 @@ public class TokenService {
             throw new InvalidTokenException();
         }
         Instant expiresAt = decoded.getExpiresAt();
-        RefreshTokenBlacklist refreshToken = new RefreshTokenBlacklist();
-        refreshToken.setToken(token);
-        refreshToken.setExpiresAt(expiresAt);
+        RefreshTokenBlacklist refreshToken = RefreshTokenBlacklist.builder()
+            .token(token)
+            .expiresAt(expiresAt)
+            .build();
+
         refreshTokenRepository.save(refreshToken);
     }
 
     public void flushExpiredBlackListRefreshTokens() {
         List<RefreshTokenBlacklist> refreshTokenBlacklist = refreshTokenRepository.findAll();
         for(RefreshTokenBlacklist refreshTokenBlacklistItem : refreshTokenBlacklist) {
-            if(refreshTokenBlacklistItem.getExpiresAt().isAfter(Instant.now())) {
+            if(refreshTokenBlacklistItem.isTokenExpired()) {
                 refreshTokenRepository.delete(refreshTokenBlacklistItem);
             }
         }
+    }
+
+    public User getUserFromAccessToken(String token) {
+        if(!token.startsWith("Bearer")) {
+            throw new InvalidBearerTokenException("Token is not a valid Bearer token");
+        }
+        String strippedToken = token.substring(7);
+        String username = extractUsername(strippedToken);
+        return userRepository.findByUsername(username).orElseThrow(UserDoesNotExistException::new);
     }
 }

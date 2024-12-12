@@ -6,4 +6,8 @@ public class UnableToCreatePostingException extends RuntimeException {
     public UnableToCreatePostingException() {
         super("Unable to create job posting");
     }
+
+    public UnableToCreatePostingException(String message) {
+        super(message);
+    }
 }

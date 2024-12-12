@@ -14,7 +14,7 @@ public class TokenTasks {
         this.tokenService = tokenService;
     }
 
-    @Scheduled(cron = "* 3 * * 1 ?", zone = "UTC")
+    @Scheduled(fixedRate = 86400000)
     public void deleteBlacklistedTokens() {
         tokenService.flushExpiredBlackListRefreshTokens();
     }

@@ -20,20 +20,6 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @ExceptionHandler({ImageNotFoundException.class})
-    public ResponseEntity<String> handleImageNotFoundException(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler({UnableToUploadImageException.class, UnableToDownloadImageException.class})
-    public ResponseEntity<String> handleUnableToUploadImageException(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler({UnsupportedImageTypeException.class})
-    public ResponseEntity<String> handleUnsupportedImageTypeException(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 
     @GetMapping("/{filename}")
     public ResponseEntity<byte[]> downloadImage(@PathVariable String filename) {

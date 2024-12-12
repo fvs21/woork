@@ -1,1 +1,0 @@
-export const INCORRECT_CREDENTIALS_ERROR = "Incorrect credentials";

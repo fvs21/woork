@@ -2,11 +2,17 @@ package org.woork.backend.token;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Entity
 @Table
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RefreshTokenBlacklist {
     @Id
     @SequenceGenerator(
@@ -27,16 +33,9 @@ public class RefreshTokenBlacklist {
 
     private Instant expiresAt;
 
-    public RefreshTokenBlacklist() {}
-
-    public RefreshTokenBlacklist(String token) {
-        this.token = token;
-    }
-
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -55,6 +54,10 @@ public class RefreshTokenBlacklist {
 
     public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
+    }
+
+    public boolean isTokenExpired() {
+        return Instant.now().isAfter(expiresAt);
     }
 
 }

@@ -1,6 +1,7 @@
 package org.woork.backend.image;
 
 import io.github.cdimascio.dotenv.Dotenv;
+ import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,7 +10,9 @@ import org.woork.backend.exceptions.UnableToUploadImageException;
 import org.woork.backend.exceptions.ImageNotFoundException;
 import org.woork.backend.exceptions.UnsupportedImageTypeException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -18,8 +21,6 @@ public class ImageService {
     private final ImageRepository imageRepository;
 
     private static final String imagesPath = Dotenv.load().get("images_path");
-    private static final File DIRECTORY = new File(imagesPath);
-    private static final String URL = "http://localhost:8000/api/images/";
 
     @Autowired
     public ImageService(ImageRepository imageRepository) {
@@ -34,10 +35,16 @@ public class ImageService {
         try {
             String extension = "." + file.getContentType().split("/")[1];
 
-            File imageFile = File.createTempFile(prefix, extension, DIRECTORY);
-            file.transferTo(imageFile);
+            File imageFile = File.createTempFile(prefix, extension, new File(imagesPath + "/" + prefix));
 
-            String imageUrl = URL + imageFile.getName();
+            byte[] bytes = stripExifMetadata(file.getBytes());
+            try(FileOutputStream fos = new FileOutputStream(imageFile.getPath())) {
+                fos.write(bytes);
+            } catch (IOException e) {
+                throw new UnableToUploadImageException();
+            }
+
+            String imageUrl = "/api/images/" + imageFile.getName();
 
             Image image = new Image(
                     imageFile.getName(),
@@ -70,5 +77,19 @@ public class ImageService {
 
     public Image getDefaultPfp() {
         return imageRepository.findByImageName("default-pfp").orElse(null);
+    }
+
+    private byte[] stripExifMetadata(byte[] fileBytes) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            new ExifRewriter().removeExifMetadata(fileBytes, byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteImage(Image image) {
+        imageRepository.delete(image);
     }
 }

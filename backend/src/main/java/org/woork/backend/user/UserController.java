@@ -1,14 +1,16 @@
 package org.woork.backend.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.woork.backend.address.requests.UpdateAddressRequest;
+import org.woork.backend.annotations.Authenticated;
+import org.woork.backend.authentication.AuthenticationService;
 import org.woork.backend.exceptions.UserDoesNotExistException;
-import org.woork.backend.exceptions.UserNotVerifiedException;
-import org.woork.backend.location.LocationDTO;
+import org.woork.backend.exceptions.UserPhoneNotVerifiedException;
+import org.woork.backend.address.AddressResource;
 
 import java.util.LinkedHashMap;
 
@@ -17,51 +19,44 @@ import java.util.LinkedHashMap;
 @RequestMapping("api/user")
 public class UserController {
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthenticationService authenticationService) {
         this.userService = userService;
-    }
-
-    @ExceptionHandler({UserDoesNotExistException.class})
-    public ResponseEntity<String> handleUserDoesNotExist(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler({UserNotVerifiedException.class})
-    public ResponseEntity<String> handleUserNotVerified(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        this.authenticationService = authenticationService;
     }
 
     //MAPPINGS
-
     @GetMapping("/verify")
-    public UserDTO verifyUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        return userService.userToDTO(
-                userService.getUserFromAccessToken(token)
+    @Authenticated
+    public UserResource verifyUser() {
+        return new UserResource(
+                authenticationService.getCurrentUser()
         );
     }
 
     @PutMapping("/gender/update")
-    public UserDTO updateGender(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody LinkedHashMap<String, String> body) {
-        User user = userService.getUserFromAccessToken(token);
+    @Authenticated
+    public UserResource updateGender(@RequestBody LinkedHashMap<String, String> body) {
+        User user = authenticationService.getCurrentUser();
         String gender = body.get("gender");
-        Gender genderEnum = Gender.valueOf(gender);
 
-        return userService.updateGender(user, genderEnum);
+        return userService.updateGender(user, gender);
     }
 
     @PutMapping("/location/update")
-    public UserDTO updateLocation(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody LocationDTO locationObject) {
-        User user = userService.getUserFromAccessToken(token);
+    @Authenticated
+    public UserResource updateLocation(@RequestBody UpdateAddressRequest updateAddressRequest) {
+        User user = authenticationService.getCurrentUser();
 
-        return userService.updateLocation(user, locationObject);
+        return userService.updateLocation(user, updateAddressRequest);
     }
 
     @PutMapping("/pfp/update")
-    public UserDTO updateProfilePicture(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                                                       @RequestParam("image") MultipartFile multipartFile) {
-        User user = userService.getUserFromAccessToken(token);
+    @Authenticated
+    public UserResource updateProfilePicture(@RequestParam("image") MultipartFile multipartFile) {
+        User user = authenticationService.getCurrentUser();
 
         return userService.uploadProfilePicture(user, multipartFile);
     }

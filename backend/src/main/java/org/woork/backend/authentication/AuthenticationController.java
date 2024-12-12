@@ -6,19 +6,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.woork.backend.annotations.Verified;
+import org.woork.backend.annotations.Authenticated;
+import org.woork.backend.authentication.requests.RegistrationRequest;
+import org.woork.backend.authentication.requests.ResetPasswordRequest;
+import org.woork.backend.authentication.responses.AuthenticationResponse;
+import org.woork.backend.authentication.responses.ResetTokenExistsResponse;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
-import org.woork.backend.user.UserDTO;
+import org.woork.backend.user.UserResource;
 import org.woork.backend.user.UserService;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 @RestController
@@ -26,103 +28,52 @@ import java.util.LinkedHashMap;
 public class AuthenticationController {
     private final UserService userService;
     private final TokenService tokenService;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    public AuthenticationController(UserService userService, TokenService tokenService, AuthenticationManager authenticationManager) {
+    public AuthenticationController(UserService userService, TokenService tokenService, AuthenticationService authenticationService) {
         this.userService = userService;
         this.tokenService = tokenService;
-        this.authenticationManager = authenticationManager;
-    }
-
-    //Exceptions
-    @ExceptionHandler({
-            EmailAlreadyTakenException.class,
-            PhoneNumberAlreadyTakenException.class,
-            IncorrectVerificationCodeException.class,
-            EmailNotAddedException.class,
-            UnableToGenerateVerificationCodeException.class})
-    public ResponseEntity<String> handleConflictedRequest(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler({UserDoesNotExistException.class})
-    public ResponseEntity<String> handleNotFoundRequest(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler({
-            IncorrectCredentialsException.class,
-            CredentialsNotProvidedException.class,
-            InvalidPhoneNumberException.class,
-            InvalidCountryCodeException.class,
-            InvalidTokenException.class,
-            InvalidBearerTokenException.class,
-            RegistrationException.class,
-            VerificationCodeExpiredException.class
-    })
-    public ResponseEntity<String> handleBadRequest(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({AuthenticationErrorException.class})
-    public ResponseEntity<String> handleInternalServerError(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler({
-            UserNotVerifiedException.class,
-            RefreshTokenExpiredException.class,
-            AccessTokenExpiredException.class,
-    })
-    public ResponseEntity<String> handleUnauthorizedRequest(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        this.authenticationService = authenticationService;
     }
 
     //Mappings
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegistrationDTO registration,
-                                                           BindingResult bindingResult, HttpServletResponse response) {
+    public AuthenticationResponse register(@RequestBody @Valid RegistrationRequest registration,
+                                           BindingResult bindingResult, HttpServletResponse response) {
         if(bindingResult.hasErrors()) {
             bindingResult.getFieldErrors().forEach(fieldError -> {
                 throw new RegistrationException(fieldError.getDefaultMessage());
             });
         }
 
-        User user = userService.registerUser(registration);
-
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            (registration.getCountryCode() + registration.getPhone()),
-                            registration.getPassword()
-                    )
-            );
-            String accessToken = tokenService.generateAccessToken(user);
-            AuthenticationResponse authResponse = new AuthenticationResponse(
-                    userService.userToDTO(user),
-                    accessToken);
-
-            String refreshToken = tokenService.generateRefreshToken(user);
-
-            response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateTokenCookie(refreshToken).toString());
-
-            return new ResponseEntity<>(authResponse, HttpStatus.OK);
-
-        } catch (AuthenticationException e) {
-            throw new AuthenticationErrorException();
-        }
+        User user = authenticationService.register(registration);
+        HashMap<String, String> tokens = authenticationService.authenticate(
+                user.getPhone(),
+                registration.getPassword()
+        );
+        response.addHeader(
+                HttpHeaders.SET_COOKIE,
+                tokenService.generateTokenCookie(tokens.get("refreshToken")).toString()
+        );
+        return new AuthenticationResponse(
+                new UserResource(user),
+                tokens.get("accessToken")
+        );
     }
 
     @PutMapping("/phone/update")
-    public String updatePhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                                  @RequestBody LinkedHashMap<String, String> body, HttpServletResponse response) {
+    @Authenticated
+    public String updatePhoneNumber(
+            @RequestBody LinkedHashMap<String, String> body,
+            HttpServletResponse response
+    ) {
         String countryCode = body.get("countryCode");
         String phoneNumber = body.get("phone");
 
-        User user = userService.getUserFromAccessToken(token);
-        String responseMsg = userService.updatePhoneNumber(user, countryCode, phoneNumber);
+        User user = authenticationService.getCurrentUser();
+        String responseMsg = authenticationService.updatePhoneNumber(user, countryCode, phoneNumber);
 
         String refreshToken = tokenService.generateRefreshToken(user);
         response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateTokenCookie(refreshToken).toString());
@@ -130,55 +81,59 @@ public class AuthenticationController {
         return responseMsg;
     }
 
-    @PostMapping("/phone/code")
-    public String generatePhoneVerificationCode(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        User user = userService.getUserFromAccessToken(token);
-        return userService.generateNewPhoneVerificationCode(user);
+    @PostMapping("/verify-phone/resend")
+    public String generatePhoneVerificationCode() {
+        User user = authenticationService.getCurrentUser();
+        return authenticationService.generateNewPhoneVerificationCode(user);
     }
 
-    @PostMapping("/phone/verify")
-    public UserDTO verifyPhoneNumber(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                                    @RequestBody LinkedHashMap<String, String> body, HttpServletResponse response) {
+    @PostMapping("/verify-phone")
+    public UserResource verifyPhoneNumber(
+            @RequestBody LinkedHashMap<String, String> body,
+            HttpServletResponse response
+    ) {
         String verificationCode = body.get("otp");
 
-        User user = userService.getUserFromAccessToken(token);
+        User user = authenticationService.getCurrentUser();
 
-        UserDTO userDTO = userService.checkPhoneVerificationCode(
+        UserResource userResource = authenticationService.checkPhoneVerificationCode(
                 user,
                 verificationCode
         );
 
         String refreshToken = tokenService.generateRefreshToken(user);
         response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateTokenCookie(refreshToken).toString());
-        return userDTO;
+        return userResource;
     }
 
-    @Verified
     @PutMapping("/email/update")
-    public String updateEmail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-            @RequestBody LinkedHashMap<String, String> body) {
-        User user = userService.getUserFromAccessToken(token);
+    @Authenticated
+    public String updateEmail(
+            @RequestBody LinkedHashMap<String, String> body
+    ) {
+        User user = authenticationService.getCurrentUser();
         String email = body.get("email");
 
-        return userService.updateEmail(user, email);
+        return authenticationService.updateEmail(user, email);
     }
 
-    @Verified
-    @PostMapping("/email/code")
-    public String generateEmailVerificationCode(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        User user = userService.getUserFromAccessToken(token);
-        return userService.generateNewEmailVerificationCode(user);
+    @Authenticated
+    @PostMapping("/verify-email/resend")
+    public String generateEmailVerificationCode() {
+        User user = authenticationService.getCurrentUser();
+        return authenticationService.generateNewEmailVerificationCode(user);
     }
 
-    @Verified
-    @PostMapping("/email/verify")
-    public UserDTO verifyEmail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                               @RequestBody LinkedHashMap<String, String> body) {
+    @Authenticated
+    @PostMapping("/verify-email")
+    public UserResource verifyEmail(
+            @RequestBody LinkedHashMap<String, String> body
+    ) {
 
-        User user = userService.getUserFromAccessToken(token);
+        User user = authenticationService.getCurrentUser();
         String code = body.get("otp");
 
-        return userService.checkEmailVerificationCode(user, code);
+        return authenticationService.checkEmailVerificationCode(user, code);
     }
 
     @PostMapping("/login")
@@ -186,40 +141,66 @@ public class AuthenticationController {
         String phoneOrEmail = body.get("credential");
         String password = body.get("password");
 
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(phoneOrEmail, password)
-            );
-            User user = userService.getUserByEmailOrPhone(phoneOrEmail);
+        HashMap<String, String> tokens = authenticationService.authenticate(
+                phoneOrEmail,
+                password
+        );
 
-            String refreshToken = tokenService.generateRefreshToken(user);
-
-            response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateTokenCookie(refreshToken).toString());
-
-            String token = tokenService.generateAccessToken(user);
-            return new AuthenticationResponse(
-                    userService.userToDTO(user),
-                    token
-            );
-        } catch (AuthenticationException | UserDoesNotExistException e) {
-            throw new IncorrectCredentialsException();
-        }
+        response.addHeader(
+                HttpHeaders.SET_COOKIE,
+                tokenService.generateTokenCookie(tokens.get("refreshToken")).toString()
+        );
+        return new AuthenticationResponse(
+                new UserResource((User) userService.loadUserByUsername(phoneOrEmail)),
+                tokens.get("accessToken")
+        );
     }
 
     @GetMapping("/refresh")
     public String refresh(@CookieValue("user_r") String token) {
         User user = userService.getUserFromRefreshToken(token);
-        String access_token = tokenService.getNewAccessToken(user, token);
-
-        return access_token;
+        return tokenService.getNewAccessToken(user, token);
     }
 
     @GetMapping("/logout")
     public String logout(@CookieValue("user_r") String token, HttpServletResponse response) {
-        userService.getUserFromRefreshToken(token);
+        if(!tokenService.isTokenValid(token) || !tokenService.isTokenRefresh(token))
+            throw new InvalidTokenException();
+
         tokenService.blackListRefreshToken(token);
         response.addHeader(HttpHeaders.SET_COOKIE, tokenService.generateLogoutCookie().toString());
-
         return "Logged out successfully";
+    }
+
+    @PostMapping("/forgot-password")
+    public String forgotPassword(@RequestBody LinkedHashMap<String, String> body, HttpServletResponse response) {
+        String credential = body.get("credential");
+        authenticationService.sendPasswordResetLink(credential);
+        return "El link para cambiar tu contraseña fue enviado.";
+    }
+
+    @GetMapping("/reset-password/verification")
+    public ResetTokenExistsResponse verifyResetTokenExists(
+            @RequestParam("token") String token
+    ) {
+        if(authenticationService.resetTokenExists(token)) {
+            return ResetTokenExistsResponse.builder()
+                    .exists(true)
+                    .build();
+        } else {
+            return ResetTokenExistsResponse.builder()
+                    .exists(false)
+                    .build();
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(ResetPasswordRequest request) {
+        authenticationService.resetPassword(
+                request.getToken(),
+                request.getPassword(),
+                request.getConfirmPassword()
+        );
+        return "Contraseña actualizada.";
     }
 }
