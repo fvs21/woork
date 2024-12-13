@@ -44,7 +44,7 @@ public class Posting {
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     private Address address;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "author_id", nullable = false)
     @JsonIgnore
     private User author;
@@ -54,7 +54,7 @@ public class Posting {
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Image> images;
 
-    @OneToMany(mappedBy = "posting_application")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "posting")
     Set<PostingApplication> postingApplications;
 
     public Posting() {
@@ -71,5 +71,9 @@ public class Posting {
         this.address = address;
         this.category = category;
         this.images = images;
+    }
+
+    public boolean belongsToUser(User user) {
+        return author.getId().equals(user.getId());
     }
 }

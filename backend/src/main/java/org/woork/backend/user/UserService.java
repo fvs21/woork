@@ -14,6 +14,7 @@ import org.woork.backend.address.Address;
 import org.woork.backend.address.AddressService;
 import org.woork.backend.sms.SMSService;
 import org.woork.backend.token.TokenService;
+import org.woork.backend.user.resources.UserResource;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -42,6 +43,9 @@ public class UserService implements UserDetailsService {
         return user.isPhoneVerified();
     }
 
+    //Mandatory function for authentication flow
+    //returns User by his phone number or email
+    //Contrary to what the function name implies, do not use to get a user by his username
     @Override
     public UserDetails loadUserByUsername(String emailOrPhone) throws UsernameNotFoundException {
         return getUserByEmailOrPhone(emailOrPhone);

@@ -1,20 +1,11 @@
 package org.woork.backend.config;
 
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
-import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,12 +18,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
-    private final PhoneVerificationFilter phoneVerificationFilter;
 
     @Autowired
-    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthFilter, PhoneVerificationFilter phoneVerificationFilter) {
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
-        this.phoneVerificationFilter = phoneVerificationFilter;
     }
 
     @Bean
@@ -48,15 +37,47 @@ public class SecurityConfiguration {
         return new ProviderManager(provider);
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
+                        //AUTH
+                        .requestMatchers(
+                                "/api/auth/register",
+                                "/api/auth/login",
+                                "/api/auth/reset-password/**"
+                                ,"/api/auth/forgot-password/"
+                        ).permitAll()
+                        .requestMatchers(
+                                "/api/auth/email/update",
+                                "/api/auth/verify-email/**",
+                                "/api/auth/logout",
+                                "/api/auth/verify-phone/**",
+                                "/api/auth/email/**",
+                                "/api/auth/phone/**"
+                        ).authenticated()
+                        //POSTING
+                        .requestMatchers(
+                                "/api/posting/{id}"
+                        ).permitAll()
+                        .requestMatchers(
+                                "/api/posting/create"
+                        ).authenticated()
+                        //WS
+                        .requestMatchers("/ws").permitAll()
+                        //USER
+                        .requestMatchers("/api/user/**").authenticated()
+                        //EXPLORE
+                        .requestMatchers("/api/explore").permitAll()
+                        //ADDRESS
+                        .requestMatchers("/api/location/**").permitAll()
+                        //NOTIFICATIONS
+                        .requestMatchers(
+                                "/api/notification/**"
+                        ).authenticated()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

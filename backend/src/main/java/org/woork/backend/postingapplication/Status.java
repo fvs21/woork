@@ -5,10 +5,8 @@ public enum Status {
     REJECTED,
     ACCEPTED;
 
-    private String name;
-
     @Override
     public String toString() {
-        return name.toLowerCase();
+        return name().toLowerCase();
     }
 }

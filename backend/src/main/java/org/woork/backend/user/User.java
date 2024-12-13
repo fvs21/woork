@@ -125,8 +125,7 @@ public class User implements UserDetails {
 
     @Setter
     @Getter
-    @OneToMany(mappedBy = "author")
-    @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private Set<Posting> postings;
 
     @Setter

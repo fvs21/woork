@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 import org.woork.backend.authentication.requests.RegistrationRequest;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.passwordreset.PasswordResetService;
-import org.woork.backend.passwordreset.PasswordResetTokenRepository;
 import org.woork.backend.sms.SMSService;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserRepository;
-import org.woork.backend.user.UserResource;
+import org.woork.backend.user.resources.UserResource;
 import org.woork.backend.utils.AuthenticationUtils;
 
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service

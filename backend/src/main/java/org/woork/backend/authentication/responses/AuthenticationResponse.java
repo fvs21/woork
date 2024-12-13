@@ -1,6 +1,6 @@
 package org.woork.backend.authentication.responses;
 
-import org.woork.backend.user.UserResource;
+import org.woork.backend.user.resources.UserResource;
 
 public class AuthenticationResponse {
     UserResource user;

@@ -1,15 +1,19 @@
 package org.woork.backend.url;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.sqids.Sqids;
 import org.woork.backend.address.records.LocationQuery;
 import org.woork.backend.url.records.DecimalAsInteger;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
 public class UrlService {
+    private static final Log log = LogFactory.getLog(UrlService.class);
     private final Sqids sqids;
 
     @Autowired
@@ -43,13 +47,9 @@ public class UrlService {
     }
 
     public DecimalAsInteger convertDecimalToInt(Double decimal) {
-        long numOfDecimals = Long.parseLong(
-                new StringBuilder(
-                        String.valueOf(decimal)
-                ).reverse().toString()
-        );
+        long numOfDecimals = BigDecimal.valueOf(decimal).scale();
         return new DecimalAsInteger(
-                (long) (decimal + Math.pow(10, numOfDecimals)),
+                Math.abs((long) (decimal * Math.pow(10, numOfDecimals))),
                 numOfDecimals
         );
     }
@@ -59,17 +59,18 @@ public class UrlService {
     }
 
     public LocationQuery decodeCoordinates(String url) {
-        List<Long> coordinates = sqids.decode(url);
+        List<Long> coordinates = decodeIdFromUrl(url);
+        log.info(coordinates);
 
         Double lat = convertIntToDecimal(
                 Math.toIntExact(coordinates.get(0)),
                 Math.toIntExact(coordinates.get(1))
-        );
+        ) * (coordinates.get(2) == 1 ? -1 : 1);
 
         Double lng = convertIntToDecimal(
                 Math.toIntExact(coordinates.get(3)),
                 Math.toIntExact(coordinates.get(4))
-        );
+        ) * (coordinates.get(5) == 1 ? -1 : 1);
 
         Long radius = coordinates.get(6);
 

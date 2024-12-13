@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.woork.backend.address.records.Coordinates;
+import org.woork.backend.address.records.LocationQuery;
 import org.woork.backend.address.requests.UpdateAddressRequest;
 import org.woork.backend.exceptions.InvalidLocationException;
 import org.woork.backend.exceptions.UnableToDeleteAddressException;
@@ -17,17 +19,13 @@ import org.woork.backend.exceptions.UnableToFetchSearchLocationException;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.posting.PostingRepository;
 import org.woork.backend.posting.requests.PostingLocationRequest;
-import org.woork.backend.posting.resources.FetchedLocation;
+import org.woork.backend.posting.resources.FetchedLocationResource;
 import org.woork.backend.user.User;
 import org.woork.backend.utils.CustomStringUtils;
 import org.woork.backend.utils.JsonUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -37,6 +35,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AddressService {
+    private static final Log log = LogFactory.getLog(AddressService.class);
     private final AddressRepository locationRepository;
     private final AddressRepository addressRepository;
     private final PostingRepository postingRepository;
@@ -192,8 +191,8 @@ public class AddressService {
         ArrayList<Coordinates> options = new ArrayList<>();
 
         List<Double> options_x = List.of(
-                randomDecimal(-0.027, -0.09, 8),
-                randomDecimal(0.09, 0.027, 8)
+                randomDecimal(-0.027, -0.009, 8),
+                randomDecimal(0.009, 0.027, 8)
         );
 
         double x1 = options_x.get(random.nextInt(0, 1));
@@ -212,8 +211,8 @@ public class AddressService {
         );
 
         List<Double> options_y = List.of(
-                randomDecimal(-0.027, -0.09, 8),
-                randomDecimal(0.09, 0.027, 8)
+                randomDecimal(-0.027, -0.009, 8),
+                randomDecimal(0.009, 0.027, 8)
         );
 
         double y2 = options_y.get(random.nextInt(0, 1));
@@ -243,16 +242,13 @@ public class AddressService {
         address.updateCoords(lat, lon);
     }
 
-    public Set<Address> filterLocationsByCoords(
-            ArrayList<Double> coordinates,
-            int radius
-    ) {
-        Double offset = radius * 0.009; //Where 0.009 is approximately a kilometer. Just a generalization
+    public List<Address> filterLocationsByCoords(LocationQuery locationQuery) {
+        Double offset = locationQuery.radius() * 0.009; //Where 0.009 is approximately a kilometer. Just a generalization
 
-        Double minLat = coordinates.get(0) - offset;
-        Double maxLat = coordinates.get(0) + offset;
-        Double minLng = coordinates.get(1) - offset;
-        Double maxLng = coordinates.get(1) + offset;
+        Double minLat = locationQuery.latitude() - offset;
+        Double maxLat = locationQuery.latitude() + offset;
+        Double minLng = locationQuery.longitude() - offset;
+        Double maxLng = locationQuery.longitude() + offset;
 
         Set<Address> addresses = addressRepository.findAllByLatitudeBetweenAndLongitudeBetween(
                 minLat, maxLat, minLng, maxLng
@@ -260,28 +256,27 @@ public class AddressService {
 
         return addresses.stream()
                 .filter(address -> Math.sqrt(
-                        Math.pow(address.getLatitude() - coordinates.get(0), 2) +
-                                Math.pow(address.getLongitude() - coordinates.get(1), 2)
+                        Math.pow(address.getLatitude() - locationQuery.latitude(), 2) +
+                                Math.pow(address.getLongitude() - locationQuery.longitude(), 2)
                 ) <= offset)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
-    public Object[] searchLocation(String query) {
+    public List<FetchedLocationResource> searchLocation(String query) {
         String url = "https://nominatim.openstreetmap.org/search?q=" + CustomStringUtils.stripAccents(query) + "&format=json&limit=5&addressdetails=1";
         try {
             String json = getUrl(url);
 
             ObjectMapper mapper = new ObjectMapper();
-            List<FetchedLocation> locations = mapper.readValue(
+            List<FetchedLocationResource> locations = mapper.readValue(
                     json,
-                    new TypeReference<List<FetchedLocation>>(){}
+                    new TypeReference<List<FetchedLocationResource>>(){}
             );
 
+
             return locations.stream()
-                    .filter(location -> {
-                        return ((Map<?, ?>) ((Map<?, ?>) location).get("address")).get("country").equals("México");
-                    })
-                    .toArray();
+                    .filter(location -> Objects.equals(location.getAddress().get("country"), "México"))
+                    .toList();
 
         } catch (IOException | InterruptedException e) {
             throw new UnableToFetchSearchLocationException(e.getMessage());

@@ -9,11 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.address.AddressRepository;
+import org.woork.backend.address.records.Coordinates;
+import org.woork.backend.address.records.LocationQuery;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.image.Image;
 import org.woork.backend.image.ImageService;
 import org.woork.backend.address.Address;
 import org.woork.backend.address.AddressService;
+import org.woork.backend.notification.NotificationService;
+import org.woork.backend.notification.NotificationType;
+import org.woork.backend.notification.records.NotificationData;
 import org.woork.backend.posting.requests.PostingLocationRequest;
 import org.woork.backend.posting.requests.PostingRequest;
 import org.woork.backend.posting.resources.PostingResource;
@@ -39,6 +44,7 @@ public class PostingService {
     private final ValidatorImpl validator;
     private final PostingApplicationRepository postingApplicationRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @Autowired
     public PostingService(
@@ -48,7 +54,7 @@ public class PostingService {
             ImageService imageService,
             UrlService urlService,
             ValidatorImpl validator,
-            PostingApplicationRepository postingApplicationRepository, UserService userService) {
+            PostingApplicationRepository postingApplicationRepository, UserService userService, NotificationService notificationService) {
         this.postingRepository = postingRepository;
         this.addressService = addressService;
         this.addressRepository = addressRepository;
@@ -57,6 +63,7 @@ public class PostingService {
         this.validator = validator;
         this.postingApplicationRepository = postingApplicationRepository;
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     private PostingRequest decodeJson(String body) {
@@ -69,14 +76,7 @@ public class PostingService {
         }
     }
 
-    public PostingResource createPosting(User author, String body, List<MultipartFile> images) {
-        PostingRequest postingRequest = decodeJson(body);
-        PostingLocationRequest addressRequest = postingRequest.getAddress();
-        validator.validateFields(postingRequest);
-        validator.validateFields(addressRequest);
-
-        Address postingLocation = null;
-
+    public Address getLocationForPosting(User author, PostingLocationRequest addressRequest) {
         if(!addressRequest.isCreate()) {
             if(addressRequest.getId() == null)
                 throw new UnableToCreatePostingException("Forbidden action.");
@@ -103,18 +103,29 @@ public class PostingService {
                 addressService.storeCoordinates(addressObject, addressRequest.getLatitude().doubleValue(), addressRequest.getLongitude().doubleValue());
             }
 
-            postingLocation = addressObject;
+            return addressObject;
         } else {
             if(addressRequest.getLatitude() == null && addressRequest.getLongitude() == null) {
                 throw new UnableToCreatePostingException("Latitude and longitude required.");
             }
 
             try {
-                postingLocation = addressService.createAddress(addressRequest);
+                return addressService.createAddress(addressRequest);
             } catch(InvalidLocationException e) {
                 throw new UnableToCreatePostingException(e.getMessage());
             }
         }
+    }
+
+    public PostingResource createPosting(User author, String body, List<MultipartFile> images) {
+        PostingRequest postingRequest = decodeJson(body);
+        PostingLocationRequest addressRequest = postingRequest.getAddress();
+        validator.validateFields(postingRequest);
+        validator.validateFields(addressRequest);
+        if(images.size() > 3)
+            throw new UnableToCreatePostingException("Image upload size exceeded.");
+
+        Address postingLocation = getLocationForPosting(author, addressRequest);
 
         Posting posting = new Posting();
         posting.setTitle(postingRequest.getTitle());
@@ -126,7 +137,7 @@ public class PostingService {
 
         Set<Image> imagesObjects = new HashSet<>();
         for(MultipartFile image : images) {
-            Image img = imageService.uploadImage(image, "pfp");
+            Image img = imageService.uploadImage(image, "postings");
             imagesObjects.add(img);
         }
         posting.setImages(imagesObjects);
@@ -202,15 +213,11 @@ public class PostingService {
         return application.getStatus();
     }
 
-    public PostingApplication createJobRequest(Long userId, Long postingId) {
-        Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
-        User user = userService.getUser(userId);
-
+    public PostingApplication createJobRequest(User user, Posting posting) {
         PostingApplication postingApplication = new PostingApplication(
                 posting,
                 user
         );
-
         return postingApplicationRepository.save(postingApplication);
     }
 
@@ -223,9 +230,58 @@ public class PostingService {
         Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
 
         if(application != null) {
-            if(application.getStatus().equals(Status.REJECTED.toString())) {
+            if(application.isRejected()) {
                 throw new UnableToApplyToJobException("Job is rejected.");
+            } else if(application.isAccepted()) {
+                throw new UnableToApplyToJobException("Job is accepted.");
             }
+            else {
+                postingApplicationRepository.delete(application);
+                return "Solicitud cancelada";
+            }
+        } else {
+            PostingApplication request = createJobRequest(user, posting);
+            notificationService.createAndSendNotification(
+                    user,
+                    new NotificationData(
+                            NotificationType.JOB_APPLICATION,
+                            List.of(posting.getAuthor()),
+                            postingId
+                    )
+            );
+            return request.getStatus();
         }
+    }
+
+    public List<PostingResource> filterPostingsByLocationAndCategory(LocationQuery coordinates, String category) {
+        List<Address> filteredAddresses = addressService.filterLocationsByCoords(coordinates);
+
+        List<Posting> filteredPostings = new ArrayList<>();
+
+        filteredAddresses.forEach(address -> {
+            List<Posting> filtered = postingRepository.findPostingsByAddressAndCategory(address, Category.valueOf(category)).orElse(new ArrayList<>());
+            filteredPostings.addAll(filtered);
+        });
+
+        return filteredPostings.stream().map(filtered -> new PostingResource(filtered, urlService.encodeIdToUrl(filtered.getId()))).collect(Collectors.toList());
+    }
+
+    public int acceptJobApplicantRequest(User creator, String applicantUsername, Long postingId) {
+        Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
+        if(!posting.belongsToUser(creator)) {
+            throw new UnableToAcceptApplicantException("Forbidden action.");
+        }
+
+        if(!isJobAvailable(postingId)) {
+            throw new UnableToApplyToJobException("Job is no longer available.");
+        }
+
+        User applicant = userService.getUserByUsername(applicantUsername);
+        PostingApplication application = postingApplicationRepository.findByPostingIdAndUserId(postingId, applicant.getId()).orElseThrow(
+                () -> new UnableToApplyToJobException("Posting application does not exist.")
+        );
+        application.acceptApplication();
+
+        return 0;
     }
 }

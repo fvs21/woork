@@ -65,6 +65,8 @@ public class DefaultExceptionHandler {
             UnsupportedImageTypeException.class,
             InvalidLocationException.class,
             UnableToDeleteAddressException.class,
+            NotificationDoesNotExistException.class,
+            UnableToParseLocationException.class
     })
     public ResponseEntity<String> handleBadRequest(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

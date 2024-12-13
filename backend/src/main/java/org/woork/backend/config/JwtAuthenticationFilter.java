@@ -40,11 +40,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             user = tokenService.getUserFromAccessToken(authorizationHeader);
-        } catch(BadJwtException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        } catch(UserDoesNotExistException e) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } catch(BadJwtException | UserDoesNotExistException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 

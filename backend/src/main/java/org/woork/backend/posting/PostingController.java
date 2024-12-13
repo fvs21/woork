@@ -38,10 +38,11 @@ public class PostingController {
             @RequestPart String posting,
             @RequestPart List<MultipartFile> images
     ) {
-        //User author = authenticationService.getCurrentUser();
+        User author = authenticationService.getCurrentUser();
 
-        return postingService.createPosting(null, posting, images);
+        return postingService.createPosting(author, posting, images);
     }
+
 
     @GetMapping("/{id}")
     public PostingResource getPosting(@PathVariable("id") Long id) {

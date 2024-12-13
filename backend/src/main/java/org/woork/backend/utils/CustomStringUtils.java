@@ -1,9 +1,10 @@
 package org.woork.backend.utils;
 
-import java.text.Normalizer;
+import org.apache.commons.lang3.StringUtils;
+
 
 public class CustomStringUtils {
     public static String stripAccents(String str) {
-        return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return StringUtils.stripAccents(str);
     }
 }

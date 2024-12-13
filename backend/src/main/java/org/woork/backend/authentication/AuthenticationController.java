@@ -4,9 +4,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.woork.backend.annotations.Authenticated;
@@ -17,8 +14,9 @@ import org.woork.backend.authentication.responses.ResetTokenExistsResponse;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
-import org.woork.backend.user.UserResource;
+import org.woork.backend.user.resources.UserResource;
 import org.woork.backend.user.UserService;
+import org.woork.backend.validators.ValidatorImpl;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -29,12 +27,14 @@ public class AuthenticationController {
     private final UserService userService;
     private final TokenService tokenService;
     private final AuthenticationService authenticationService;
+    private final ValidatorImpl validatorImpl;
 
     @Autowired
-    public AuthenticationController(UserService userService, TokenService tokenService, AuthenticationService authenticationService) {
+    public AuthenticationController(UserService userService, TokenService tokenService, AuthenticationService authenticationService, ValidatorImpl validatorImpl) {
         this.userService = userService;
         this.tokenService = tokenService;
         this.authenticationService = authenticationService;
+        this.validatorImpl = validatorImpl;
     }
 
     //Mappings
@@ -196,6 +196,7 @@ public class AuthenticationController {
 
     @PostMapping("/reset-password")
     public String resetPassword(ResetPasswordRequest request) {
+        validatorImpl.validateFields(request);
         authenticationService.resetPassword(
                 request.getToken(),
                 request.getPassword(),

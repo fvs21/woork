@@ -2,6 +2,8 @@ package org.woork.backend.image;
 
 import io.github.cdimascio.dotenv.Dotenv;
  import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +20,7 @@ import java.nio.file.Files;
 
 @Service
 public class ImageService {
+    private static final Log log = LogFactory.getLog(ImageService.class);
     private final ImageRepository imageRepository;
 
     private static final String imagesPath = Dotenv.load().get("images_path");
@@ -41,6 +44,7 @@ public class ImageService {
             try(FileOutputStream fos = new FileOutputStream(imageFile.getPath())) {
                 fos.write(bytes);
             } catch (IOException e) {
+                log.info(e.getMessage());
                 throw new UnableToUploadImageException();
             }
 
@@ -54,6 +58,7 @@ public class ImageService {
             );
             return imageRepository.save(image);
         } catch (IOException e) {
+            log.info(e.getMessage());
             throw new UnableToUploadImageException();
         }
     }
@@ -73,10 +78,6 @@ public class ImageService {
     public String getImageType(String fileName) {
         Image image = imageRepository.findByImageName(fileName).orElseThrow(ImageNotFoundException::new);
         return image.getImageType();
-    }
-
-    public Image getDefaultPfp() {
-        return imageRepository.findByImageName("default-pfp").orElse(null);
     }
 
     private byte[] stripExifMetadata(byte[] fileBytes) {
