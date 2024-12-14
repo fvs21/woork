@@ -2,8 +2,10 @@ package org.woork.backend.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,12 +54,10 @@ public class User implements UserDetails {
     @Column(name = "country_code")
     private int countryCode;
 
-    @Setter
     @Getter
     @Column(name = "phone", unique = true)
     private String phone;
 
-    @Setter
     @Getter
     @Column(name = "email", unique = true)
     private String email;
@@ -68,6 +68,7 @@ public class User implements UserDetails {
     private String password;
 
     @Getter
+    @Setter
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
@@ -85,8 +86,8 @@ public class User implements UserDetails {
 
     @Setter
     @Getter
-    @Column(name = "verified")
-    private boolean phoneVerified;
+    @Column(name = "phone_verified_at")
+    private LocalDate phoneVerifiedAt;
 
     @Getter
     @Column(name = "phone_verification_code")
@@ -101,8 +102,8 @@ public class User implements UserDetails {
 
     @Setter
     @Getter
-    @Column(name = "email_verified")
-    private boolean emailVerified;
+    @Column(name = "email_verified_at")
+    private LocalDate emailVerifiedAt;
 
     @Getter
     @Column(name = "email_verification_code")
@@ -130,7 +131,7 @@ public class User implements UserDetails {
 
     @Setter
     @Getter
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address", referencedColumnName = "address_id")
     private Address address;
 
@@ -144,12 +145,23 @@ public class User implements UserDetails {
     @Getter
     private Instant passwordUpdatedAt;
 
+    @Column(columnDefinition = "TEXT")
+    @Size(min = 1, max = 450)
+    @Getter
+    @Setter
+    private String about;
+
+    @Column(name = "identity_verified_at")
+    private LocalDate identityVerifiedAt;
+
+    @Getter
+    private LocalDate createdAt;
+
     public User() {
         this.role = Role.USER;
         this.postings = new HashSet<>();
-        this.phoneVerified = false;
-        this.emailVerified = false;
         this.isWorker = false;
+        this.createdAt = LocalDate.now();
     }
 
     public User(
@@ -168,11 +180,11 @@ public class User implements UserDetails {
         this.phone = phone;
         this.email = email;
         this.password = password;
-        this.phoneVerified = false;
-        this.emailVerified = false;
         this.dateOfBirth = dateOfBirth;
         this.role = role;
         this.postings = new HashSet<>();
+        this.isWorker = false;
+        this.createdAt = LocalDate.now();
     }
 
     @Override
@@ -200,16 +212,25 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    }
-
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     public void setAuthority(Role role) {
         this.role = role;
+    }
+
+    public boolean hasPhoneVerified() {
+        return this.phoneVerifiedAt != null;
+    }
+
+    public boolean hasEmailVerified() {
+        return this.emailVerifiedAt != null;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+        this.phoneVerifiedAt = null;
     }
 
     public void setPhoneVerificationCode(String phoneVerificationCode) {
@@ -223,17 +244,22 @@ public class User implements UserDetails {
         if(getPhoneCodeGenerationDate() == null) {
             return false;
         }
-        long seconds = ChronoUnit.SECONDS.between(getPhoneCodeGenerationDate(), LocalDateTime.now());
-        return seconds <= 90;
+        long seconds = ChronoUnit.MINUTES.between(getPhoneCodeGenerationDate(), LocalDateTime.now());
+        return seconds <= 4;
     }
 
     //Method to check if 20 seconds have passed since last code generation request.
-    public boolean requestPhoneCodeRefreshTime() {
+    public boolean canRequestPhoneVerificationCode() {
         if(getPhoneCodeGenerationDate() == null) {
             return true;
         }
         long seconds = ChronoUnit.SECONDS.between(getPhoneCodeGenerationDate(), LocalDateTime.now());
-        return seconds >= 20;
+        return seconds >= 30;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+        this.emailVerifiedAt = null;
     }
 
     public void setEmailVerificationCode(String emailVerificationCode) {
@@ -250,12 +276,31 @@ public class User implements UserDetails {
         return seconds <= 90;
     }
 
-    public boolean requestEmailCodeRefreshTime() {
+    public boolean canRequestEmailVerificationCode() {
         if(getEmailCodeGenerationDate() == null) {
             return true;
         }
         long seconds = ChronoUnit.SECONDS.between(getEmailCodeGenerationDate(), LocalDateTime.now());
         return seconds >= 20;
+    }
+
+    public void markPhoneAsVerified() {
+        if(this.phoneVerifiedAt != null) {
+            return;
+        }
+        this.phoneVerifiedAt = LocalDate.now();
+        this.phoneVerificationCode = null;
+        this.phoneCodeGenerationDate = null;
+    }
+
+    public void markEmailAsVerified() {
+        if(this.emailVerifiedAt != null) {
+            return;
+        }
+
+        this.emailVerifiedAt = LocalDate.now();
+        this.emailVerificationCode = null;
+        this.emailCodeGenerationDate = null;
     }
 
     public String getProfilePictureUrl() {
@@ -274,5 +319,13 @@ public class User implements UserDetails {
         if(this.passwordUpdatedAt == null)
             return true;
         return ChronoUnit.HOURS.between(this.passwordUpdatedAt, Instant.now()) >= 24;
+    }
+
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
+
+    public boolean hasIdentityVerified() {
+        return identityVerifiedAt != null;
     }
 }

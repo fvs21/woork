@@ -1,10 +1,14 @@
 package org.woork.backend.authentication;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -145,49 +149,54 @@ public class AuthenticationService {
         }
     }
 
+    public boolean isUserAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !(authentication instanceof AnonymousAuthenticationToken);
+    }
+
     public User getCurrentUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    public void sendPasswordResetLink(String phoneOrEmail) {
+    public String sendPasswordResetLink(String phoneOrEmail) {
         String credential = AuthenticationUtils.isEmail(phoneOrEmail) ? "email" : "phone";
         User user = userRepository.findByEmailOrPhone(credential, credential).orElseThrow(UserDoesNotExistException::new);
 
         if(!user.canUpdatePassword()) {
-            throw new CannotRequestResetPasswordException("La contraseña ha sido actualizada recientemente. Intente de nuevo en unas horas.");
+            throw new CannotRequestResetPasswordException(PasswordResetService.RECENTLY_UPDATED_PASSWORD);
         }
 
         String generatedToken = passwordResetService.createPasswordResetToken(credential, phoneOrEmail);
 
         //emailService.sendPasswordResetLink(...args);
         logger.info("Token for " + phoneOrEmail + ": " + generatedToken);
+        return PasswordResetService.RESET_LINK_SENT;
     }
 
     public boolean resetTokenExists(String token) {
         return passwordResetService.resetTokenExists(token);
     }
 
-    public void resetPassword(String token, String newPassword, String confirmPassword) {
+    public String resetPassword(String token, String newPassword, String confirmPassword) {
         if(!newPassword.equals(confirmPassword)) {
             throw new PasswordsDontMatchException();
         }
         passwordResetService.resetPassword(token, newPassword);
+        return PasswordResetService.PASSWORD_RESET;
     }
 
-    public String updatePhoneNumber(User user, String countryCode, String phoneNumber) {
+    public void updatePhoneNumber(User user, String countryCode, String phoneNumber) {
         try {
             user.setPhone(countryCode + phoneNumber);
             user.setCountryCode(Integer.parseInt(countryCode));
 
             String verificationCode = AuthenticationUtils.generateVerificationCode();
-            System.out.println(verificationCode);
             //sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
             user.setPhoneVerificationCode(
                     passwordEncoder.encode(verificationCode)
             );
-            user.setPhoneVerified(false);
             userRepository.save(user);
-            return "Phone number successfully updated. Verification code sent";
+            logger.info(verificationCode);
         } catch (Exception e) {
             throw new PhoneNumberAlreadyTakenException();
         }
@@ -204,7 +213,7 @@ public class AuthenticationService {
         );
     }
 
-    public UserResource checkPhoneVerificationCode(User user, String verificationCode) {
+    public void checkPhoneVerificationCode(User user, String verificationCode) {
         if(!user.isPhoneVerificationCodeValid()) {
             throw new VerificationCodeExpiredException();
         }
@@ -212,16 +221,15 @@ public class AuthenticationService {
         if(!passwordEncoder.matches(verificationCode, storedVerificationCode)) {
             throw new IncorrectVerificationCodeException();
         }
-        user.setPhoneVerificationCode(null);
-        user.setPhoneVerified(true);
-        return new UserResource(userRepository.save(user));
+        user.markPhoneAsVerified();
+        userRepository.save(user);
     }
 
     public String generateNewPhoneVerificationCode(User user) {
-        if(!user.requestPhoneCodeRefreshTime()) {
+        if(!user.canRequestPhoneVerificationCode()) {
             throw new UnableToGenerateVerificationCodeException("There is a refresh time between code generation");
         }
-        if(user.isPhoneVerified()) {
+        if(user.hasPhoneVerified()) {
             throw new UnableToGenerateVerificationCodeException("User is verified");
         }
         try {
@@ -239,18 +247,17 @@ public class AuthenticationService {
         }
     }
 
-    public String updateEmail(User user, String email) {
+    public void updateEmail(User user, String email) {
         try {
             user.setEmail(email);
-            user.setEmailVerified(false);
             String verificationCode = AuthenticationUtils.generateVerificationCode();
-            System.out.println("Email code: " + verificationCode);
             //sendEmailVerificationCode(email, verificationCode);
             user.setEmailVerificationCode(
                     passwordEncoder.encode(verificationCode)
             );
             userRepository.save(user);
-            return "Email successfully updated. Verification code sent";
+            logger.info("Email code: " + verificationCode);
+
         } catch (Exception e) {
             throw new EmailAlreadyTakenException();
         }
@@ -261,7 +268,7 @@ public class AuthenticationService {
         System.out.println("Your one time generated password: " + verificationCode);
     }
 
-    public UserResource checkEmailVerificationCode(User user, String verificationCode) {
+    public void checkEmailVerificationCode(User user, String verificationCode) {
         if(user.getEmail() == null) {
             throw new EmailNotAddedException();
         }
@@ -269,20 +276,18 @@ public class AuthenticationService {
             throw new VerificationCodeExpiredException();
         }
         if(passwordEncoder.matches(verificationCode, user.getEmailVerificationCode())) {
-            user.setEmailCodeGenerationDate(null);
-            user.setEmailVerificationCode(null);
-            user.setEmailVerified(true);
-            return new UserResource(userRepository.save(user));
+            user.markEmailAsVerified();
+            userRepository.save(user);
         } else {
             throw new IncorrectVerificationCodeException();
         }
     }
 
     public String generateNewEmailVerificationCode(User user) {
-        if(!user.requestEmailCodeRefreshTime()) {
+        if(!user.canRequestEmailVerificationCode()) {
             throw new UnableToGenerateVerificationCodeException("There is a refresh time between code generation");
         }
-        if(user.isEmailVerified()) {
+        if(user.hasEmailVerified()) {
             throw new UnableToGenerateVerificationCodeException("User has a verified email");
         }
         try {
@@ -296,5 +301,18 @@ public class AuthenticationService {
         } catch (Exception e) {
             throw new UnableToGenerateVerificationCodeException();
         }
+    }
+
+    public void updatePassword(User user, String currentPassword, String newPassword) {
+        if(!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new UnableToUpdateUserException("Las contraseñas no coinciden");
+        }
+        if(!AuthenticationUtils.validatePassword(newPassword)) {
+            throw new UnableToUpdateUserException("Debes elegir una contraseña más segura.");
+        }
+        if(!user.canUpdatePassword()) {
+            throw new UnableToUpdateUserException("Cambiaste tu contraseña recientemente. Vuelvelo a intentar en un rato.");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
     }
 }

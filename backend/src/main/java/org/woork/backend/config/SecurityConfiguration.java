@@ -47,8 +47,10 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/api/auth/register",
                                 "/api/auth/login",
+                                "/api/auth/forgot-password/"
+                        ).anonymous()
+                        .requestMatchers(
                                 "/api/auth/reset-password/**"
-                                ,"/api/auth/forgot-password/"
                         ).permitAll()
                         .requestMatchers(
                                 "/api/auth/email/update",
@@ -56,7 +58,8 @@ public class SecurityConfiguration {
                                 "/api/auth/logout",
                                 "/api/auth/verify-phone/**",
                                 "/api/auth/email/**",
-                                "/api/auth/phone/**"
+                                "/api/auth/phone/**",
+                                "/api/auth/forgot-password/authenticated"
                         ).authenticated()
                         //POSTING
                         .requestMatchers(
@@ -76,6 +79,10 @@ public class SecurityConfiguration {
                         //NOTIFICATIONS
                         .requestMatchers(
                                 "/api/notification/**"
+                        ).authenticated()
+                        //PROFILE
+                        .requestMatchers(
+                                "/api/profile/**"
                         ).authenticated()
                         .anyRequest().permitAll()
                 )

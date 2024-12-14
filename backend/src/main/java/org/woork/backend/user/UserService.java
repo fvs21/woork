@@ -14,7 +14,14 @@ import org.woork.backend.address.Address;
 import org.woork.backend.address.AddressService;
 import org.woork.backend.sms.SMSService;
 import org.woork.backend.token.TokenService;
+import org.woork.backend.user.requests.UpdateGenderRequest;
 import org.woork.backend.user.resources.UserResource;
+import org.woork.backend.utils.AuthenticationUtils;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -40,7 +47,7 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean isUserVerified(User user) {
-        return user.isPhoneVerified();
+        return user.hasPhoneVerified();
     }
 
     //Mandatory function for authentication flow
@@ -65,12 +72,16 @@ public class UserService implements UserDetailsService {
         return getUserByUsername(username);
     }
 
-    public UserResource updateGender(User user, String gender) {
+    public UserResource updateGender(User user, UpdateGenderRequest request) {
+        String gender = request.isCustom() ? request.getOther() : request.getGender();
+        if((request.isCustom() && List.of("MALE", "FEMALE").contains(gender.toUpperCase())) || gender.isEmpty()) {
+            throw new UnableToUpdateUserException("Error al actualizar género.");
+        }
         user.setGender(gender);
         return new UserResource(userRepository.save(user));
     }
 
-    public UserResource updateLocation(User user, UpdateAddressRequest updateAddressRequest) {
+    public UserResource updateAddress(User user, UpdateAddressRequest updateAddressRequest) {
         if(user.getAddress() != null) {
             Long locationId = user.getAddress().getId();
             Address address = addressService.updateAddress(locationId, updateAddressRequest);
@@ -80,12 +91,34 @@ public class UserService implements UserDetailsService {
             user.setAddress(address);
         }
 
+        return new UserResource(
+                userRepository.save(user)
+        );
+    }
+
+    public UserResource updateProfilePicture(User user, MultipartFile file) {
+        if(file.isEmpty()) {
+            throw new UnableToUpdateUserException("Error al actualizar imagen.");
+        }
+        if(user.getProfilePicture() != null) {
+            imageService.deleteImage(user.getProfilePicture());
+        }
+
+        Image image = imageService.uploadImage(file, "pfp");
+        user.setProfilePicture(image);
         return new UserResource(userRepository.save(user));
     }
 
-    public UserResource uploadProfilePicture(User user, MultipartFile file) {
-        Image image = imageService.uploadImage(file, "pfp");
-        user.setProfilePicture(image);
+    public UserResource updateDateOfBirth(User user, String newDob) {
+        LocalDate date = LocalDate.parse(newDob, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if(date.equals(user.getDateOfBirth())) {
+            throw new UnableToUpdateUserException("Error al actualizar fecha de nacimiento.");
+        }
+
+        if(Period.between(date, LocalDate.now()).getYears() < 18) {
+            throw new UnableToUpdateUserException("Debes ser mayor de edad para poder registrarte.");
+        }
+        user.setDateOfBirth(date);
         return new UserResource(userRepository.save(user));
     }
 

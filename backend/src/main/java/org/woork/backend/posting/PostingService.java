@@ -2,14 +2,12 @@ package org.woork.backend.posting;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.address.AddressRepository;
-import org.woork.backend.address.records.Coordinates;
 import org.woork.backend.address.records.LocationQuery;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.image.Image;
@@ -124,6 +122,9 @@ public class PostingService {
         validator.validateFields(addressRequest);
         if(images.size() > 3)
             throw new UnableToCreatePostingException("Image upload size exceeded.");
+
+        if(author.getAddress() == null)
+            throw new UnableToCreatePostingException("Debes agregar tu dirección.");
 
         Address postingLocation = getLocationForPosting(author, addressRequest);
 
@@ -259,7 +260,7 @@ public class PostingService {
         List<Posting> filteredPostings = new ArrayList<>();
 
         filteredAddresses.forEach(address -> {
-            List<Posting> filtered = postingRepository.findPostingsByAddressAndCategory(address, Category.valueOf(category)).orElse(new ArrayList<>());
+            List<Posting> filtered = postingRepository.findPostingsByAddressAndCategory(address, category).orElse(new ArrayList<>());
             filteredPostings.addAll(filtered);
         });
 

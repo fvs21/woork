@@ -6,4 +6,8 @@ public class AuthenticationErrorException extends RuntimeException {
     public AuthenticationErrorException() {
         super("Error authenticating user");
     }
+
+    public AuthenticationErrorException(String message) {
+        super(message);
+    }
 }

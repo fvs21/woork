@@ -7,14 +7,10 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.woork.backend.address.requests.UpdateAddressRequest;
 import org.woork.backend.annotations.InEnum;
-import org.woork.backend.image.Image;
-import org.woork.backend.address.AddressResource;
-import org.woork.backend.posting.Category;
+import org.woork.backend.posting.Categories;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -33,7 +29,7 @@ public class PostingRequest {
     private PostingLocationRequest address;
 
     @NotEmpty(message = "Es requisito elegir una categoría.")
-    @InEnum(enumClass = Category.class, message = "Categoría invalida.")
+    @InEnum(enumClass = Categories.class, message = "Categoría invalida.")
     private String category;
 
     public PostingRequest(String title, String description, BigDecimal price, PostingLocationRequest addressResource, String category) {

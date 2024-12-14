@@ -12,6 +12,7 @@ public class AddressResource {
     private String zip_code;
     private String street;
     private int number;
+    private String address_name;
 
     public AddressResource() {}
 
@@ -22,6 +23,7 @@ public class AddressResource {
         this.zip_code = address.getZipCode();
         this.street = address.getStreet();
         this.number = address.getNumber();
+        this.address_name = address.getAddress_name();
     }
 
 }

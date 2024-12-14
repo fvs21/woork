@@ -53,4 +53,8 @@ public class AuthenticationUtils {
     public static boolean isEmail(String email) {
         return EmailValidator.getInstance().isValid(email);
     }
+
+    public static boolean validatePassword(String password) {
+        return password.length() >= 8;
+    }
 }

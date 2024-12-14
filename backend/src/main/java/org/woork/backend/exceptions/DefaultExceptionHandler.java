@@ -66,7 +66,8 @@ public class DefaultExceptionHandler {
             InvalidLocationException.class,
             UnableToDeleteAddressException.class,
             NotificationDoesNotExistException.class,
-            UnableToParseLocationException.class
+            UnableToParseLocationException.class,
+            UnableToUpdateUserException.class
     })
     public ResponseEntity<String> handleBadRequest(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -83,10 +84,10 @@ public class DefaultExceptionHandler {
     //INTERNAL SERVER ERROR
 
     @ExceptionHandler({
-            AuthenticationErrorException.class,
             UnableToUploadImageException.class,
             UnableToDownloadImageException.class,
-            UnableToCreatePostingException.class
+            UnableToCreatePostingException.class,
+            UnableToDeleteImageException.class
     })
     public ResponseEntity<String> handleInternalServerError(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

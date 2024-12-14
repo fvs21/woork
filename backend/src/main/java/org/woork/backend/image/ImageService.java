@@ -7,10 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.woork.backend.exceptions.UnableToDownloadImageException;
-import org.woork.backend.exceptions.UnableToUploadImageException;
-import org.woork.backend.exceptions.ImageNotFoundException;
-import org.woork.backend.exceptions.UnsupportedImageTypeException;
+import org.woork.backend.exceptions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -91,6 +88,10 @@ public class ImageService {
     }
 
     public void deleteImage(Image image) {
+        File file = new File(image.getImagePath());
+        if(!file.delete()) {
+            throw new UnableToUpdateUserException("Error al eliminar imagen");
+        }
         imageRepository.delete(image);
     }
 }

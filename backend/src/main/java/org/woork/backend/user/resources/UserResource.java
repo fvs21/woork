@@ -30,8 +30,8 @@ public class UserResource {
         this.email = user.getEmail();
         this.dateOfBirth = user.getDateOfBirth();
         this.gender = user.getGender();
-        this.phoneVerified = user.isPhoneVerified();
-        this.emailVerified = user.isEmailVerified();
+        this.phoneVerified = user.hasPhoneVerified();
+        this.emailVerified = user.hasEmailVerified();
         this.pfpUrl = user.getProfilePictureUrl();
         this.address = user.getAddress() != null ? new AddressResource(user.getAddress()) : null;
     }

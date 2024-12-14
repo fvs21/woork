@@ -1,6 +1,7 @@
 package org.woork.backend.address.requests;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -25,15 +26,19 @@ public class UpdateAddressRequest {
     @NotBlank(message = defaultErrorMessage)
     private String street;
 
-    @NotBlank(message = defaultErrorMessage)
+    @NotNull(message = defaultErrorMessage)
     private int number;
 
-    public UpdateAddressRequest(String city, String country, String state, String zip_code, String street, int number) {
+    @NotBlank(message = defaultErrorMessage)
+    private String address_name;
+
+    public UpdateAddressRequest(String city, String country, String state, String zip_code, String street, int number, String address_name) {
         this.city = city;
         this.country = country;
         this.state = state;
         this.zip_code = zip_code;
         this.street = street;
         this.number = number;
+        this.address_name = address_name;
     }
 }

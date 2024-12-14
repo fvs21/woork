@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 
 @Setter
 @Getter
@@ -23,15 +26,19 @@ public class PasswordResetToken {
     private String token;
 
     @Column(name = "created_at")
-    private Instant createdAt;
+    private LocalDate createdAt;
 
     public PasswordResetToken() {
-        this.createdAt = Instant.now();
+        this.createdAt = LocalDate.now();
     }
 
     public PasswordResetToken(String token) {
         this.token = token;
-        this.createdAt = Instant.now();
+        this.createdAt = LocalDate.now();
+    }
+
+    public boolean isValid() {
+        return ChronoUnit.HOURS.between(LocalDate.now(), createdAt) < 2;
     }
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.woork.backend.address.records.Coordinates;
 import org.woork.backend.address.records.LocationQuery;
+import org.woork.backend.address.records.UserLocation;
 import org.woork.backend.address.requests.UpdateAddressRequest;
 import org.woork.backend.exceptions.InvalidLocationException;
 import org.woork.backend.exceptions.UnableToDeleteAddressException;
@@ -92,6 +93,7 @@ public class AddressService {
         address.setStreet(request.getStreet());
         address.setZipCode(request.getZip_code());
         address.setNumber(request.getNumber());
+        address.setAddress_name(request.getAddress_name());
         return locationRepository.save(address);
     }
 
@@ -137,6 +139,7 @@ public class AddressService {
         address.setStreet(request.getStreet());
         address.setNumber(request.getNumber());
         address.setZipCode(request.getZip_code());
+        address.setAddress_name(request.getAddress_name());
         return locationRepository.save(address);
     }
 
@@ -145,15 +148,18 @@ public class AddressService {
         return new AddressResource(address);
     }
 
-    public Coordinates getUsersLocation(User user) {
+    public UserLocation getUsersLocation(User user) {
         if(user.getAddress() == null)
             return null;
 
         Address address = user.getAddress();
         if(address.getLatitude() != null && address.getLongitude() != null) {
-            return new Coordinates(
-                    address.getLatitude(),
-                    address.getLongitude()
+            return new UserLocation(
+                    new Coordinates(
+                            address.getLatitude(),
+                            address.getLongitude()
+                    ),
+                    address.getAddress_name()
             );
         }
 
@@ -238,8 +244,10 @@ public class AddressService {
     }
 
     public void storeCoordinates(Address address, Double lat, Double lon) {
+        Coordinates coords = createRandomCoordsForDisplay(lat, lon);
         //display coords
         address.updateCoords(lat, lon);
+        address.updateDisplayCoords(coords.latitude(), coords.longitude());
     }
 
     public List<Address> filterLocationsByCoords(LocationQuery locationQuery) {

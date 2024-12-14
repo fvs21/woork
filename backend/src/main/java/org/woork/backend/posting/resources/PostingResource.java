@@ -44,7 +44,7 @@ public class PostingResource {
                 Image::getImageUrl
         ).collect(Collectors.toSet());
         this.url = url;
-        this.creator = posting.getAuthor().getFirstName() + " " + posting.getAuthor().getLastName();
+        this.creator = posting.getAuthor().getFullName()    ;
         this.creatorUsername = posting.getAuthor().getUsername();
         this.isUserCreator = isUsersPosting(posting.getAuthor().getId());
         this.location_name = posting.getAddress().getAddress_name();

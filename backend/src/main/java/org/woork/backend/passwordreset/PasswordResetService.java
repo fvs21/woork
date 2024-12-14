@@ -30,6 +30,14 @@ public class PasswordResetService {
         this.userRepository = userRepository;
     }
 
+    //Mensajes
+    public static String RESET_LINK_SENT = "El link de recuperación fue enviado";
+    public static String PASSWORD_RESET = "Contraseña cambiada.";
+    public static String INVALID_USER = "No se encontró ningun usuario con esas credenciales.";
+    public static String INVALID_TOKEN = "Token de verificación incorrecto.";
+    public static String RESET_THROTTLED = "Espera unos minutos antes de solicitar otro link.";
+    public static String RECENTLY_UPDATED_PASSWORD = "Cambiaste tu contraseña recientemente. Debes esperar 1 día desde que la actualizaste para solicitar cambiarla.";
+
     public String createPasswordResetToken(String credentialType, String credential) {
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         if(Objects.equals(credentialType, "email"))
@@ -55,14 +63,10 @@ public class PasswordResetService {
                 passwordEncoder.encode(token)
         ).orElse(null);
         if(passwordResetToken == null) {
-            throw new ResetTokenDoesNotExistException("The token you provided does not exist.");
+            throw new ResetTokenDoesNotExistException(INVALID_TOKEN);
         }
 
-        User user = userRepository.findByEmailOrPhone(passwordResetToken.getEmail(), passwordResetToken.getPhone()).orElse(null);
-        if(user == null)
-            throw new UserDoesNotExistException();
-
-        return user;
+        return userRepository.findByEmailOrPhone(passwordResetToken.getEmail(), passwordResetToken.getPhone()).orElseThrow(UserDoesNotExistException::new);
     }
 
     public void resetPassword(String token, String newPassword) {
