@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.woork.backend.address.AddressService;
 import org.woork.backend.authentication.AuthenticationService;
 import org.woork.backend.exceptions.InvalidLocationException;
 import org.woork.backend.exceptions.PostingDoesNotExistException;
@@ -25,12 +26,14 @@ public class PostingController {
     private final PostingService postingService;
     private final UserService userService;
     private final AuthenticationService authenticationService;
+    private final AddressService addressService;
 
     @Autowired
-    public PostingController(PostingService postingService, UserService userService, AuthenticationService authenticationService) {
+    public PostingController(PostingService postingService, UserService userService, AuthenticationService authenticationService, AddressService addressService) {
         this.postingService = postingService;
         this.userService = userService;
         this.authenticationService = authenticationService;
+        this.addressService = addressService;
     }
 
     @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -45,7 +48,16 @@ public class PostingController {
 
 
     @GetMapping("/{id}")
-    public PostingResource getPosting(@PathVariable("id") Long id) {
-        return postingService.getPosting(id);
+    public PostingResource getPosting(@PathVariable("id") String id) {
+        return postingService.getPostingByHashId(id);
+    }
+
+
+    @DeleteMapping("/address/{id}")
+    public String deletePosting(@PathVariable Long id) {
+        User user = authenticationService.getCurrentUser();
+
+        addressService.deleteAddedAddress(id, user);
+        return "Dirección eliminada.";
     }
 }

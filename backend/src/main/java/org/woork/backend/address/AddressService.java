@@ -166,7 +166,7 @@ public class AddressService {
         return null;
     }
 
-    public boolean deleteAddedAddress(Long id, User user) {
+    public void deleteAddedAddress(Long id, User user) {
         if(Objects.equals(user.getAddress().getId(), id))
             throw new UnableToDeleteAddressException("You cannot delete your current address");
 
@@ -183,7 +183,6 @@ public class AddressService {
 
         postingRepository.deleteAll(createdPostings);
         locationRepository.delete(address);
-        return true;
     }
 
     private Double randomDecimal(Double min, Double max, int digits) {

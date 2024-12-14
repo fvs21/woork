@@ -81,6 +81,7 @@ public class User implements UserDetails {
     private Role role;
 
     @Setter
+    @Column(unique = true)
     private String username;
     //Verification
 
@@ -151,6 +152,8 @@ public class User implements UserDetails {
     @Setter
     private String about;
 
+    @Getter
+    @Setter
     @Column(name = "identity_verified_at")
     private LocalDate identityVerifiedAt;
 

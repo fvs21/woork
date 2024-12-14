@@ -2,13 +2,10 @@ package org.woork.backend.token;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.stereotype.Service;
-import org.woork.backend.exceptions.AccessTokenExpiredException;
 import org.woork.backend.exceptions.InvalidTokenException;
 import org.woork.backend.exceptions.RefreshTokenExpiredException;
 import org.woork.backend.exceptions.UserDoesNotExistException;
@@ -82,10 +79,6 @@ public class TokenService {
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    public boolean isTokenAccess(String token) {
-        Jwt decoded = jwtDecoder.decode(token);
-        return decoded.getClaim("type").equals("access");
-    }
 
     public boolean isTokenRefresh(String token) {
         Jwt decoded = jwtDecoder.decode(token);
@@ -166,6 +159,9 @@ public class TokenService {
             throw new InvalidBearerTokenException("Token is not a valid Bearer token");
         }
         String strippedToken = token.substring(7);
+        if(!isTokenValid(strippedToken)) {
+            throw new InvalidBearerTokenException("Invalid token.");
+        }
         String username = extractUsername(strippedToken);
         return userRepository.findByUsername(username).orElseThrow(UserDoesNotExistException::new);
     }

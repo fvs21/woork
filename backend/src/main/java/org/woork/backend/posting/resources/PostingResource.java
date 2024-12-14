@@ -47,19 +47,23 @@ public class PostingResource {
         this.creator = posting.getAuthor().getFullName()    ;
         this.creatorUsername = posting.getAuthor().getUsername();
         this.isUserCreator = isUsersPosting(posting.getAuthor().getId());
-        this.location_name = posting.getAddress().getAddress_name();
+        this.location_name = (!isAuthenticated()) ? posting.getAddress().getAddress_name() : null;
         this.display_coordinates = Map.of(
                 "latitude", posting.getAddress().getDisplay_lat(),
                 "longitude", posting.getAddress().getDisplay_long()
         );
     }
 
+    private boolean isAuthenticated() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth instanceof AnonymousAuthenticationToken;
+    }
+
     private boolean isUsersPosting(Long creatorId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof AnonymousAuthenticationToken)
+        if(isAuthenticated())
             return false;
 
-        User user = (User) authentication.getPrincipal();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId().equals(creatorId);
     }
 }

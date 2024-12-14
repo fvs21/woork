@@ -116,7 +116,6 @@ public class AuthenticationController {
     }
 
     @PutMapping("/email/update")
-    @Authenticated
     public UserResource updateEmail(
             @RequestBody LinkedHashMap<String, String> body
     ) {
@@ -127,14 +126,12 @@ public class AuthenticationController {
         return new UserResource(user);
     }
 
-    @Authenticated
     @PostMapping("/verify-email/resend")
     public String generateEmailVerificationCode() {
         User user = authenticationService.getCurrentUser();
         return authenticationService.generateNewEmailVerificationCode(user);
     }
 
-    @Authenticated
     @PostMapping("/verify-email")
     public UserResource verifyEmail(
             @RequestBody LinkedHashMap<String, String> body
@@ -186,6 +183,9 @@ public class AuthenticationController {
 
     @GetMapping("/logout")
     public String logout(@CookieValue("user_r") String token, HttpServletResponse response) {
+        if(token == null) {
+            throw new InvalidTokenException();
+        }
         if(!tokenService.isTokenValid(token) || !tokenService.isTokenRefresh(token))
             throw new InvalidTokenException();
 

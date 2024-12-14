@@ -44,7 +44,7 @@ public class Posting {
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     private Address address;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     @JsonIgnore
     private User author;
@@ -56,6 +56,10 @@ public class Posting {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "posting")
     Set<PostingApplication> postingApplications;
+
+    @OneToOne
+    @JoinColumn(name = "completed_by")
+    private User completedBy;
 
     public Posting() {
         images = new HashSet<>();

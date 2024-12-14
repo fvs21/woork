@@ -17,7 +17,8 @@ public class DefaultExceptionHandler {
             PhoneNumberAlreadyTakenException.class,
             IncorrectVerificationCodeException.class,
             EmailNotAddedException.class,
-            UnableToGenerateVerificationCodeException.class})
+            UnableToGenerateVerificationCodeException.class}
+    )
     public ResponseEntity<String> handleConflictedRequest(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
@@ -30,7 +31,8 @@ public class DefaultExceptionHandler {
             UserDoesNotExistException.class,
             ResetTokenDoesNotExistException.class,
             ImageNotFoundException.class,
-            PostingDoesNotExistException.class,
+            NotificationDoesNotExistException.class,
+            PostingDoesNotExistException.class
     })
     public ResponseEntity<String> handleNotFoundRequest(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -65,7 +67,6 @@ public class DefaultExceptionHandler {
             UnsupportedImageTypeException.class,
             InvalidLocationException.class,
             UnableToDeleteAddressException.class,
-            NotificationDoesNotExistException.class,
             UnableToParseLocationException.class,
             UnableToUpdateUserException.class
     })

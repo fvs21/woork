@@ -76,7 +76,10 @@ public class UserService implements UserDetailsService {
         String gender = request.isCustom() ? request.getOther() : request.getGender();
         if((request.isCustom() && List.of("MALE", "FEMALE").contains(gender.toUpperCase())) || gender.isEmpty()) {
             throw new UnableToUpdateUserException("Error al actualizar género.");
+        } else if(!request.isCustom() && !List.of("MALE", "FEMALE").contains(gender.toUpperCase())) {
+            throw new UnableToUpdateUserException("Error al actualizar género.");
         }
+
         user.setGender(gender);
         return new UserResource(userRepository.save(user));
     }

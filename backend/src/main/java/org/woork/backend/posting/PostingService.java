@@ -158,6 +158,11 @@ public class PostingService {
         return posting.getImages();
     }
 
+    public PostingResource getPostingByHashId(String hashId) {
+        Long postingId = urlService.decodeIdFromUrl(hashId).get(0);
+        return getPosting(postingId);
+    }
+
     public PostingResource getPosting(Long id) {
         Posting posting = postingRepository.findPostingById(id).orElseThrow(PostingDoesNotExistException::new);
         String url = urlService.encodeIdToUrl(posting.getId());

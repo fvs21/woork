@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.BadJwtException;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -40,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             user = tokenService.getUserFromAccessToken(authorizationHeader);
-        } catch(BadJwtException | UserDoesNotExistException e) {
+        } catch(BadJwtException | InvalidBearerTokenException | UserDoesNotExistException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
