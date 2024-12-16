@@ -1,0 +1,28 @@
+@use "@/css/variables" as var;
+
+.step-list {
+    li {
+        margin: 10px 0;
+    }
+}
+
+.verify-link {
+    background-color: #15b67c;
+    color: white;
+    font-size: 15px;
+    border: none;
+    padding: 15px 100px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.disclaimer-link {
+    color: var.$primary-color;
+    text-decoration: none;
+    position: absolute;
+}
+
+.disclaimer-link:hover {
+    text-decoration: underline;
+}

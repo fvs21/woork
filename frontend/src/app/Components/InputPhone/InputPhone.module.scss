@@ -1,0 +1,38 @@
+@use "@/css/variables" as var;
+
+.input-label {
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.select-form {
+    padding: 0 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+    background-color: var(--input-color);
+    color: var(--text-color);
+}
+
+.select-form:focus {
+    outline: none !important;
+    box-shadow: 0 0 3px 1px var.$primary-color;
+}
+
+.input-container {
+    display: grid;
+    grid-auto-flow: column;
+    column-gap: 10px;
+    grid-template-columns: 40%;
+}
+
+.select-form:invalid {
+    color:var(--text-secondary-color);
+}
+
+.error-msg {
+    font-size: small;
+    color: red;
+}

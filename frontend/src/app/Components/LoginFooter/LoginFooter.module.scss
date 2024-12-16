@@ -1,0 +1,86 @@
+@use "@/css/variables" as var;
+
+.login-fixed-container {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    border-top: 1px solid var.$border-color;
+    z-index: 200;
+    height: 90px;
+
+    padding: 15px 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 5px #ddd;
+}
+
+.form-container {
+    display: flex;
+    gap: 10px;
+    width: 60%;
+}
+
+.input-containers {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.input-field {
+    width: 50%;
+}
+
+.login-title {
+    font-size: large;
+    font-weight: bold;
+}
+
+.register-link {
+    text-decoration: none;
+    color: var.$primary-color;
+    background-color: white;
+    border: none;
+    font-weight: bold;
+}
+
+.login-link {
+    display: none;
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.submit-btn {
+    text-decoration: none;
+    color: white;
+    background-color: var.$primary-color;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    width: 20%;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+@media only screen and (max-width: 1000px) {
+    .login-fixed-container {
+        padding: 15px 5px;
+    }
+    .form-container {
+        display: none;
+    }
+    .login-link {
+        display: inline;
+        background-color: var.$primary-color;
+    }
+
+    .login-title {
+        font-size: medium;
+    }
+}

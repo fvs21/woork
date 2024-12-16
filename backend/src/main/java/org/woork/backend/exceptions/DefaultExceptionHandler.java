@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
+import java.util.Map;
 
 @ControllerAdvice
 public class DefaultExceptionHandler {
@@ -102,9 +103,16 @@ public class DefaultExceptionHandler {
             UserPhoneNotVerifiedException.class,
             RefreshTokenExpiredException.class,
             AccessTokenExpiredException.class,
+            RefreshTokenNotPresentException.class
     })
-    public ResponseEntity<String> handleUnauthorizedRequest(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Map<String, Object>> handleUnauthorizedRequest(Exception e) {
+        return new ResponseEntity<>(
+                Map.of(
+                        "error", true,
+                        "message", e.getMessage()
+                ), 
+                HttpStatus.UNAUTHORIZED
+        );
     }
 
 

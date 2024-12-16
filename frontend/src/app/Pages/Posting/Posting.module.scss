@@ -1,0 +1,239 @@
+@use "@/css/variables" as var;
+
+.mainContainer {
+    height: 100%;
+    display: flex;
+    min-height: 450px;
+    max-width: 2000px;
+    max-height: 1000px;
+
+    margin: auto;
+
+    * {
+        max-width: 2000px;
+    }
+}
+
+.contentContainer {
+    width: 900px;
+    padding: 12px 20px;
+    overflow: auto;
+}
+
+.closeBtn {
+    border-radius: 50%;
+    line-height: 0;
+    cursor: pointer;
+    background-color: white;
+    border: none;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 8px;
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
+.closeBtn:hover {
+    opacity: 1;
+}
+
+.title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: var.$margin-xxs;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+}
+
+.viewApplicantsBtn {
+    background-color: var.$primary-color;
+    border: none;
+    border-radius: 20px;
+    padding: 8px;
+    color: white;
+    cursor: pointer;
+    width: 130px;
+}
+
+.viewApplicantsBtn:hover {
+    opacity: 0.7;
+}
+
+.creator {
+    margin-bottom: var.$margin-xxs;
+    font-size: 16px;
+    font-weight: 500;
+
+    a {
+        text-decoration: none;
+        color: var(--text-color);
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+}
+
+.price {
+    font-weight: 600;
+    font-size: medium;
+    padding-top: 4px;
+}
+
+.category {
+    font-size: 14px;
+    padding-top: 8px;
+    padding-bottom: 12px;
+    color: var(--text-secondary-color );
+}
+
+.applyButtonContainer {
+    padding-bottom: 20px;
+}
+
+.applyButton {
+    padding: 10px 20px;
+    cursor: pointer;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.applyButton_request {
+    background-color: var.$primary-color;
+}
+
+.applyButton_requested {
+    background-color: var.$secondary-color;
+}
+
+.applyButton:hover {
+    background-color: var.$secondary-color;
+}
+
+.rejected {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.description {
+    margin-bottom: var.$margin-l;
+    line-height: 1.2;
+}
+
+.descriptionTitle {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.descriptionContent {
+    font-size: 14px;
+    font-weight: 400;
+    white-space: pre-line;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    margin-top: var.$margin-xxs;
+}
+
+.hideContent {
+    max-height: 51px;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.showContent {
+    display: block;
+}
+
+.seeMoreBtn {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+    color: var.$secondary-color;
+}
+
+.seeMoreBtn:hover {
+    text-decoration: underline;
+}
+
+.location {
+    padding-bottom: var.$margin-s;
+}
+
+.locationTitle {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.selectedLocationName {
+    font-size: 13px;
+    color: var(--text-secondary-color);
+}
+
+.mapContainer {
+    height: 300px;
+    z-index: 0;
+    width: 100%;
+}
+
+.imageContainer {
+    width: 100%;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.imagesPreviewContainer {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.imagesPreview {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: rgb(43, 43, 43);
+}
+
+.image {
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+@media only screen and (max-width: 1200px) {
+    .mainContainer {
+        display: block;
+        min-height: none;
+    }
+    .imageContainer {
+        padding: 20px;
+        height: 500px;
+    }
+    .imagesPreview {
+        border-radius: 4px;
+    }
+    .contentContainer {
+        width: 100%;
+        padding-top: 0;
+        overflow-wrap: break-word;  
+        display: block;
+        min-width: 0;    
+    }
+}

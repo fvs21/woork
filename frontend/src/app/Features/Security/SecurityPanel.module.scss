@@ -1,0 +1,167 @@
+@use "@/css/variables" as var;
+
+.title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: var.$margin-l;
+}
+
+.subTitle {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.securityOptions {
+    padding-top: var.$margin-s;
+}
+
+.option {
+    width: 100%;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    padding: 18px;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    color: var(--text-color);
+}
+
+.option:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.option:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.option:hover {
+    background-color: var(--button-hover);
+}
+
+.arrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translate(0, -50%);
+    line-height: 0;
+}
+
+.changePasswordModalContainer {
+    width: 600px;
+}
+
+.changePasswordModal {
+    padding: 15px;
+    position: relative;
+}
+
+.closeModalBtn {
+    position: absolute;
+    border: none;
+    padding: 5px;
+    line-height: 0;
+    background-color: transparent;
+    top: 10px;
+    left: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.closeModalBtn:hover {
+    background-color: var(--button-hover);
+}
+
+.changePasswordModalHeader {
+    margin-top: 4rem;
+}
+
+.changePasswordModalTitle {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.instructions {
+    font-size: 14px;
+    color: var(--text-secondary-color);
+    margin-top: var.$margin-xs;
+}
+
+.inputContainer {
+    margin-top: var.$margin-m;
+    position: relative;
+}
+
+.passwordInput {
+    padding: 16px 12px;
+    border-radius: 10px;
+    background-color: var(--background-color);
+    font-size: 15px;
+    outline: none;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.passwordInput:hover:not(:focus) {
+    border: 1px solid var(--text-color);
+}
+
+.passwordInput::placeholder {
+    color: var(--text-secondary-color);
+}
+
+.passwordInput::-webkit-input-placeholder {
+    color: var(--text-secondary-color);
+}
+
+.passwordInput::-moz-placeholder {
+    color: var(--text-secondary-color);
+}
+
+.forgotPassword {
+    margin: var.$margin-xs 0;
+}
+
+.forgotPasswordBtn {
+    font-size: 14px;
+    color: var.$secondary-color;
+    cursor: pointer;
+}
+
+.forgotPasswordBtn:hover {
+    text-decoration: underline;
+}
+
+.submitChangePasswordContainer {
+    width: 100%;
+    margin-top: var.$margin-xl;
+    margin-bottom: var.$margin-xxs;
+}
+
+.submitChangePasswordBtn {
+    width: 100%;
+    padding: 16px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    background-color: var.$primary-color;
+    color: white;
+    font-size: 14px;
+}
+
+.errorMsg {
+    font-size: 13px;
+    color: rgb(196, 0, 0);
+    padding-top: 0.75rem;
+    gap: 5px;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}

@@ -1,0 +1,309 @@
+@use "@/css/variables" as var;
+
+.jobFiltersContainer {
+    width: 100%;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    overflow-x: scroll;
+    scrollbar-width: none;
+    //scroll-behavior: smooth;
+    background-color: var(--background-color);
+}
+
+.categoriesList {
+    display: flex;
+    gap: 10px;
+}
+
+.categoriesListContainer {
+    display: flex;
+}
+
+@mixin arrowedButtonContainer {
+    position: sticky;
+    background-color: var(--background-color);
+    display: flex;
+    align-items: center;
+    width: 30px;
+}
+
+.leftArrowedButtonContainer {
+    @include arrowedButtonContainer;
+    left: 140px;
+    box-shadow: 0 3px 2px 10px var(--background-color);
+}
+
+.rightArrowedButtonContainer {
+    @include arrowedButtonContainer;
+    right: 0;
+    padding-right: 40px;
+    padding-left: 5px;
+    box-shadow: 0 3px 2px 10px var(--background-color);
+}
+
+.arrowedButton {
+    margin: 0;
+    width: 30px;
+    height: 30px;
+    line-height: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.arrowedButton:hover {
+    border: 1px solid var(--text-color);
+}
+
+.locationSelectorContainer {
+    text-align: center;
+    background-color: var(--background-color);
+    
+    cursor: pointer;
+    min-width: 140px;
+    width: 140px;
+    left: 0;
+    position: sticky;
+    z-index: 1;
+}
+
+.locationSelector {
+    padding: 5px;
+    border-radius: 4px;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.locationSelector:hover {
+    background-color: var(--button-hover);
+}
+
+.locationFilterModal {
+    width: 550px;
+    padding: 10px;
+}
+
+.locationFilterContainer {
+    padding: 10px 5px;
+}
+
+.locationFilterHeader {
+    display: flex;
+    gap: 15px;
+    padding-bottom: 10px;
+}
+
+.locationFilterTitle {
+    font-size: 23px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.closeModalBtn {
+    padding: 6px;
+    line-height: 0;
+    background-color: var(--border-color);
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    opacity: 0.6;
+}
+
+.closeModalBtn:hover {
+    opacity: 1;
+}
+
+.mapContainer {
+    margin-top: 20px;
+    height: 330px;
+    position: relative;
+}
+
+.map {
+    height: 100%;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    cursor: default;
+}
+
+.selectOwnLocationBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 400;
+    background-color: white;
+    border: 1px solid var.$border-color;
+    padding: 5px 10px;
+    line-height: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.selectOwnLocationBtn:hover {
+    opacity: 1;
+}
+
+.locationInputContainer {
+    margin-top: 15px;
+    width: 100%;
+    position: relative;
+    padding: 0;
+}
+
+.locationInput {
+    width: 100%;
+    padding: 24px 14px 8px 14px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.locationInput:hover {
+    outline: 1px solid var.$primary-color;
+}
+
+.locationInput:focus {
+    outline: 1px solid var.$primary-color;
+}
+
+.locLabel {
+    font-size: 12px;
+    color: var(--text-secondary-color);
+    top: 10px;
+    left: 16px;
+    position: absolute;
+}
+
+.radiusContainer {
+    margin-top: 8px;
+    position: relative;
+}
+
+.radiusInput {
+    width: 100%;
+    padding: 24px 14px 8px 14px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.radiusInput:hover {
+    outline: 1px solid var.$primary-color;
+}
+
+.radius {
+    bottom: 5px;
+}
+
+.radiusLabel {
+    font-size: 12px;
+    color: var(--text-secondary-color);
+    top: 10px;
+    position: absolute;
+}
+
+.radiusDropup {
+    position: absolute;
+    background-color: var(--card-bg);
+    width: 80%;
+    bottom: 101%;
+    border: 1px solid var(--border-color);
+    padding: 0;
+    margin: 0;
+    border-radius: 4px;
+    z-index: 1000;
+    display: block;
+}
+
+.radiusList {
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+
+    li {
+        font-size: 14px;
+        padding: 0;
+    }
+}
+
+.selectRadiusBtn {
+    padding: 6px 10px;
+    height: 100%;
+    width: 100%;
+    text-align: left;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+}
+
+.selectRadiusBtn:hover {
+    background-color: var(--button-hover);
+}
+
+.radiusSelected {
+    background-color: var(--button-hover);
+}
+
+.locationDropup {
+    position: absolute;
+    background-color: var(--card-bg);
+    bottom: 102%;
+    z-index: 1000;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 5px;
+}
+
+.locationBtn {
+    width: 100%;
+    text-align: left;
+    padding: 14px;
+    border: none;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.locationBtn:hover {
+    background-color: var(--button-hover);
+}
+
+.applyBtnContainer {
+    margin-top: 15px;
+    width: 100%;
+    text-align: left;
+}
+
+.applyBtn {
+    width: 80px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: var.$primary-color;
+    color: white;
+    border: none;
+    border-radius: 6px;
+}
+
+.applyBtn:hover {
+    background-color: var.$secondary-color;
+}

@@ -1,0 +1,177 @@
+@use "@/css/variables" as var;
+
+.mainNavBar{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px 0 20px;
+    height: 60px;
+    margin-bottom: 50px;
+    transition: 0.3s;
+    background-color: var(--background-color);
+}
+
+.small-main-nav-bar {
+   padding-bottom: 0px; 
+   margin-bottom: -50px;
+}
+
+.links {
+    text-decoration: none;
+    color: black;
+}
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+.profile-btn {
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 100%;
+    z-index: 1;
+    height: 40px;
+    width: 40px;
+}
+
+.pfp {
+    width: 40px;
+    border-radius: 50%;
+}
+
+.profile-btn:hover {
+    opacity: 0.7;
+}
+
+.profile-btn:focus {
+    outline: 1px solid var.$primary-color;
+}
+
+.nav-bar-btn {
+    border: 0;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 10px 14px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: medium;
+    transition: 0.3s;
+    text-decoration: none;
+    height: 100%;
+    font-weight: 500;
+}
+
+.nav-bar-btn:hover {
+    background-color: var(--button-hover);
+}
+
+.logo {
+    flex: 1 0 140px;
+    div {
+        line-height: 0;
+        height: 100%;
+    }
+}
+
+.page-loading {
+    visibility: hidden;
+}
+
+.navLinksContainer {
+    list-style: none;
+    position: relative;
+    margin: 0;
+    transition: opacity 1s ease-in;
+    opacity: 1;
+
+    li {
+        display: inline-block;
+        color: white;
+        padding: 0 20px;
+    }
+}
+
+.navLinks {
+    transition: 0.3s;
+}
+
+.navLinksHidden {
+    margin-top: -50px;
+}
+
+.auth-buttons-container {
+    display: flex;
+    gap: 15px;
+    flex: 1 0 140px;
+    justify-content: right;
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.createPostingBtn {
+    @include var.posting-gradient;
+    color: white;
+    border: 0;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 10px 14px;
+    font-size: medium;
+    transition: 0.3s;
+    text-decoration: none;
+    height: 100%;
+    font-weight: 500;
+    display: inline-block;
+    min-width: 170px;
+} 
+
+.createPostingBtn:hover {
+    opacity: 0.7;
+}
+
+.notifications {
+    display: flex;
+    align-items: center;
+    width: 30px;
+    position: relative !important;
+    height: 100%;
+}
+
+.searchButton {
+    padding: 5px;
+    line-height: 0;
+    border-radius: 50%;
+    width: 40px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.searchButton:hover {
+    background-color: var(--button-hover);
+}
+
+@media only screen and (max-width: 1090px) {
+    .logo {
+        flex: 0 0 auto;
+    }
+
+    .auth-buttons-container {
+        flex: 0 0 auto;
+    }
+}
+
+
+@media only screen and (max-width: 800px) {
+    .createPostingBtn {
+        display: none;
+    }
+}

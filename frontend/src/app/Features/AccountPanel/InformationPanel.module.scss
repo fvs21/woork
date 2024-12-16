@@ -1,0 +1,406 @@
+@use "@/css/variables" as var;
+
+.accountPanelContainer {
+    min-width: 400px;
+}
+
+.profile-picture {
+    border-radius: 50%;
+    outline: 2px solid var.$primary-color;
+    cursor: pointer;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    transition: 0.1s;
+}
+
+.profile-picture:hover {
+    outline: 3px solid var.$primary-color; 
+}
+
+.pfp-btn {
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    background-color: gray;
+    width: 200px;
+    padding: 0;
+    margin: 0;
+}
+
+.pfpModal {
+   width: 520px;
+   padding: 10px;
+}
+
+.pfpModalContainer {
+    padding: 0 10px;
+}
+
+.pfp-viewer {
+    border-radius: 50%;
+    border: 2px solid var.$primary-color;
+    object-fit: cover;
+    width: 240px;
+    height: 240px;
+}
+
+.pfp-modal-pfp-container {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.exit-btn {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    font-size: medium;
+}
+
+.exit-btn:hover {
+    color: var.$primary-color;
+}
+
+.pfp-modal-header {
+    text-align: left;
+}
+
+.hr-style {
+    border: none;
+    height: 1px;
+    background-color: rgb(199, 199, 199);
+}
+
+.update-pfp-btn {
+    background-color: var.$primary-color;
+    color: white;
+    border: none;
+    padding: 14px 10px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.3s;
+}
+
+.update-pfp-form-container {
+    text-align: center;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.update-pfp-btn:hover {
+    background-color: var.$secondary-color;
+}
+
+.cancel-pfp-container {
+    text-align: center;
+}
+
+.cancel-btn {
+    background-color: transparent;
+    color: black;
+    border: none;
+    padding: 8px;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: var(--border-color);
+}
+
+.basic-info-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.name-container {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.user-info-header {
+    width: 100%;
+}
+
+.user-info-container {
+    padding: 20px 0;
+}
+
+.user-labeled-btn-container {
+    padding-bottom: 18px;
+}
+
+.contact-info-container {
+    display: flex;
+    gap: 10px;
+
+    button {
+        width: 50%;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+.form-container {
+    padding: 12px 0;
+}
+
+.contactModal {
+    width: 600px;
+    min-height: 300px;
+    padding: 10px 8px;
+}
+
+.contactModalContainer {
+    width: 100%;
+    height: 100%;
+    padding: 0px 12px 0px;
+}
+
+.contact-modal-title {
+    text-align: left;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 0;
+}
+
+.modal-desc {
+    font-size: 15px;
+}
+
+.email-modal-title {
+    text-align: left;
+}
+
+.return-btn {
+    font-size: medium;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    margin: 0;
+    border-radius: 50%;
+    line-height: 0;
+    transition: 0.3s;
+}
+
+.return-btn:hover {
+    background-color: var(--button-hover);
+}
+
+.edit-phone-container {
+    text-align: center;
+    width: 100%;
+}
+
+.edit-email-btn {
+    background-color: transparent;
+    color: var.$primary-color;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 0;
+    margin: 0;
+}
+
+.edit-email-btn:hover {
+    text-decoration: underline;
+}
+
+.addressModal {
+    width: 620px;
+    min-height: 580px;
+    padding: 10px;
+}
+
+.addressModalContainer {
+    width: 100%;
+    height: 560px;
+    padding: 0 10px 0;
+}
+
+.adress-container {
+    width: 100%;
+}
+
+.address-fields {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+
+    div {
+        width: 50%;
+    }
+}
+
+.countries-selector {
+    width: 100%;
+    padding: 15px 0 15px 10px;
+    border-radius: 6px;
+    border: none;
+    background-color: var(--input-color);
+    color: var(--text-color);
+    font-size: medium;
+
+    &:invalid {
+        color: var(--text-secondary-color);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 3px 1px var.$primary-color;
+    }
+}
+
+.countries-selector-2 {
+    width: 100%;
+    padding: 15px 0 15px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-size: medium;
+    color: var(--text-color);
+    background-color: var(--input-color);
+
+    &:invalid {
+        color: var(--text-secondary-color);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 3px 1px var.$primary-color;
+    }
+}
+
+.createLocationModalInputs {
+    padding: 14px 0px 14px 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-color);
+    color: var(--text-color) !important;
+}
+
+.createLocationModalInputs:focus {
+    outline: none;
+    box-shadow: 0 0 3px 1px var.$primary-color;
+}
+
+.dobModal {
+    width: 620px;
+    height: 280px;
+    padding: 10px;
+}
+
+.dobModalContainer {
+    width: 100%;
+    height: 100%;
+    padding: 0px 10px 0px;
+}
+
+.genderModal {
+    width: 520px;
+    padding: 10px;
+}
+
+.genderModalContainer {
+    width: 100%;
+    height: 100%;
+    padding: 0px 10px 0px;
+}
+
+.gender-select-container {
+    position: relative;
+}
+
+.gender-select {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 14px;
+    border-radius: 6px;
+    font-size: medium;
+}
+
+.gender-select:invalid {
+    color: var(--text-secondary-color);
+}
+
+.gender-other-input {
+    width: 100%;
+    padding: 10px;
+    position: absolute;
+    border-top: none;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    outline: none;
+}
+
+.gender-other-input:focus {
+    box-shadow: 0 0 3px 1px var(--border-color);
+}
+
+.disclaimer {
+    font-size: small;
+    color: gray;
+}
+
+.input-field {
+    padding: 10px 0;
+}
+
+.save-btn-container {
+    margin-top: 25px;
+}
+
+.formInput {
+    padding: 14px 0px 14px 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 100%;
+    background-color: var(--input-color);
+    border: none;
+    color: var(--text-color);
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: var(--text-secondary-color);
+}
+
+.form-input::-webkit-input-placeholder {
+    color: var(--text-secondary-color);
+}
+
+.form-input::-moz-placeholder {
+    color: var(--text-secondary-color);
+    opacity: 1;
+}
+
+@media only screen and (max-width: 1100px) {
+    .left-container {
+        display: none !important;
+    }
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .name-container {
+        display: inline-block;
+    }
+}

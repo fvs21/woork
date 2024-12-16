@@ -1,0 +1,34 @@
+@use "@/css/variables" as var;
+
+.notificationsBtn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 5px;
+    aspect-ratio: 1 / 1;
+    line-height: 0;
+    transition: 0.2s;
+    position: relative;
+}
+
+.notificationsBtn:hover {
+    background-color: var(--button-hover);
+}
+
+.notificationCount {
+    position: absolute;
+    background-color: rgb(255, 73, 73);
+    right: 5px;
+    bottom: 5px;
+    font-size: 9px;
+    z-index: 1;
+    color: white;
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 7px;
+}

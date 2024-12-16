@@ -1,0 +1,151 @@
+@use "@/css/variables" as var;
+
+.registerFormContainer {
+    background-color: var(--auth-forms-bg); 
+    height: 636px;
+}
+
+.register-form {
+    width: 400px;
+}
+
+.fullname-field {
+   display: grid;
+   grid-auto-flow: column;
+   column-gap: 10px;
+}
+
+.input-field {
+    padding: 10px 0;
+    position: relative;
+}
+
+.formInput {
+    padding: 14px 0px 14px 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 100%;
+    background-color: var(--input-color);
+    border: none;
+    color: var(--text-color);
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: var(--text-secondary-color);
+}
+
+.form-input::-webkit-input-placeholder {
+    color: var(--text-secondary-color);
+}
+
+.form-input::-moz-placeholder {
+    color: var(--text-secondary-color);
+    opacity: 1;
+}
+
+
+.form-title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 20px 0;
+}
+
+.form-hr {
+    border-top: 1px;
+}
+
+.disabled-option {
+    color: var(--text-secondary-color);
+}
+
+.cancel-btn {
+    background-color: white;
+    border: none;
+    font-size: large;
+    padding: 20px 0px;
+    cursor: pointer;
+    position: fixed;
+}
+
+.hr-style {
+    border: none;
+    height: 1px;
+    background-color: rgb(199, 199, 199);
+}
+
+.register-link {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.buttom-links {
+    font-size: medium;
+
+    a {
+        text-decoration: none;
+        color: var.$primary-color;
+        font-weight: bold;
+    }
+}
+
+.registration-disclaimers {
+    font-size: 11px;
+    color: var(--text-secondary-color);
+    margin: 10px 0;
+}
+
+.submit-button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.disclaimer-links {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.disclaimer-links:hover {
+    text-decoration: underline;
+}
+
+.date-input {
+    padding: 14px 0px 14px 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+    width: 100%;
+    outline: none;
+    background-color: var(--input-color);
+    color: var(--text-color);
+}
+
+.date-input:focus {
+    box-shadow: 0 0 3px 1px var.$primary-color;
+}
+
+.text-input {
+    padding: 14px 0px 14px 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 100%;
+    background-color: var.$input-color;
+    border: none;
+}
+
+.country-code {
+    padding: 0 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+    background-color: var.$input-color;
+}
+
+.country-code:focus {
+    outline: none !important;
+    box-shadow: 0 0 3px 1px var.$primary-color;
+}

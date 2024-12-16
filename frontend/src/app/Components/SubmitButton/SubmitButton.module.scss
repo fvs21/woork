@@ -1,0 +1,25 @@
+@use "@/css/variables" as var;
+
+.submit-btn {
+    @include var.primary-button;
+    transition: 0.3s;
+    padding: 15px 0px 15px 10px;
+    font-size: 16px;
+}
+
+.active {
+    color: white;
+    background-color: var.$primary-color;
+    cursor: pointer;
+}
+
+.inactive {
+    opacity: 0.5;
+    background-color: rgb(163, 163, 163);
+    color: black;
+    cursor: not-allowed;
+}
+
+.active:hover {
+    background-color: var.$secondary-color;
+}

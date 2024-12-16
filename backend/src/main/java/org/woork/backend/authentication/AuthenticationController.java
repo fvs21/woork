@@ -176,9 +176,12 @@ public class AuthenticationController {
     }
 
     @GetMapping("/refresh")
-    public String refresh(@CookieValue("user_r") String token) {
+    public Map<String, String> refresh(@CookieValue("user_r") Optional<String> user_r) {
+        String token = user_r.orElseThrow(RefreshTokenNotPresentException::new);
         User user = userService.getUserFromRefreshToken(token);
-        return tokenService.getNewAccessToken(user, token);
+        return Map.of(
+                "access_token", tokenService.getNewAccessToken(user, token)
+        );
     }
 
     @GetMapping("/logout")

@@ -1,0 +1,53 @@
+.bottomAlertContainer {
+    z-index: 1000;
+    position: fixed;
+    bottom: 20px;
+    width: 700px;
+    right: calc(50% - 300px);
+    padding: 20px;
+    border-radius: 15px;
+    color: var(--text-color);
+    background-color: var(--card-bg);
+    border: none;
+    box-shadow: 0px 4px 8px 8px rgba(0,0,0,0.2);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+}   
+
+.successMsg {
+    border-left: 8px solid green;
+}
+
+.errorMsg {
+    border-left: 8px solid rgb(212, 4, 4);
+}
+
+.alertMessage {
+    width: 670px;
+    word-break:keep-all;
+}
+
+.closeAlert {
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    line-height: 0;
+    cursor: pointer;
+}
+
+.closeAlert:hover {
+    background-color: var(--button-hover);
+}
+
+@media only screen and (max-width: 800px) {
+    .bottomAlertContainer {
+        width: 100%;
+        right: 0;
+        left: 0;
+        border-radius: 0;
+        bottom: 0;
+    }
+}

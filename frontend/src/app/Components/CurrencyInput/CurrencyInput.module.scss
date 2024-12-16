@@ -1,0 +1,30 @@
+@use "@/css/variables" as var;
+
+.currency-input {
+    width: 100%;
+    color: var(--text-color);
+}
+
+.currency-input::placeholder {
+    color: var(--text-secondary-color);
+}
+
+.currency-input::-webkit-input-placeholder {
+    color: var(--text-secondary-color);
+}
+
+.currency-input::-moz-placeholder {
+    color: var(--text-secondary-color);
+}
+
+.currency-input:focus::placeholder {
+    color: rgb(184, 184, 184);
+}
+
+.currency-input:focus::-webkit-input-placeholder {
+    color: rgb(184, 184, 184);
+}
+
+.currency-input:focus::-moz-placeholder {
+    color: rgb(184, 184, 184);
+}

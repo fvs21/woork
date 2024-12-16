@@ -1,0 +1,30 @@
+.arrow-button {
+    position:absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.1s;
+    background-color: white;
+    opacity: 0.5; 
+    border: none;
+    font-size: 1vw;
+    line-height: 0;
+}
+
+.arrow-button:hover {
+    opacity: 1;
+}
+
+.right {
+    right: 5px;
+}
+
+.left {
+    left: 5px;
+}
+

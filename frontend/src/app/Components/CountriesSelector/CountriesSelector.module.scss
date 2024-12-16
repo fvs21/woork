@@ -1,0 +1,26 @@
+.input {
+    width: 100%;
+}
+.input::placeholder {
+    color: var(--input-color);
+}
+
+.input::-webkit-input-placeholder {
+    color: var(--input-color);
+}
+
+.input::-moz-placeholder {
+    color: var(--input-color);
+}
+
+.input:focus::placeholder {
+    color: rgb(184, 184, 184);
+}
+
+.input:focus::-webkit-input-placeholder {
+    color: rgb(184, 184, 184);
+}
+
+.input:focus::-moz-placeholder {
+    color: rgb(184, 184, 184);
+}

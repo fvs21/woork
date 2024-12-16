@@ -1,4 +1,4 @@
-package org.woork.backend.user;
+package org.woork.backend.passwordreset;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

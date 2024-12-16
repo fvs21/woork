@@ -1,0 +1,71 @@
+@use "@/css/variables" as var;
+
+.layoutContainer {
+    height: 60px;
+    background-color: inherit;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+    z-index: 1000;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 3px 3px -3px rgba(0,0,0,0.2);
+}
+
+
+.logotype {
+    line-height: 0;
+}
+
+.accountBtnContainer {
+    height: 100%;
+    line-height: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.userName {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.accountBtn {
+    padding: 0;
+    line-height: 0;
+    border: none;
+    background-color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: auto;
+    width: 40px;
+    height: 40px;
+}
+
+.accountBtn:focus {
+    outline: 1px solid var.$primary-color;
+}
+
+.pfp {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.dropdownContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.loginLink {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 10px 14px;
+    border-radius: 25px;
+}
+
+.loginLink:hover {
+    background-color: var(--button-hover);
+}

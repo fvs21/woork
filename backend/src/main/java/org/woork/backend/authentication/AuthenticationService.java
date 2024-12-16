@@ -1,8 +1,6 @@
 package org.woork.backend.authentication;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -20,7 +18,6 @@ import org.woork.backend.sms.SMSService;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserRepository;
-import org.woork.backend.user.resources.UserResource;
 import org.woork.backend.utils.AuthenticationUtils;
 
 import java.util.ArrayList;

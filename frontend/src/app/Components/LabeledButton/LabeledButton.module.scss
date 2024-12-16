@@ -1,0 +1,34 @@
+@use "@/css/variables" as var;
+
+.labeled-btn {
+    width: 100%;
+    padding: 12px;
+    text-align: left;
+    font-size: medium;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    background-color: var(--labeled-btn-bg);
+    color: var(--text-color);
+}
+
+.not-verified {
+    border: 1px solid var(--border-color); 
+}
+
+.verified {
+    color: var.$success-border-color;
+    border: 1px solid var.$success-border-color;
+}
+
+.labeled-btn:hover {
+    background-color: var(--dashboard-options-color);
+}
+
+.btn-label {
+    font-weight:600;
+}
+
+.error {
+    border: 1px solid red; 
+}

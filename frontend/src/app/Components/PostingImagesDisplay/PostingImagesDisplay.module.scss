@@ -1,0 +1,12 @@
+.images-display-container {
+    padding: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.job-image {
+    object-fit: cover;
+    border-radius: 6px;
+}

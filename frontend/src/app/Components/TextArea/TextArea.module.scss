@@ -1,0 +1,30 @@
+@use "@/css/variables" as var;
+
+.text-area {
+    width: 100%;
+    color: var(--text-color);
+}
+
+.text-area::placeholder {
+    color: var(--text-secondary-color);
+}
+
+.text-area::-webkit-input-placeholder {
+    color: var(--text-secondary-color);
+}
+
+.text-area:-moz-placeholder {
+    color: var(--text-secondary-color);
+}
+
+.text-area:focus::placeholder {
+    color: rgb(184, 184, 184);
+}
+
+.text-area:focus::-webkit-input-placeholder {
+    color: rgb(184, 184, 184);
+}
+
+.text-area:focus::-moz-placeholder {
+    color: rgb(184, 184, 184);
+}

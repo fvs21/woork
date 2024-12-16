@@ -1,0 +1,97 @@
+@use "@/css/variables" as var;
+
+.posting {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--card-bg);
+    
+    a {
+        color: black;
+    }
+
+    max-width: 300px;
+    min-width: 200px;
+}
+
+.postingPhotoContainer {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+.postingImagesDisplay {
+    width: 100%;
+    height: 100%;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.postingInformation {
+    padding: 8px 12px 12px;
+}
+
+.postingTitle {
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--text-color);
+}
+
+.postingDescription {
+    margin-top: .25rem;
+    font-size: 13px;
+    color: var(--text-secondary-color);
+    height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+.postingPrice {
+    height: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.postingAuthor {
+    font-size: small;
+    color: var(--text-secondary-color);
+}
+
+
+/**
+@media only screen and (max-width: 1050px) {
+    .posting {
+        width: 330px;
+        height: 475px;
+    }
+
+    .postingImagesDisplay {
+        width: 328px;
+        height: 330px;
+    }
+    .postingPhotoContainer {
+        width: 330px;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .posting {
+        width: 390px;
+        height: 535px;
+    }
+
+    .postingImagesDisplay {
+        width: 388px;
+        height: 390px;
+    }
+
+    .postingPhotoContainer {
+        width: 450px;
+    }
+}
+    */

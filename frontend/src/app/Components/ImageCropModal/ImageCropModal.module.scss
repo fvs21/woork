@@ -1,0 +1,194 @@
+@use "@/css/variables" as var;
+
+.imageCropModalContainer {
+    width: 700px;
+    min-height: 600px;
+}
+
+.modalHeader {
+    height: 50px;
+    padding: 25px 10px;
+    margin: auto;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.modalTitle {
+    font-size: 18px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.imageCropContainer {
+    height: 700px;
+}
+
+.imageCrop {
+    text-align: center;
+    overflow: hidden;
+    height: 100%;
+    cursor: pointer;
+    z-index: 1;
+    
+    display: flex;
+    align-items:baseline;
+}
+
+.imageToCrop {
+    flex-shrink: 1;
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.gridLine {
+    background-image:
+      repeating-linear-gradient(#ccc 0 1px, transparent 1px 100%),
+      repeating-linear-gradient(90deg, #ccc 0 1px, transparent 1px 100%);
+    background-size: calc((700px / 3) - 0.5px) calc((700px / 3) - 0.5px);
+    z-index: 2;
+
+    position: fixed;
+    float:left;
+
+    width: 700px;
+    height: 700px;
+}
+
+.closeModalBtn {
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+
+.bottomContainer {
+    height: 60px;
+    display: flex;
+    gap: 60%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.zoomBar {
+    accent-color: var.$primary-color;
+    -webkit-appearance: none;
+    background-color: var(--background-color);
+}
+
+.zoomBar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 0.5px solid var(--border-color);
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -4px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+.zoomBar::-moz-range-thumb {
+    -webkit-appearance: none;
+    border: 0.5px solid var(--border-color);
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -14px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+.zoomBar::-ms-thumb {
+    -webkit-appearance: none;
+    border: 0.5px solid var(--border-color);
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -14px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; 
+}
+
+.zoomBar::-webkit-slider-runnable-track {
+    height: 8.4px;
+    cursor: pointer;
+    background: var.$primary-color;
+    border-radius: 5px;
+    border: none;
+}
+
+.zoomBar::-moz-range-track {
+    height: 8.4px;
+    cursor: pointer;
+    background: var.$primary-color;
+    border-radius: 5px;
+    border: none;
+}
+
+.zoomBar::-ms-track {
+    height: 8.4px;
+    cursor: pointer;
+    background: var.$primary-color;
+    border-radius: 5px;
+    border: none;
+}
+
+.cropBtn {
+    padding: 10px;
+    font-size: 14px;
+    background-color: var.$primary-color;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+@media only screen and (max-height: 830px), screen and (max-width: 700px){
+    .imageCropModalContainer {
+        width: 450px;
+    } 
+
+    .modalHeader {
+        height: 40px;
+    }
+
+    .imageCropContainer {
+        height: 450px;
+    }
+
+    .modalTitle {
+        font-size: 14px;
+    }
+
+    .gridLine {
+        background-image:
+          repeating-linear-gradient(#ccc 0 1px, transparent 1px 100%),
+          repeating-linear-gradient(90deg, #ccc 0 1px, transparent 1px 100%);
+        background-size: calc((450px / 3) - 0.5px) calc((450px / 3) - 0.5px);
+        z-index: 2;
+    
+        position: fixed;
+        float:left;
+    
+        width: 450px;
+        height: 450px;
+    }
+
+    .bottomContainer {
+        height: 50px;
+        gap: 40%;
+    }
+
+    .cropBtn {
+        font-size: 12px;
+        padding: 8px;
+    }
+    
+}

@@ -1,0 +1,94 @@
+@use "@/css/variables" as var;
+
+.loginFormContainer {
+    width: 470px;
+    background-color: var(--auth-forms-bg);
+}
+
+.login-form {
+    width: 400px;
+}
+
+.formInput {
+    padding: 14px 0px 14px 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 100%;
+    background-color: var(--input-color);
+    border: none;
+    color: var(--text-color);
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: var(--text-secondary-color);
+}
+
+.form-input::-webkit-input-placeholder {
+    color: var(--text-secondary-color);
+}
+
+.form-input::-moz-placeholder {
+    color: var(--text-secondary-color);
+    opacity: 1;
+}
+
+.form-title {
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 15px 0;
+}
+
+.form-hr {
+    border-top: 1px;
+}
+
+.disabled-option {
+    color: gray;
+}
+
+.cancel-btn {
+    background-color: white;
+    border: none;
+    font-size: large;
+    padding: 20px 0px;
+    cursor: pointer;
+    position: fixed;
+}
+
+.hr-style {
+    border: none;
+    height: 1px;
+    background-color: rgb(199, 199, 199);
+}
+
+.login-input-container {
+    padding: 10px 0;
+    position: relative;
+}
+
+.bottom-links {
+    font-size: medium;
+
+    a {
+        text-decoration: none;
+        color: var.$primary-color;
+        font-weight: bold;
+    }
+}
+
+.forgot-password-link {
+    font-size: 14px;    
+
+    text-decoration: none;
+    color: var(--text-secondary-color);
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+.submit-btn-container {
+    padding-top: 16px;
+}

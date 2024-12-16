@@ -2,12 +2,10 @@ package org.woork.backend.passwordreset;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.woork.backend.exceptions.ResetTokenDoesNotExistException;
 import org.woork.backend.exceptions.UserDoesNotExistException;
-import org.woork.backend.user.PasswordResetToken;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserRepository;
 

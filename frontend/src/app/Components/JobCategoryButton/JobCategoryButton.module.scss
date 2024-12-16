@@ -1,0 +1,39 @@
+@use "@/css/variables" as var;
+
+.category-btn {
+    padding: 10px 18px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-secondary-color);
+    min-width: 80px;
+    
+    .category-icon {
+        svg {
+            color: var(--text-secondary-color) !important; 
+        }
+    }
+}
+
+.category-btn:hover {
+    transition: 0.3s;
+    border-bottom: 2px solid var.$border-color; 
+}
+
+.selected {
+    transition: 0.1s linear;
+    border-bottom: 2px solid var(--text-color) !important;
+    color: var(--text-color);
+
+    .category-icon {
+        svg {
+            color: var(--text-color) !important; 
+        
+            #SVGRepo_iconCarrier > * {
+                fill: var(--text-color) !important;
+            }
+        }
+    }
+}

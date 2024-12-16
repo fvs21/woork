@@ -1,0 +1,180 @@
+@use "@/css/variables" as var;
+
+.createdJobCardContainer {
+    height: 100%;
+    margin: 0;
+    position: relative;
+    border: none;
+    border-radius: 10px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.imageContainer {
+    width: 100%;
+    border-radius: 6px;
+}
+
+.contentContainer {
+    width: 100%;
+    overflow: hidden;
+    color: var(--text-color);
+    padding-top: var.$margin-xs;
+}
+
+.postingTitle {
+    font-size: 15px;
+    font-weight: 600;
+    height: 10%;
+    padding-bottom: var.$margin-xxs;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.postingDescription {
+    color: var(--text-secondary-color);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    height: 50px;
+    font-size: 13px;
+}
+
+.postingPrice {
+    padding-top: var.$margin-s;
+    font-size: 13px;
+    font-weight: 500;
+    padding-bottom: 10px;
+}
+
+.postingCategory{
+    font-size: 13px;
+    font-weight: 500;
+    padding-bottom: 10px;
+}
+
+.postingLocation {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.deletePostingAlertBtn {
+    display: flex;
+    gap: 5px;
+    padding: 16px 0;
+}
+
+.cancelDeleteBtn {
+    width: 50%;
+    cursor: pointer;
+    border: none;
+    padding: 6px;
+    border-radius: 4px;
+    transition: 0.3s;
+    background-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.cancelDeleteBtn:hover {
+    background-color: var(--button-hover);
+}
+
+.confirmDeleteBtn {
+    width: 50%;
+    cursor: pointer;
+    padding: 6px;
+    background-color: var.$primary-color;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.confirmDeleteBtn:hover {
+    background-color: var.$secondary-color;
+}
+
+.imagesDisplay {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+}
+
+.onClickModalContainer {
+    width: 400px;
+    padding: 15px;
+    position: relative;
+}
+
+.modalBody {
+    padding-top: 3.5rem;
+    text-align: center;
+}
+
+.postingControllerBtnsContainer {
+    display: block;
+    padding-top: var.$margin-xs;
+}
+
+.visitPostingBtn {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    background-color: var.$primary-color;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.visitPostingBtn:hover {
+    background-color: var.$secondary-color;
+}
+
+.deletePostingBtn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    margin-top: var.$margin-s;
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+}
+
+.deletePostingBtn:hover {
+    background-color: var(--button-hover);
+}
+
+.modalPostingTitle {
+    width: 100%;
+    text-align: left;
+    font-size: 22px;
+    font-weight: 500;
+    padding-bottom: var.$margin-s;
+}
+
+.deletePostingBtns {
+    display: flex;
+    gap: 5px;
+}
+
+.desc {
+    font-size: 14px;
+    width: 100%;
+    text-align: left;
+    padding-bottom: var.$margin-m;
+    color: var(--text-secondary-color);
+}
