@@ -103,13 +103,16 @@ public class UserService implements UserDetailsService {
         if(file.isEmpty()) {
             throw new UnableToUpdateUserException("Error al actualizar imagen.");
         }
-        if(user.getProfilePicture() != null) {
-            imageService.deleteImage(user.getProfilePicture());
-        }
+        Image pfp = user.getProfilePicture();
 
         Image image = imageService.uploadImage(file, "pfp");
         user.setProfilePicture(image);
-        return new UserResource(userRepository.save(user));
+        userRepository.save(user);
+
+        if(pfp != null)
+            imageService.deleteImage(pfp);
+
+        return new UserResource(user);
     }
 
     public UserResource updateDateOfBirth(User user, String newDob) {

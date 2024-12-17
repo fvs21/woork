@@ -1,11 +1,11 @@
-import { useUser } from "@/jotai/user";
+import { useUser } from "@/api/hooks/user";
 import styles from "./WorkPanel.module.scss";
-import StarSVG from "@/Components/SVGs/Star";
-import { useTheme } from "@/Hooks/theme";
-import { svgColor } from "@/Utils/extra/utils";
+import StarSVG from "@/components/SVGs/Star";
+import { useTheme } from "@/hooks/theme";
+import { svgColor } from "@/utils/extra/utils";
 
 export default function WorkPanel() {
-    const [user] = useUser();
+    const user = useUser();
 
     return (
         <div>

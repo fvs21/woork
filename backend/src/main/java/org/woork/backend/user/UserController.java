@@ -10,6 +10,8 @@ import org.woork.backend.user.requests.UpdateGenderRequest;
 import org.woork.backend.user.resources.UserResource;
 import org.woork.backend.validators.ValidatorImpl;
 
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("api/user")
@@ -56,8 +58,8 @@ public class UserController {
     }
 
     @PutMapping("/dob/update")
-    public UserResource updateDateOfBirth(@RequestBody String dateOfBirth) {
+    public UserResource updateDateOfBirth(@RequestBody Map<String, String> map) {
         User user = authenticationService.getCurrentUser();
-        return userService.updateDateOfBirth(user, dateOfBirth);
+        return userService.updateDateOfBirth(user, map.get("dateOfBirth"));
     }
 }

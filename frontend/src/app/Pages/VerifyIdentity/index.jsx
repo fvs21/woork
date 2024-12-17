@@ -1,7 +1,7 @@
 import { Head, Link } from "@inertiajs/react";
 import styles from "./Verify.module.scss";
-import Logotype from "@/Components/Logotype/Logotype";
-import Layout from "@/Components/Layout/Layout";
+import Logotype from "@/components/Logotype/Logotype";
+import Layout from "@/components/Layout/Layout";
 
 export default function Verify() {
     return (

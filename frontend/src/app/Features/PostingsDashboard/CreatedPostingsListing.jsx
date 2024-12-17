@@ -1,4 +1,4 @@
-import CreatedPostingCard from "@/Components/CreatedJobCard/CreatedPostingCard";
+import CreatedPostingCard from "@/components/CreatedJobCard/CreatedPostingCard";
 import styles from "./PostingsDashboard.module.scss";
 
 export default function CreatedPostingsListing({postings}) {

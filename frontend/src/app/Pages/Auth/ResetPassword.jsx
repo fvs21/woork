@@ -1,9 +1,9 @@
-import Logotype from "@/Components/Logotype/Logotype";
+import Logotype from "@/components/Logotype/Logotype";
 import styles from "./Auth.module.scss";
 import { Head } from '@inertiajs/react';
-import ResetPasswordForm from "@/Features/ResetPassword/ResetPasswordForm";
-import Footer from "@/Components/Footer/Footer";
-import Layout from "@/Components/Layout/Layout";
+import ResetPasswordForm from "@/features/resetpassword/ResetPasswordForm";
+import Footer from "@/components/Footer/Footer";
+import Layout from "@/components/Layout/Layout";
 
 export default function ResetPassword({ token, phone, email }) {
     return (

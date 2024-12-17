@@ -25,7 +25,8 @@ public class PhoneVerificationFilter extends OncePerRequestFilter {
             "/api/auth/verify-phone",
             "/api/auth/logout",
             "/api/auth/verify-phone/resend",
-            "/images/default-pfp"
+            "/images/default-pfp",
+            "/api/auth/phone/update"
     };
 
     @Override

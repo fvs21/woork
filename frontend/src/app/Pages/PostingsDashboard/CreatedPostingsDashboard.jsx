@@ -1,5 +1,5 @@
-import CreatedPostingsListing from "@/Features/PostingsDashboard/CreatedPostingsListing";
-import PostingsDashboardLayout from "@/Features/PostingsDashboard/PostingsDashboardLayout";
+import CreatedPostingsListing from "@/features/postingsdashboard/CreatedPostingsListing";
+import PostingsDashboardLayout from "@/features/postingsdashboard/PostingsDashboardLayout";
 import { flash } from "@/flash-message/flashMessageCreator";
 import { useEffect } from "react";
 

@@ -1,4 +1,4 @@
-import "@/css/globals.scss";
+import "@/styles/globals.scss";
 
 export function determineInputColor(active, valid) {
     if(!active && !valid) {

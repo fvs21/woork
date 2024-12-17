@@ -1,19 +1,19 @@
-import ArrowBackSVG from '@/Components/SVGs/ArrowBack';
+import ArrowBackSVG from '@/components/SVGs/ArrowBack';
 import { Head, Link, router} from '@inertiajs/react';
 import React, { useEffect, useState } from 'react';
 import styles from "./Dashboard.module.scss";
-import Logotype from '@/Components/Logotype/Logotype';
-import AccountPanel from '@/Features/AccountPanel/AccountPanel';
-import useWindowDimensions from '@/Hooks/window';
-import VerifyPanel from '@/Features/VerifyPanel/VerifyPanel';
+import Logotype from '@/components/Logotype/Logotype';
+import AccountPanel from '@/features/accountpanel/AccountPanel';
+import useWindowDimensions from '@/hooks/window';
+import VerifyPanel from '@/features/verifypanel/VerifyPanel';
 import { useUser } from '@/jotai/user';
-import { useTheme } from '@/Hooks/theme';
-import LogotypeWhite from '@/Components/Logotype/LogotypeWhite';
-import { svgColor } from '@/Utils/extra/utils';
-import WorkPanel from '@/Features/WorkPanel/WorkPanel';
-import SecurityPanel from '@/Features/Security/SecurityPanel';
+import { useTheme } from '@/hooks/theme';
+import LogotypeWhite from '@/components/Logotype/LogotypeWhite';
+import { svgColor } from '@/utils/extra/utils';
+import WorkPanel from '@/features/workpanel/WorkPanel';
+import SecurityPanel from '@/features/security/SecurityPanel';
 
-export default function Dashboard({ flash: f }) {
+export default function Dashboard() {
     const [option, setOption] = useState(-1);
     const [user] = useUser();
     const [panel, setPanel] = useState(0); //0 is options menu, and 1 is panel
@@ -23,7 +23,7 @@ export default function Dashboard({ flash: f }) {
     const [rightContainerStyle, setRightContainerStyle] = useState(styles['right-container']);
 
     const [theme, switchTheme] = useTheme();
-    const [dark, setDark] = useState(theme == 'dark');
+    const dark = theme == 'dark';
 
     const svgClr = svgColor();
 
@@ -95,7 +95,7 @@ export default function Dashboard({ flash: f }) {
                                 </Link>
                             </div>
                             <div className={styles['logotype-header']}>
-                                {theme == 'dark' ? 
+                                {dark ? 
                                     <LogotypeWhite width={"120px"} />
                                 :
                                     <Logotype width={"120px"} />
@@ -145,7 +145,6 @@ export default function Dashboard({ flash: f }) {
                         <button 
                             className={styles['option-btn'] + " " + styles.themeToggleContainer}
                             onClick={() => {
-                                setDark(!dark);
                                 switchTheme();
                         }}>
                             Modo oscuro
@@ -156,7 +155,7 @@ export default function Dashboard({ flash: f }) {
                                 }}
                             >
                                 <input 
-                                    checked={dark} 
+                                    checked={theme == 'dark'} 
                                     className={styles.darkmodeInput} 
                                     type="checkbox"
                                     onChange={() => {}}/>

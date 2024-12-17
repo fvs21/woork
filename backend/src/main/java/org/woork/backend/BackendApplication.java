@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.woork.backend.config.RsaKeyProperties;
 import org.woork.backend.image.Image;
 import org.woork.backend.image.ImageRepository;
@@ -20,6 +21,7 @@ public class BackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(BackendApplication.class, args);
     }
+
 
 //    @Bean
 //    CommandLineRunner run(ImageRepository imageRepository) {

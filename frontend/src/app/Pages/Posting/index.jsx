@@ -1,17 +1,17 @@
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import styles from "./Posting.module.scss";
 import { useEffect, useRef, useState } from "react";
-import ArrowButton from "@/Components/ArrowButton/ArrowButton";
-import SendSVG from "@/Components/SVGs/Send";
+import ArrowButton from "@/components/ArrowButton/ArrowButton";
+import SendSVG from "@/components/SVGs/Send";
 import "leaflet/dist/leaflet.css";
 import "leaflet";
-import CloseSVG from "@/Components/SVGs/Close";
-import Layout from "@/Components/Layout/Layout";
+import CloseSVG from "@/components/SVGs/Close";
+import Layout from "@/components/Layout/Layout";
 import { lazy } from "react";
 import { Suspense } from "react";
-import LoadingModal from "@/Components/LoadingModal/LoadingModal";
+import LoadingModal from "@/components/LoadingModal/LoadingModal";
 
-const JobApplicantsList = lazy(() => import("@/Features/PostingsDashboard/JobApplicantsList"));
+const JobApplicantsList = lazy(() => import("@/features/postingsdashboard/JobApplicantsList"));
 
 export default function Posting({ data, application_status, flash }) {
     const postingData = data.data;

@@ -1,8 +1,8 @@
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from "./Profile.module.scss";
-import CloseSVG from "@/Components/SVGs/Close";
-import { svgColor } from "@/Utils/extra/utils";
-import TextArea from "@/Components/TextArea/TextArea";
+import CloseSVG from "@/components/SVGs/Close";
+import { svgColor } from "@/utils/extra/utils";
+import TextArea from "@/components/TextArea/TextArea";
 import { useState } from "react";
 
 export default function AboutModal({about, setAbout, closeModal}) {

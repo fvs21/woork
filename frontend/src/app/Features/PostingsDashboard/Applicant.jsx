@@ -1,6 +1,6 @@
-import StarSVG from "@/Components/SVGs/Star";
+import StarSVG from "@/components/SVGs/Star";
 import styles from "./PostingsDashboard.module.scss";
-import { svgColor } from "@/Utils/extra/utils";
+import { svgColor } from "@/utils/extra/utils";
 
 export default function Applicant({pfpUrl, username, name, rating}) {
     return (

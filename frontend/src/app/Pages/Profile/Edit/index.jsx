@@ -1,15 +1,15 @@
-import Layout from "@/Components/Layout/Layout";
+import Layout from "@/components/Layout/Layout";
 import styles from "./Edit.module.scss";
 import { Head, router } from "@inertiajs/react";
 import { useUser } from "@/jotai/user";
 import { useState } from "react";
 import { Suspense } from "react";
-import LoadingScreen from "@/Components/LoadingScreen/LoadingScreen";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { lazy } from "react";
-import LoadingSpinner from "@/Components/LoadingSpinner/LoadingSpinner";
-import LoadingModal from "@/Components/LoadingModal/LoadingModal";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import LoadingModal from "@/components/LoadingModal/LoadingModal";
 
-const AboutModal = lazy(() => import("@/Features/Profile/AboutModal"));
+const AboutModal = lazy(() => import("@/features/profile/AboutModal"));
 
 export default function Edit({editInformation}) {
     const [user] = useUser();

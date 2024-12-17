@@ -1,17 +1,17 @@
 import { useState } from "react";
-import Modal from "@/Components/Modal/Modal";
-import CloseSVG from "@/Components/SVGs/Close";
-import RegisterDateInput from "../Registration/RegisterDateInput";
+import Modal from "@/components/Modal/Modal";
+import CloseSVG from "@/components/SVGs/Close";
+import RegisterDateInput from "../registration/RegisterDateInput";
 import styles from "./InformationPanel.module.scss";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
-import { validateAge } from "@/Services/validators";
-import { stringifyDateOfBirth } from "@/Utils/authentication/RegisterUtils";
-import axios from "@/api/axios";
-import { useUser } from "@/jotai/user";
-import { svgColor } from "@/Utils/extra/utils";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
+import { validateAge } from "@/services/validators";
+import { stringifyDateOfBirth } from "@/utils/authentication/RegisterUtils";
+import { useUpdateDob, useUser } from "@/api/hooks/user";
+import { svgColor } from "@/utils/extra/utils";
+import { flash } from "@/flash-message/flashMessageCreator";
 
 export default function DateOfBirthModal({closeModal}) {
-    const [user, setUser] = useUser();
+    const [user] = useUser();
 
     const dob = new Date(user?.dateOfBirth.replace(/-/g, "/"));
 
@@ -21,6 +21,8 @@ export default function DateOfBirthModal({closeModal}) {
         "day": dob.getDate() || ""
     });
 
+    const { update } = useUpdateDob();
+
     const body = {
         'dateOfBirth': stringifyDateOfBirth(dateOfBirth.year, dateOfBirth.month, dateOfBirth.day)
     }
@@ -29,14 +31,11 @@ export default function DateOfBirthModal({closeModal}) {
         e.preventDefault();
 
         try {
-            await axios.put("/dob/update", body);
-            setUser({
-                ...user,
-                dateOfBirth: stringifyDateOfBirth(dateOfBirth.year, dateOfBirth.month, dateOfBirth.day)
-            });
+            await update(body);
+            flash("Fecha de nacimiento actualizada.", 4000, "success");
             closeModal();
         } catch(error) {
-            console.log(error);
+            flash(error.response.data.message, 4000, "error");
         }       
     }
 

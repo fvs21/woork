@@ -1,11 +1,11 @@
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from "./CreatePosting.module.scss";
 import "leaflet/dist/leaflet.css";
 import "leaflet"
 import { useEffect, useState } from "react";
-import ArrowBackSVG from "@/Components/SVGs/ArrowBack";
-import { defaultIcon } from "@/Components/MapMarker";
-import { useTheme } from "@/Hooks/theme";
+import ArrowBackSVG from "@/components/SVGs/ArrowBack";
+import { defaultIcon } from "@/components/MapMarker";
+import { useTheme } from "@/hooks/theme";
 
 export default function MapModal({location, setLocation, setMapModal, setNewLocationModal, setSelectLocationModal}) {
     const [theme] = useTheme();

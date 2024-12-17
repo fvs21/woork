@@ -1,11 +1,11 @@
-import { determineInputColor } from "@/Utils/authentication/DetermineStylesUtils";
+import { determineInputColor } from "@/utils/authentication/DetermineStylesUtils";
 import { useEffect } from "react";
 import { useState } from "react";
 import InputBox from "../ValidatedInput/InputBox";
 import InputLabel from "../ValidatedInput/InputLabel";
 import ErrorCircleSVG from "../SVGs/ErrorCircle";
 import EyeSVG from "../SVGs/Eye";
-import { svgColor } from "@/Utils/extra/utils";
+import { svgColor } from "@/utils/extra/utils";
 import { useRef } from "react";
 import styles from "./PasswordInput.module.scss";
 

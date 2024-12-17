@@ -1,16 +1,16 @@
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from "./JobFilters.module.scss";
-import CloseSVG from "@/Components/SVGs/Close";
+import CloseSVG from "@/components/SVGs/Close";
 import "leaflet/dist/leaflet.css";
 import "leaflet"
 import { useEffect, useState } from "react";
-import { defaultIcon } from "@/Components/MapMarker";
-import CrosshairSVG from "@/Components/SVGs/Crosshair";
+import { defaultIcon } from "@/components/MapMarker";
+import CrosshairSVG from "@/components/SVGs/Crosshair";
 import axios from "@/api/axios";
-import LoadingSpinner from "@/Components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { useSearchLocation } from "@/jotai/user";
 import { router, usePage } from "@inertiajs/react";
-import { svgColor } from "@/Utils/extra/utils";
+import { svgColor } from "@/utils/extra/utils";
 
 export default function LocationFilter({setDisplayModal}) {
     const { category_tag } = usePage().props;

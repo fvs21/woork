@@ -1,7 +1,9 @@
+"use client";
+
 import { useState } from "react";
 import { setUpdateFlashes, deleteAll } from "../flashMessageCreator";
 import { useEffect } from "react";
-import FlashAlert from "@/Components/FlashAlert/FlashAlert";
+import FlashAlert from "@/components/FlashAlert/FlashAlert";
 
 export default function FlashRenderer() {
     const [messages, setMessages] = useState([]);

@@ -2,8 +2,7 @@ import InputLabel from "./InputLabel";
 import InputBox from "./InputBox";
 import styles from "./ValidatedInput.module.scss";
 import { useEffect, useState } from "react";
-import "@/css/globals.scss";
-import { determineInputColor } from "@/Utils/authentication/DetermineStylesUtils";
+import { determineInputColor } from "@/utils/authentication/DetermineStylesUtils";
 import ErrorCircleSVG from "../SVGs/ErrorCircle";
 
 export default function ValidatedInput(

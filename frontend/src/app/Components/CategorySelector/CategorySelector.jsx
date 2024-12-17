@@ -1,7 +1,7 @@
 import InputLabel from "../ValidatedInput/InputLabel";
 import styles from "./CategorySelector.module.scss";
 import "@/css/globals.scss";
-import { Categories } from "@/Services/Categories";
+import { Categories } from "@/services/Categories";
 
 export default function CategorySelector({value, setValue, label, className}) {
     

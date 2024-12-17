@@ -21,7 +21,7 @@ public class UpdateAddressRequest {
     private String state;
 
     @NotBlank(message = defaultErrorMessage)
-    private String zip_code;
+    private String zipCode;
 
     @NotBlank(message = defaultErrorMessage)
     private String street;
@@ -32,11 +32,11 @@ public class UpdateAddressRequest {
     @NotBlank(message = defaultErrorMessage)
     private String address_name;
 
-    public UpdateAddressRequest(String city, String country, String state, String zip_code, String street, int number, String address_name) {
+    public UpdateAddressRequest(String city, String country, String state, String zipCode, String street, int number, String address_name) {
         this.city = city;
         this.country = country;
         this.state = state;
-        this.zip_code = zip_code;
+        this.zipCode = zipCode;
         this.street = street;
         this.number = number;
         this.address_name = address_name;

@@ -17,5 +17,5 @@ export function formatGender(gender) {
 }
 
 export function formatAddress(address) {
-    return `${address?.street}, ${address?.number}. C.P. ${address?.zipCode} - ${address?.city}, ${address?.state}, ${address?.country}`
+    return `${address?.street}, ${address?.number}. C.P. ${address?.zip_code} - ${address?.city}, ${address?.state}, ${address?.country}`
 }

@@ -1,0 +1,48 @@
+//fonts
+$primary-font-color: #1c1b1b; //primary color for fonts
+
+$input-color: rgb(238, 238, 238);
+$input-color-dark: rgb(50, 50, 50);
+
+$dark-bg: rgb(30, 30, 30);
+
+//borders
+$border-color: #d4d4d4; //primary color for borders
+$border-color-dark: rgb(66, 66, 66);
+
+$primary-color: #5961f8; //5961f8 second option
+
+$secondary-color: #8288f7;
+
+$gradient-color: rgb(214, 225, 238);
+
+$bg-gray: rgb(243, 243, 243);
+
+$invalid-color:  rgb(223, 223, 223);
+
+$success-border-color: rgb(24, 151, 24);
+
+$button-hover: #dcdcdc;
+$button-hover-dark: rgb(86, 86, 86);
+
+
+@mixin primary-button {
+    background-color: $primary-color;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+@mixin posting-gradient {
+    background: rgb(89,97,248);
+    background: linear-gradient(90deg, rgba(89,97,248,1) 0%, rgba(70,251,252,0.8043811274509804) 0%, rgba(133,90,210,1) 0%, rgba(89,97,248,1) 52%, rgba(85,173,191,1) 100%, rgba(252,70,107,0.7847732843137255) 100%);
+}
+
+$margin-xxs: .25rem;
+$margin-xs: .5rem;
+$margin-s: .75rem;
+$margin-m: 1rem;
+$margin-l: 1.25rem;
+$margin-xl: 1.75rem;
+$margin-xxl: 2.5rem;

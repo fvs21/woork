@@ -1,8 +1,7 @@
 import styles from "./InputDate.module.scss";
-import { daysInMonth, MONTHS } from "@/Utils/authentication/RegisterUtils";
+import { daysInMonth, MONTHS } from "@/utils/authentication/RegisterUtils";
 
 export default function InputDate({month, day, year, changeDateOfBirth, setActive, yearsArray, className}) {
-    
     const focus = () => {
         setActive(true);
     }

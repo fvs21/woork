@@ -1,4 +1,4 @@
-import { useTheme } from "@/Hooks/theme";
+import { useTheme } from "@/hooks/theme";
 
 export const svgColor = () => {
     const [theme] = useTheme();

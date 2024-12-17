@@ -1,4 +1,4 @@
-import InputLabel from "@/Components/ValidatedInput/InputLabel";
+import InputLabel from "@/components/ValidatedInput/InputLabel";
 import styles from "./TextArea.module.scss";
 import { useState } from "react";
 

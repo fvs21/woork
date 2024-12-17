@@ -1,7 +1,7 @@
-import Logotype from "@/Components/Logotype/Logotype";
+import Logotype from "@/components/Logotype/Logotype";
 import styles from "./Auth.module.scss";
-import LoginForm from "@/Features/Login/LoginForm";
-import Footer from "@/Components/Footer/Footer";
+import LoginForm from "@/features/login/LoginForm";
+import Footer from "@/components/Footer/Footer";
 import "@/css/globals.scss";
 
 export default function LoginPage({errors}) {

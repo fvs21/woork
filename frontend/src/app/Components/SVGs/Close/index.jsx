@@ -1,5 +1,3 @@
-import "../../../../css/globals.scss";
-
 export default function CloseSVG({width, color}) {
     return (
         <svg className="global-svgs" style={{width: width, height: width, color: color || "black"}} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" 

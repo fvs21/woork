@@ -1,17 +1,16 @@
 import { useRef, useState } from "react";
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from './InformationPanel.module.scss';
-import { checkIfValidImage } from "@/Utils/account/AccountUtils";
-import CloseSVG from "@/Components/SVGs/Close";
-import ArrowBackSVG from "@/Components/SVGs/ArrowBack";
-import { axiosMultiPart } from "@/api/axios";
-import ImageCropModal from "@/Components/ImageCropModal/ImageCropModal";
-import { useUser } from "@/jotai/user";
-import { svgColor } from "@/Utils/extra/utils";
+import { checkIfValidImage } from "@/utils/account/AccountUtils";
+import CloseSVG from "@/components/SVGs/Close";
+import ArrowBackSVG from "@/components/SVGs/ArrowBack";
+import ImageCropModal from "@/components/ImageCropModal/ImageCropModal";
+import { useUpdatePfp, useUser } from "@/api/hooks/user";
+import { svgColor } from "@/utils/extra/utils";
 import { flash } from "@/flash-message/flashMessageCreator";
 
 export default function ProfilePictureModal({closeModal}) {
-    const [user, setUser] = useUser();
+    const [user] = useUser();
 
     const [image, setImage] = useState(null);
     const [imageSrc, setImageSrc] = useState("");
@@ -19,6 +18,8 @@ export default function ProfilePictureModal({closeModal}) {
     const [step, setStep] = useState(0);
     const pfpInput = useRef(null);
     const [displayCropModal, setDisplayCropModal] = useState(false);
+
+    const { update } = useUpdatePfp();
 
 
     const pfpUrl = user?.pfp_url;
@@ -45,20 +46,13 @@ export default function ProfilePictureModal({closeModal}) {
     async function handleSubmit(event) {
         event.preventDefault();
 
-        const formData = new FormData();
-        formData.append("profile_picture", image);
-        formData.append('_method', 'PUT')
 
         try {
-            const request = await axiosMultiPart.post("/pfp/update", formData);
-            setUser({
-                ...user,
-                pfp_url: request.data.url
-            });
+            await update(image);
             flash("Foto de perfil actualizada.", 4000, "success");
             closeModal();
         } catch(error) {
-            setAlertMessage(error.response.data.message);
+            flash(error.response.data.message, 4000, "error");
         }
     }
 

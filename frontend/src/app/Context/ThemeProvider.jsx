@@ -1,16 +1,22 @@
 "use client"
 
 import { ThemeContext } from "./ThemeContext";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 export default function ThemeProvider({children}) {
-    useEffect(() => {
-        if(!localStorage.getItem('theme')) {
+    const [theme, setTheme] = useState(localStorage.getItem('theme'));
+
+    useLayoutEffect(() => {
+        const theme = localStorage.getItem('theme');
+        
+        if(theme == null) {
             localStorage.setItem('theme', 'light');
-        }  
+            document.documentElement.classList.toggle('light');
+        }  else {
+            document.documentElement.classList.toggle(theme);
+        }
     }, []);
 
-    const [theme, setTheme] = useState("light");
     //come back later
 
     const changeTheme = (val) => {

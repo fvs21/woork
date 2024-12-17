@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import InputEmailOrPhone from "./InputEmailOrPhone";
-import ValidatedInput from "@/Components/ValidatedInput/ValidatedInput";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import Link from "next/link";
 import styles from "./LoginForm.module.scss";
-import { isEmail } from "@/Utils/authentication/LoginUtils";
-import Form from "@/Components/Form/Form";
+import { isEmail } from "@/utils/authentication/LoginUtils";
+import Form from "@/components/Form/Form";
 import { useLogin } from "@/api/hooks/authentication";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
 
 export default function LoginForm({errors}) {
     const [credential, setCredential] = useState("");
@@ -18,12 +19,12 @@ export default function LoginForm({errors}) {
     const [errorMsg, setErrorMsg] = useState("");
 
     const { login, isLoading } = useLogin();
+    const router = useRouter();
 
     async function handleSubmit(e) {
         e.preventDefault();
 
         const cred = isEmail(credential) ? credential : countryCode+credential;
-        const router = useRouter();
 
         try {
             await login({
@@ -32,7 +33,7 @@ export default function LoginForm({errors}) {
             });
             router.push("/dashboard");
         } catch(error) {
-            console.log(error);
+            setErrorMsg(error.response.data.message);
         }
     }
 
@@ -62,13 +63,14 @@ export default function LoginForm({errors}) {
                             value={password}
                             setValue={setPassword} 
                             autofocus={false} 
-                            autoComplete="on"/>
-                            {errors && <span className="error-msg">{errors['error'] || errors['credential']}</span>}
+                            autoComplete="on"
+                            />
+                            {errorMsg && <span className="error-msg">{errorMsg}</span>}
                     </div>
                     <div className={styles['submit-btn-container']}>
                         <SubmitButton 
                             active={true}>
-                                Iniciar sesión
+                                {isLoading ? <LoadingSpinnerClear width={"18px"} /> : "Iniciar sesión"}
                         </SubmitButton>
                     </div>
                 </form>

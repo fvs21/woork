@@ -1,16 +1,16 @@
 "use client";
 
 import styles from "./Landing.module.scss";
-import Footer from "@/Components/Footer/Footer";
-import LogotypeWhite from "@/Components/Logotype/LogotypeWhite";
-import Logotype from "@/Components/Logotype/Logotype";
-import InputEmailOrPhone from "@/Features/Login/InputEmailOrPhone";
-import ValidatedInput from "@/Components/ValidatedInput/ValidatedInput";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
+import Footer from "@/components/Footer/Footer";
+import LogotypeWhite from "@/components/Logotype/LogotypeWhite";
+import Logotype from "@/components/Logotype/Logotype";
+import InputEmailOrPhone from "@/features/login/InputEmailOrPhone";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import { useState } from "react";
-import { isEmail } from "@/Utils/authentication/LoginUtils";
-import { useTheme } from "../../Hooks/theme";
-import { loginUser } from "@/Services/auth";
+import { isEmail } from "@/utils/authentication/LoginUtils";
+import { useTheme } from "../../hooks/theme";
+import { loginUser } from "@/services/auth";
 import Link from "next/link";
 
 export default function LandingPage() {

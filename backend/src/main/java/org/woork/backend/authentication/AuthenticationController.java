@@ -19,10 +19,8 @@ import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.resources.UserResource;
 import org.woork.backend.user.UserService;
-import org.woork.backend.utils.AuthenticationUtils;
 import org.woork.backend.validators.ValidatorImpl;
 
-import javax.security.auth.login.LoginException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;

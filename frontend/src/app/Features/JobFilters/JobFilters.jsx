@@ -1,17 +1,17 @@
 import styles from "./JobFilters.module.scss";
-import JobCategoryButton from "@/Components/JobCategoryButton/JobCategoryButton";
+import JobCategoryButton from "@/components/JobCategoryButton/JobCategoryButton";
 import { router } from "@inertiajs/react";
-import { CategoriesList } from "@/Services/Categories";
-import LocationSVG from "@/Components/SVGs/Location";
+import { CategoriesList } from "@/services/Categories";
+import LocationSVG from "@/components/SVGs/Location";
 import { useEffect, useRef, useState } from "react";
-import ArrowBackSVG from "@/Components/SVGs/ArrowBack";
-import ArrowRightSVG from "@/Components/SVGs/ArrowRight";
-import useWindowDimensions from "@/Hooks/window";
+import ArrowBackSVG from "@/components/SVGs/ArrowBack";
+import ArrowRightSVG from "@/components/SVGs/ArrowRight";
+import useWindowDimensions from "@/hooks/window";
 import { useSearchLocation } from "@/jotai/user";
-import { useTheme } from "@/Hooks/theme";
+import { useTheme } from "@/hooks/theme";
 import { lazy } from "react";
 import { Suspense } from "react";
-import LoadingModal from "@/Components/LoadingModal/LoadingModal";
+import LoadingModal from "@/components/LoadingModal/LoadingModal";
 
 const LocationFilter = lazy(() => import("./LocationFilter"));
 

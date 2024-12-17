@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./Footer.module.scss";
-import { useTheme } from "@/Hooks/theme";
+import { useTheme } from "@/hooks/theme";
 
 export default function Footer() {
     const [theme] = useTheme();

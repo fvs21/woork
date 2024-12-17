@@ -13,7 +13,7 @@ import org.woork.backend.validators.ValidatorImpl;
 import java.util.Map;
 
 @RestController
-@RequestMapping(name = "api/profile")
+@RequestMapping("api/profile")
 public class ProfileController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
@@ -28,7 +28,7 @@ public class ProfileController {
         this.validatorImpl = validatorImpl;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public Map<String, Object> usersProfile() {
         User user = authenticationService.getCurrentUser();
         return Map.of(

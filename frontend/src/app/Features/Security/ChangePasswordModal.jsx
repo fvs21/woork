@@ -1,12 +1,12 @@
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from "./SecurityPanel.module.scss";
-import CloseSVG from "@/Components/SVGs/Close";
-import { svgColor } from "@/Utils/extra/utils";
+import CloseSVG from "@/components/SVGs/Close";
+import { svgColor } from "@/utils/extra/utils";
 import { useState } from "react";
-import { validatePassword } from "@/Services/validators";
-import axios from "@/api/axios";
+import { validatePassword } from "@/services/validators";
+import { api } from "@/api/axios";
 import { flash } from "@/flash-message/flashMessageCreator";
-import PasswordInput from "@/Components/PasswordInput/PasswordInput";
+import PasswordInput from "@/components/PasswordInput/PasswordInput";
 
 export default function ChangePasswordModal({closeModal}) {
     const [currentPassword, setCurrentPassword] = useState("");
@@ -42,7 +42,7 @@ export default function ChangePasswordModal({closeModal}) {
             return;
 
         try {
-            await axios.put("/password/update", {
+            await api.put("/password/update", {
                 currentPassword: currentPassword,
                 newPassword: newPassword,
                 password_confirmation: reNewPassword

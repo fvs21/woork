@@ -1,6 +1,6 @@
-import InputDate from "@/Components/InputDate/InputDate";
-import InputLabel from "@/Components/ValidatedInput/InputLabel";
-import { validateJobPostingDate } from "@/Services/validators";
+import InputDate from "@/components/InputDate/InputDate";
+import InputLabel from "@/components/ValidatedInput/InputLabel";
+import { validateJobPostingDate } from "@/services/validators";
 import { useEffect, useState } from "react";
 import styles from "./CreatePosting.module.scss";
 

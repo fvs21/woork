@@ -1,24 +1,26 @@
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from "./InformationPanel.module.scss";
 import { useState } from "react";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
-import ValidatedInput from "@/Components/ValidatedInput/ValidatedInput";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
 import EmailVerification from "./EmailVerification";
-import CloseSVG from "@/Components/SVGs/Close";
-import { validateEmail } from "@/Services/validators";
-import "../../../css/globals.scss";
-import axios from "@/api/axios";
-import { useUser } from "@/jotai/user";
-import { svgColor } from "@/Utils/extra/utils";
+import CloseSVG from "@/components/SVGs/Close";
+import { validateEmail } from "@/services/validators";
+import { api } from "@/api/axios";
+import { svgColor } from "@/utils/extra/utils";
+import { useUser } from "@/api/hooks/user";
+import { useUpdateEmail } from "@/api/hooks/authentication";
 
 export default function EmailModal({closeModal}) {
-    const [user, setUser] = useUser();
+    const [user] = useUser();
 
-    const [email, setEmail] = useState(user?.email);
+    const [email, setEmail] = useState(user?.email || "");
     const [emailValid, setEmailValid] = useState(true);
-    const notVerified = user?.email && !user?.email_verified;
+    const notVerified = user?.email && !user?.emailVerified;
     const [step, setStep] = useState(notVerified ? 1 : 0);
     const [error, setError] = useState("");
+
+    const { updateEmail, isLoading } = useUpdateEmail();
 
     const body = {
         "email": email
@@ -38,14 +40,11 @@ export default function EmailModal({closeModal}) {
 
         try {
             setError("");
-            await axios.put("/email/update", body);
-            setUser({
-                ...user,
-                email: email,
-                email_verified: false
-            });
+            await updateEmail(body);
             setStep(1);
         } catch(error) {
+            console.log(error);
+            
             setError(error.response.data.message);
         }
     }
@@ -66,7 +65,16 @@ export default function EmailModal({closeModal}) {
                         <div>Agregar un correo electrónico te puede ayudar a recuperar tu cuenta en caso de no tener acceso a tu teléfono.</div>
                     </div>
                     <form className={styles['form-container']} onSubmit={handleSubmit}>
-                        <ValidatedInput className={styles.formInput} name={"email"} valid={emailValid} type={"email"} value={email} setValue={changeEmail} placeholder={"Correo electrónico"} autofocus={false}/>
+                        <ValidatedInput 
+                            className={styles.formInput} 
+                            name={"email"} 
+                            valid={emailValid} 
+                            type={"email"} 
+                            value={email} 
+                            setValue={changeEmail} 
+                            placeholder={"Correo electrónico"} 
+                            autofocus={false}
+                        />
                         { error && <span className="error-msg">{error}</span>}
                         <br/>
                         <br/>
@@ -80,9 +88,8 @@ export default function EmailModal({closeModal}) {
             <EmailVerification 
                 closeModal={closeModal}
                 notVerified={notVerified} 
-                user={user} 
-                setUser={setUser} 
-                editEmail={() => setStep(0)}/>
+                editEmail={() => setStep(0)}
+            />
         )
     }
 }

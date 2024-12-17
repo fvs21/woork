@@ -1,48 +1,59 @@
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
-import ValidatedInput from "@/Components/ValidatedInput/ValidatedInput";
+"use client";
+
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
 import styles from "./PhoneVerification.module.scss";
 import { useState, lazy, Suspense } from "react";
-import { useForm, usePage } from "@inertiajs/react";
-import axios from "@/api/axios";
-import Form from "@/Components/Form/Form";
-import LoadingScreen from "@/Components/LoadingScreen/LoadingScreen";
-import { useUser } from "@/jotai/user";
+import Form from "@/components/Form/Form";
+import { useUser } from "@/api/hooks/user";
 import { flash } from "@/flash-message/flashMessageCreator";
+import { useResendPhoneVerificationCode, useVerifyPhone } from "@/api/hooks/authentication";
+import { useRouter } from "next/navigation";
+import LoadingModal from "@/components/LoadingModal/LoadingModal";
 
 const EditPhoneModal = lazy(() => import("./EditPhoneModal"));
 
 export default function PhoneVerification() {
-    const [user, setUser] = useUser();
-
-    const { setData, post } = useForm({
-        otp: "",
-    });
+    const [user] = useUser();
+    
+    const [otp, setOtp] = useState("");
 
     const [otpInputActive, setOtpInputActive] = useState(false);
 
     const [displayEditPhoneModal, setDisplayEditPhoneModal] = useState(false);
 
-    const { errors } = usePage().props;
+    const { verify, isLoading } = useVerifyPhone();
+    const { resend, isLoading: loadingResend } = useResendPhoneVerificationCode(); 
+
+    const router = useRouter();
 
     function updateCode(value) {
-        setData("otp", value);
+        setOtp(value);
         if (value.length >= 7) setOtpInputActive(true);
-        else setActive(false);
+        else setOtpInputActive(false);
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        post("/verify-phone");
+
+        try {
+            await verify({
+                otp: otp
+            });
+            router.push("/dashboard");
+        } catch(error) {
+            flash(error.response.data.message, 6000, "error");
+        }
     }
 
     async function reSendCode(e) {
         e.preventDefault();
 
         try {
-            const request = await axios.post("verify-phone/resend");
-            flash(request.data.success, 6000, "success");
+            const request = await resend();
+            flash(request.data, 6000, "success");
         } catch (error) {
-            flash(error.response.data.error, 6000, "error");
+            flash(error.response.data.message, 6000, "error");
         }
     }
 
@@ -53,9 +64,7 @@ export default function PhoneVerification() {
             </div>
             <form onSubmit={handleSubmit}>
                 <span style={{ fontSize: "15px", paddingBottom: "10px" }}>
-                    {"Ingresa el código de verificación que enviamos al +" +
-                        user.phone +
-                        "."}
+                    {`Ingresa el código de verificación que enviamos al +${user.phone}.`}
                 </span>
                 <div className={styles["input-field"]}>
                     <ValidatedInput
@@ -67,7 +76,7 @@ export default function PhoneVerification() {
                         setValue={updateCode}
                         autofocus={false}
                     />
-                    {errors?.verification_code && (
+                    {false && (
                         <span className="error-msg">
                             {errors.verification_code}
                         </span>
@@ -94,9 +103,8 @@ export default function PhoneVerification() {
                 </div>
             </form>
             {displayEditPhoneModal && (
-                <Suspense fallback={<LoadingScreen />}>
+                <Suspense fallback={<LoadingModal />}>
                     <EditPhoneModal
-                        setUser={setUser}
                         closeModal={() => setDisplayEditPhoneModal(false)}
                     />
                 </Suspense>

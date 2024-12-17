@@ -1,4 +1,4 @@
-import { useTheme } from "@/Hooks/theme";
+import { useTheme } from "@/hooks/theme";
 import MailSVG from "../SVGs/Mail";
 import styles from "./NotificationsButton.module.scss";
 

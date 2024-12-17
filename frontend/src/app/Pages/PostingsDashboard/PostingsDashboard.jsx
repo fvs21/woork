@@ -1,5 +1,5 @@
-import PendingJobs from "@/Features/PostingsDashboard/PendingJobs";
-import PostingsDashboardLayout from "@/Features/PostingsDashboard/PostingsDashboardLayout";
+import PendingJobs from "@/features/postingsdashboard/PendingJobs";
+import PostingsDashboardLayout from "@/features/postingsdashboard/PostingsDashboardLayout";
 
 export default function PostingsDasboard() {
     return (

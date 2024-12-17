@@ -1,18 +1,20 @@
-import Modal from "@/Components/Modal/Modal";
-import { validateCountryCode, validatePhoneNumber } from "@/Services/validators";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
+import Modal from "@/components/Modal/Modal";
+import { validateCountryCode, validatePhoneNumber } from "@/services/validators";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import styles from "./PhoneVerification.module.scss";
 import { useState } from "react";
-import axios from "@/api/axios";
-import InputPhone from "@/Components/InputPhone/InputPhone";
+import InputPhone from "@/components/InputPhone/InputPhone";
+import { useUpdatePhone } from "@/api/hooks/authentication";
 
-export default function EditPhoneModal({setUser, closeModal}) {
+export default function EditPhoneModal({closeModal}) {
     const [phoneNumber, setPhoneNumber] = useState({
         countryCode: "",
         phone: "",
     });
     const [phoneNumberValid, setPhoneNumberValid] = useState(true);
     const [errorMsg, setErrorMsg] = useState("");
+
+    const { editPhone, isLoading } = useUpdatePhone();
 
     function validInput() {
         return validatePhoneNumber(phoneNumber.phone) && validateCountryCode(phoneNumber.countryCode);
@@ -37,14 +39,10 @@ export default function EditPhoneModal({setUser, closeModal}) {
         e.preventDefault();
 
         try {
-            await axios.put("/phone/update", {
+            await editPhone({
                 'phone': phoneNumber.phone,
                 'countryCode': phoneNumber.countryCode
             });
-            setUser((prev) => ({
-                ...prev,
-                phone: phoneNumber.countryCode + phoneNumber.phone,
-            }));
             closeModal();
         } catch(error) {
             setErrorMsg(error.response.data.message);
@@ -54,7 +52,7 @@ export default function EditPhoneModal({setUser, closeModal}) {
     return (
         <Modal className={styles.editPhoneModalContainer} handleClose={closeModal}>
             <div className={styles['edit-phone-modal']}>
-                <h3>Editar número de teléfono</h3>
+                <h2>Editar número de teléfono</h2>
                 <form onSubmit={handleEditPhone}>
                     <div className={styles['input-field']} >
                         <InputPhone 
@@ -71,7 +69,9 @@ export default function EditPhoneModal({setUser, closeModal}) {
                     <div className={styles['btn-container']}>
                         <button className={styles['cancel-btn']}
                             onClick={closeModal}>Cancelar</button>
-                        <SubmitButton width={"50%"} active={validInput()}>Editar</SubmitButton>
+                        <SubmitButton width={"50%"} active={validInput()}>
+                            Editar
+                        </SubmitButton>
                     </div>
                 </form>
             </div>

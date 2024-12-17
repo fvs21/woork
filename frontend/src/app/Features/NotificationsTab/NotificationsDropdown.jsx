@@ -2,7 +2,7 @@ import { useNotifications, useUser } from "@/jotai/user";
 import styles from "./Notifications.module.scss";
 import { useEffect } from "react";
 import axios from "@/api/axios";
-import { getUnreadNotificationsCount } from "@/Utils/notification";
+import { getUnreadNotificationsCount } from "@/utils/notification";
 import Notification from "./Notification";
 
 export default function NotificationsDropdown() {

@@ -1,5 +1,5 @@
-import { formatAddress } from "@/Utils/account/AccountUtils";
-import InputLabel from "../../Components/ValidatedInput/InputLabel";
+import { formatAddress } from "@/utils/account/AccountUtils";
+import InputLabel from "../../components/ValidatedInput/InputLabel";
 import styles from "./CreatePosting.module.scss";
 import { usePage } from "@inertiajs/react";
 

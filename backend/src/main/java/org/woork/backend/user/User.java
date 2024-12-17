@@ -121,7 +121,7 @@ public class User implements UserDetails {
 
     @Setter
     @Getter
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_picture", referencedColumnName = "image_id")
     private Image profilePicture;
 
@@ -308,7 +308,7 @@ public class User implements UserDetails {
 
     public String getProfilePictureUrl() {
         if(profilePicture == null) {
-            return "/images/default-pfp";
+            return "/api/images/default-pfp";
         }
         return profilePicture.getImageUrl();
     }

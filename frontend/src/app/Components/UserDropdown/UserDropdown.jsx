@@ -1,11 +1,11 @@
-import { Link, router } from "@inertiajs/react";
+import Link from "next/link";
 import styles from "./UserDropdown.module.scss";
 import UserSVG from "../SVGs/User";
 import LogoutSVG from "../SVGs/Logout";
 import MoonSVG from "../SVGs/Moon";
 import { useState } from "react";
-import { useTheme } from "@/Hooks/theme";
-import { useUser } from "@/jotai/user";
+import { useTheme } from "@/hooks/theme";
+import { useUser } from "@/api/hooks/user";
 import MegaphoneSVG from "../SVGs/Megaphone";
 
 export default function UserDropdown() {
@@ -14,7 +14,6 @@ export default function UserDropdown() {
     function logoutUser(e) {
         e.preventDefault();
 
-        router.post('/logout');
     }
     const [theme, switchTheme] = useTheme();
     const [dark, setDark] = useState(theme == 'dark' ? true : false);
@@ -23,7 +22,7 @@ export default function UserDropdown() {
 
     return (
         <div className={styles.dropdownContent + " " + (theme == 'dark' ? styles.dropdownDark : styles.dropdownLight)}>
-            {user.phone_verified &&
+            {user.phoneVerified &&
                 <>
                     <Link className={styles.dropdownItem + " " + styles.link} href="/dashboard" onMouseDown={(e) => e.preventDefault()}>
                         <UserSVG width={"25px"} color={color}/>

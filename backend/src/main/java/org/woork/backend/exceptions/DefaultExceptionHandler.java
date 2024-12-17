@@ -16,12 +16,14 @@ public class DefaultExceptionHandler {
     @ExceptionHandler({
             EmailAlreadyTakenException.class,
             PhoneNumberAlreadyTakenException.class,
-            IncorrectVerificationCodeException.class,
             EmailNotAddedException.class,
             UnableToGenerateVerificationCodeException.class}
     )
-    public ResponseEntity<String> handleConflictedRequest(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    public ResponseEntity<DefaultExceptionResponse> handleConflictedRequest(Exception e) {
+        return new ResponseEntity<>(
+                new DefaultExceptionResponse(e.getMessage()),
+                HttpStatus.CONFLICT
+        );
     }
 
 
@@ -35,8 +37,11 @@ public class DefaultExceptionHandler {
             NotificationDoesNotExistException.class,
             PostingDoesNotExistException.class
     })
-    public ResponseEntity<String> handleNotFoundRequest(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<DefaultExceptionResponse> handleNotFoundRequest(Exception e) {
+        return new ResponseEntity<>(
+                new DefaultExceptionResponse(e.getMessage()),
+                HttpStatus.NOT_FOUND
+        );
     }
 
 
@@ -46,8 +51,11 @@ public class DefaultExceptionHandler {
     @ExceptionHandler({
             CannotRequestResetPasswordException.class
     })
-    public ResponseEntity<String> handleTooManyRequests(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
+    public ResponseEntity<DefaultExceptionResponse> handleTooManyRequests(Exception e) {
+        return new ResponseEntity<>(
+                new DefaultExceptionResponse(e.getMessage()),
+                HttpStatus.TOO_MANY_REQUESTS
+        );
     }
 
 
@@ -69,17 +77,25 @@ public class DefaultExceptionHandler {
             InvalidLocationException.class,
             UnableToDeleteAddressException.class,
             UnableToParseLocationException.class,
-            UnableToUpdateUserException.class
+            UnableToUpdateUserException.class,
+            IncorrectVerificationCodeException.class,
+            AuthenticationErrorException.class
     })
-    public ResponseEntity<String> handleBadRequest(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<DefaultExceptionResponse> handleBadRequest(Exception e) {
+        return new ResponseEntity<>(
+                new DefaultExceptionResponse(e.getMessage()),
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     @ExceptionHandler({
             ValidationException.class
     })
-    public ResponseEntity<List<String>> handleValidationException(Exception e) {
-        return new ResponseEntity<>(((ValidationException) e).getDetails(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<DefaultExceptionResponse> handleValidationException(Exception e) {
+        return new ResponseEntity<>(
+                new DefaultExceptionResponse(((ValidationException) e).getDetails()),
+                HttpStatus.BAD_REQUEST
+        );
     }
 
 
@@ -91,8 +107,11 @@ public class DefaultExceptionHandler {
             UnableToCreatePostingException.class,
             UnableToDeleteImageException.class
     })
-    public ResponseEntity<String> handleInternalServerError(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<DefaultExceptionResponse> handleInternalServerError(Exception e) {
+        return new ResponseEntity<>(
+                new DefaultExceptionResponse(e.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 
 
@@ -105,12 +124,9 @@ public class DefaultExceptionHandler {
             AccessTokenExpiredException.class,
             RefreshTokenNotPresentException.class
     })
-    public ResponseEntity<Map<String, Object>> handleUnauthorizedRequest(Exception e) {
+    public ResponseEntity<DefaultExceptionResponse> handleUnauthorizedRequest(Exception e) {
         return new ResponseEntity<>(
-                Map.of(
-                        "error", true,
-                        "message", e.getMessage()
-                ), 
+                new DefaultExceptionResponse(e.getMessage()),
                 HttpStatus.UNAUTHORIZED
         );
     }
@@ -124,7 +140,10 @@ public class DefaultExceptionHandler {
             UnableToDeletePostingException.class,
             UnableToApplyToJobException.class
     })
-    public ResponseEntity<String> handleForbiddenRequest(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    public ResponseEntity<DefaultExceptionResponse> handleForbiddenRequest(Exception e) {
+        return new ResponseEntity<>(
+                new DefaultExceptionResponse(e.getMessage()),
+                HttpStatus.FORBIDDEN
+        );
     }
 }

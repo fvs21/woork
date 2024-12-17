@@ -1,4 +1,4 @@
-import { svgColor } from "@/Utils/extra/utils";
+import { svgColor } from "@/utils/extra/utils";
 import Modal from "../Modal/Modal";
 import CloseSVG from "../SVGs/Close";
 import ZoomSVG from "../SVGs/Zoom";

@@ -1,23 +1,22 @@
 import { Head, Link } from "@inertiajs/react";
 import styles from "./Profile.module.scss";
-import { useUser } from "@/jotai/user";
-import StarSVG from "@/Components/SVGs/Star";
-import { svgColor } from "@/Utils/extra/utils";
-import Layout from "@/Components/Layout/Layout";
-import PhoneSVG from "@/Components/SVGs/Phone";
-import EmailSVG from "@/Components/SVGs/Email";
-import VerifiedSVG from "@/Components/SVGs/Identity";
-import Electrical from "@/Components/SVGs/JobCategories/Electrical";
-import Pet from "@/Components/SVGs/JobCategories/Pet";
-import Plumbery from "@/Components/SVGs/JobCategories/Plumbery";
-import Plant from "@/Components/SVGs/JobCategories/Plant";
-import Footer from "@/Components/Footer/Footer";
+import StarSVG from "@/components/SVGs/Star";
+import { svgColor } from "@/utils/extra/utils";
+import Layout from "@/components/Layout/Layout";
+import PhoneSVG from "@/components/SVGs/Phone";
+import EmailSVG from "@/components/SVGs/Email";
+import VerifiedSVG from "@/components/SVGs/Identity";
+import Electrical from "@/components/SVGs/JobCategories/Electrical";
+import Pet from "@/components/SVGs/JobCategories/Pet";
+import Plumbery from "@/components/SVGs/JobCategories/Plumbery";
+import Plant from "@/components/SVGs/JobCategories/Plant";
+import Footer from "@/components/Footer/Footer";
 import { useState } from "react";
 import { Suspense } from "react";
-import LoadingModal from "@/Components/LoadingModal/LoadingModal";
+import LoadingModal from "@/components/LoadingModal/LoadingModal";
 import { lazy } from "react";
 
-const UserPictureViewer = lazy(() => import("@/Features/Profile/UserPictureViewer"));
+const UserPictureViewer = lazy(() => import("@/features/profile/UserPictureViewer"));
 
 export default function Profile({isUsersAccount, publicProfile}) {
     const profile = publicProfile.data;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { mainStore, setStore } from "./store";
 import { Provider } from "jotai";
-import LoadingScreen from "@/Components/LoadingScreen/LoadingScreen";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 function JotaiContainer({pageProps, children}) {
     const [isLoading, setIsLoading] = useState(true);

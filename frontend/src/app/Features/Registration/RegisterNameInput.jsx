@@ -1,7 +1,7 @@
 import styles from "./Registration.module.scss";
-import ValidatedInput from "@/Components/ValidatedInput/ValidatedInput";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
 import { useState } from "react";
-import { validateString } from "@/Services/validators";
+import { validateString } from "@/services/validators";
 
 export default function RegisterNameInput({fullName, setName}) {
     const [firstValid, setFirstValid] = useState(true);
@@ -34,7 +34,7 @@ export default function RegisterNameInput({fullName, setName}) {
                     valid={firstValid && !fullName.firstError} 
                     name={"firstName"} value={fullName.firstName} 
                     type={"text"} 
-                    placeholder={"Nombre"} 
+                    placeholder={"Nombre(s)"} 
                     setValue={changeFirstName} 
                     autofocus={false} />
                 <ValidatedInput 

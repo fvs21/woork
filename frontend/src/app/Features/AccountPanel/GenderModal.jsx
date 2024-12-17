@@ -1,17 +1,20 @@
 import { useState } from "react";
-import Modal from "@/Components/Modal/Modal";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
-import CloseSVG from "@/Components/SVGs/Close";
+import Modal from "@/components/Modal/Modal";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
+import CloseSVG from "@/components/SVGs/Close";
 import styles from "./InformationPanel.module.scss";
-import axios from "@/api/axios";
-import { useUser } from "@/jotai/user";
-import { svgColor } from "@/Utils/extra/utils";
+import { api } from "@/api/axios";
+import { useUpdateGender, useUser } from "@/api/hooks/user";
+import { svgColor } from "@/utils/extra/utils";
+import { flash } from "@/flash-message/flashMessageCreator";
 
 export default function GenderModal({closeModal}) {
-    const [user, setUser] = useUser();
+    const [user] = useUser();
 
     const [gender, setGender] = useState(helper());
     const [otherGender, setOtherGender] = useState((user?.gender != 'Male' && user?.gender != 'Female') && user?.gender || "");
+
+    const { update } = useUpdateGender();
 
     function helper() {
         if(user?.gender) {
@@ -27,18 +30,15 @@ export default function GenderModal({closeModal}) {
         e.preventDefault();
 
         try {
-            await axios.put("/gender/update", {
+            await update({
                 'gender': gender,
                 'custom': gender == 'Other',
                 'other': otherGender
             });
-            setUser({
-                ...user,
-                gender: gender == 'Other' ? otherGender : gender
-            });
+            
             closeModal();
         } catch(error) {
-            console.log(error);
+            flash(error.response.data.message, 4000, "error");
         }
     }
 

@@ -91,7 +91,7 @@ public class AddressService {
         address.setCity(request.getCity());
         address.setState(request.getState());
         address.setStreet(request.getStreet());
-        address.setZipCode(request.getZip_code());
+        address.setZipCode(request.getZipCode());
         address.setNumber(request.getNumber());
         address.setAddress_name(request.getAddress_name());
         return locationRepository.save(address);
@@ -138,7 +138,7 @@ public class AddressService {
         address.setState(state);
         address.setStreet(request.getStreet());
         address.setNumber(request.getNumber());
-        address.setZipCode(request.getZip_code());
+        address.setZipCode(request.getZipCode());
         address.setAddress_name(request.getAddress_name());
         return locationRepository.save(address);
     }

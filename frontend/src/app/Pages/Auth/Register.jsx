@@ -1,8 +1,8 @@
-import Logotype from '@/Components/Logotype/Logotype';
-import RegisterForm from '@/Features/Registration/RegisterForm';
+import Logotype from '@/components/Logotype/Logotype';
+import RegisterForm from '@/features/registration/RegisterForm';
 import { Head, Link, useForm } from '@inertiajs/react';
 import styles from "./Auth.module.scss";
-import Footer from '@/Components/Footer/Footer';
+import Footer from '@/components/Footer/Footer';
 
 export default function Register({errors}) {
     return (

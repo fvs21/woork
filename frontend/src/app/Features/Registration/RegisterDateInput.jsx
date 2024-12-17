@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { stringifyDateOfBirth } from "@/Utils/authentication/RegisterUtils";
-import InputDate from "@/Components/InputDate/InputDate";
-import { validateAge } from "@/Services/validators";
-import InputLabel from "@/Components/ValidatedInput/InputLabel";
+import { stringifyDateOfBirth } from "@/utils/authentication/RegisterUtils";
+import InputDate from "@/components/InputDate/InputDate";
+import { validateAge } from "@/services/validators";
+import InputLabel from "@/components/ValidatedInput/InputLabel";
 import styles from "./Registration.module.scss";
 
 export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}) {

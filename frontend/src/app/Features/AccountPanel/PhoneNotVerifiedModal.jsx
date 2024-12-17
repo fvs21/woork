@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Modal from "@/Components/Modal";
-import ValidatedInput from "@/Components/ValidatedInput/ValidatedInput";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
 import styles from "../InformationPanel/InformationPanel.module.scss";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
 
 
 export default function PhoneNotVerifiedModal({setDisplayPhoneNotVerifiedModal, setDisplayPhoneModal, user}) {

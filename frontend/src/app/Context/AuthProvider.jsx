@@ -1,9 +1,8 @@
-import { getUser, refreshToken } from "@/api/authServer";
-import { cookies } from "next/headers";
+import { getUser, refreshToken } from "@/api/server/auth";
 import AuthClient from "./AuthClient";
 
 export default async function AuthProvider({children}) {
-    const accessToken = await refreshToken(cookies);
+    const accessToken = await refreshToken();
     const user = await getUser(accessToken);
 
     return (

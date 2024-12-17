@@ -1,8 +1,8 @@
 import { Link, router } from "@inertiajs/react";
 import styles from "./LoginFooter.module.scss";
-import { isEmail } from "@/Utils/authentication/LoginUtils";
+import { isEmail } from "@/utils/authentication/LoginUtils";
 import { useState } from "react";
-import InputEmailOrPhone from "@/Features/Login/InputEmailOrPhone";
+import InputEmailOrPhone from "@/features/login/InputEmailOrPhone";
 import ValidatedInput from "../ValidatedInput/ValidatedInput";
 
 export default function LoginFooter() {

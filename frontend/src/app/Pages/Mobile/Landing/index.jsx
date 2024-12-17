@@ -1,8 +1,8 @@
-import Logotype from "@/Components/Logotype/Logotype";
+import Logotype from "@/components/Logotype/Logotype";
 import { Head } from "@inertiajs/react";
 import styles from "./Landing.module.scss";
-import Form from "@/Components/Form/Form";
-import ValidatedInput from "@/Components/ValidatedInput/ValidatedInput";
+import Form from "@/components/Form/Form";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
 
 export default function LandingMobile() {
     return (

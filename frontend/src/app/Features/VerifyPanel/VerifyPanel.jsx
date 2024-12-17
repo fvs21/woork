@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import Link from "next/link";
 import styles from "./VerifyPanel.module.scss";
 
 export default function VerifyPanel() {

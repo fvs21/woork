@@ -1,33 +1,35 @@
 import { useState } from "react";
-import ValidatedInput from "@/Components/ValidatedInput/ValidatedInput";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
-import Modal from "@/Components/Modal/Modal";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
+import Modal from "@/components/Modal/Modal";
 import styles from "./InformationPanel.module.scss";
-import CloseSVG from "@/Components/SVGs/Close";
-import "../../../css/globals.scss";
-import { svgColor } from "@/Utils/extra/utils";
+import CloseSVG from "@/components/SVGs/Close";
+import { svgColor } from "@/utils/extra/utils";
+import { useUser } from "@/api/hooks/user";
+import { useResendEmailVerificationCode, useVerifyEmail } from "@/api/hooks/authentication";
+import { flash } from "@/flash-message/flashMessageCreator";
 
-export default function EmailVerification({closeModal, notVerified, editEmail, user, setUser}) {
+export default function EmailVerification({closeModal, notVerified, editEmail}) {
+    const [user] = useUser();
+
     const [code, setCode] = useState("");
     const [codeValid, setCodeValid] = useState(true);
-    const [errorMsg, setErrorMsg] = useState("");
-    const [emailSentMsg, setEmailSentMsg] = useState("");
+
+    const { verify, isLoading } = useVerifyEmail();
+    const { resend } = useResendEmailVerificationCode();
 
 
     async function handleSubmit(event) {
         event.preventDefault();
 
         try {
-            await axios.post("verify-email", {
+            await verify({
                 'otp': code
             });
-            setUser({
-                ...user,
-                email_verified: true
-            })
             closeModal();
+            flash("Correo electrónico verificado.");
         } catch(error) {
-            setErrorMsg(error.response.data.message);
+            flash(error.response.data.message, 4000, "error");
         }
     }
 
@@ -39,11 +41,10 @@ export default function EmailVerification({closeModal, notVerified, editEmail, u
 
     async function resendCode() {
         try {
-            await axios.post("verify-email/resend");
-            setErrorMsg("");
-            setEmailSentMsg("Código de verificación enviado.")
+            await resend();
+            flash("Código de verificación enviado.", 4000, "success");
         } catch(error) {
-            console.log(error);
+            flash(error.response.data.message, 4000, "error");
         }
     }
 
@@ -78,8 +79,6 @@ export default function EmailVerification({closeModal, notVerified, editEmail, u
                         setValue={changeCode} 
                         autofocus={false}
                     />
-                    { errorMsg && <span className='error-msg'>{errorMsg}</span> }
-                    { emailSentMsg && <span className="success-msg">{emailSentMsg}</span>}
                     <br/>
                     <br/>
                     <SubmitButton active={code.length >= 7}>Verificar</SubmitButton>

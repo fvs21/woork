@@ -1,16 +1,16 @@
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from "./CreatePosting.module.scss";
-import CloseSVG from "@/Components/SVGs/Close";
-import { formatAddress } from "@/Utils/account/AccountUtils";
+import CloseSVG from "@/components/SVGs/Close";
+import { formatAddress } from "@/utils/account/AccountUtils";
 import { useState } from "react";
 import CreateLocationModal from "./CreateLocationModal";
 import MapModal from "./MapModal";
 import axios from "axios";
-import TrashcanSVG from "@/Components/SVGs/Trashcan";
+import TrashcanSVG from "@/components/SVGs/Trashcan";
 import { useMutation } from "@tanstack/react-query";
-import Alert from "@/Components/Alert/Alert";
+import Alert from "@/components/Alert/Alert";
 import { useAddedAddresses, useUser } from "@/jotai/user";
-import { useTheme } from "@/Hooks/theme";
+import { useTheme } from "@/hooks/theme";
 
 export default function SelectLocationModal({location, setLocation, setDisplayModal}) {
     const [user] = useUser();

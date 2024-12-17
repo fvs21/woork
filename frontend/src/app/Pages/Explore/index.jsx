@@ -1,11 +1,11 @@
-import Navbar from "@/Components/Navbar/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 import { useState } from 'react';
 import "../../../css/globals.scss";
-import Searchbar from "../../Components/Searchbar/Searchbar";
+import Searchbar from "../../components/Searchbar/Searchbar";
 import { Head } from "@inertiajs/react";
-import JobsListings from "@/Features/JobsListing/JobsListing";
+import JobsListings from "@/features/jobslisting/JobsListing";
 import styles from "./Explore.module.scss";
-import JobFilters from "@/Features/JobFilters/JobFilters";
+import JobFilters from "@/features/jobfilters/JobFilters";
 
 export default function Explore({ auth, category_tag }) {
     const [category, setCategory] = useState(category_tag);

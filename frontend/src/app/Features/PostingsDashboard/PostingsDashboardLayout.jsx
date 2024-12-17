@@ -1,7 +1,7 @@
-import Layout from "@/Components/Layout/Layout";
+import Layout from "@/components/Layout/Layout";
 import styles from "./PostingsDashboard.module.scss";
 import { Head, Link } from "@inertiajs/react";
-import Footer from "@/Components/Footer/Footer";
+import Footer from "@/components/Footer/Footer";
 import { useUser } from "@/jotai/user";
 import dayjs from "dayjs";
 

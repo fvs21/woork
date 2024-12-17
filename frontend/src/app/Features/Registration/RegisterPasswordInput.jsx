@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { validatePassword } from "@/Services/validators";
+import { validatePassword } from "@/services/validators";
 import styles from "./Registration.module.scss";
-import PasswordInput from "@/Components/PasswordInput/PasswordInput";
+import PasswordInput from "@/components/PasswordInput/PasswordInput";
 
 export default function RegisterPasswordInput({password, setPassword}) {
     const [passwordValid, setPasswordValid] = useState(true);

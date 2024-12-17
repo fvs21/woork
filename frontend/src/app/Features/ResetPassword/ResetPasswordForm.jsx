@@ -1,10 +1,10 @@
-import Form from "@/Components/Form/Form";
+import Form from "@/components/Form/Form";
 import styles from "./ResetPasswordForm.module.scss";
 import { useState } from "react";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
-import { validatePassword } from "@/Services/validators";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
+import { validatePassword } from "@/services/validators";
 import { router } from "@inertiajs/react";
-import PasswordInput from "@/Components/PasswordInput/PasswordInput";
+import PasswordInput from "@/components/PasswordInput/PasswordInput";
 
 export default function ResetPasswordForm({credential, token}) {
     const [newPassword, setNewPassword] = useState("");

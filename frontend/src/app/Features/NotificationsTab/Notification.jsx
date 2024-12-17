@@ -1,4 +1,4 @@
-import { formatNotificationDate } from "@/Utils/notification";
+import { formatNotificationDate } from "@/utils/notification";
 import styles from "./Notifications.module.scss";
 import axios from "@/api/axios";
 

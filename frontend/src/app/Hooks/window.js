@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 
 function getWindowDimensions() {
     return {
@@ -9,6 +9,7 @@ function getWindowDimensions() {
 
 export default function useWindowDimensions() {
     const [dimensions, setDimensions] = useState(getWindowDimensions());
+
 
     useEffect(() => {
         function handleResize() {

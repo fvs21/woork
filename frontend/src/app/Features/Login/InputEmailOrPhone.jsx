@@ -1,6 +1,6 @@
-import InputPhone from "@/Components/InputPhone/InputPhone";
-import ValidatedInput from "@/Components/ValidatedInput/ValidatedInput";
-import { isEmail } from "@/Utils/authentication/LoginUtils";
+import InputPhone from "@/components/InputPhone/InputPhone";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
+import { isEmail } from "@/utils/authentication/LoginUtils";
 import { useState } from "react";
 
 export default function InputEmailOrPhone({className, credential, changeCredential, countryCode, changeCountryCode, label}) {

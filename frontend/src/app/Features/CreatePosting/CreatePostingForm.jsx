@@ -1,16 +1,16 @@
 import styles from "./CreatePosting.module.scss";
-import TextArea from "@/Components/TextArea/TextArea";
-import CategorySelector from "@/Components/CategorySelector/CategorySelector";
-import CurrencyInput from "@/Components/CurrencyInput/CurrencyInput";
+import TextArea from "@/components/TextArea/TextArea";
+import CategorySelector from "@/components/CategorySelector/CategorySelector";
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput";
 import LocationSelector from "./LocationSelector";
 import { lazy, Suspense, useState } from "react";
 import ImagesInput from "./ImagesInput";
 import { router } from "@inertiajs/react";
-import LoadingScreen from "@/Components/LoadingScreen/LoadingScreen";
-import CloseSVG from "@/Components/SVGs/Close";
-import ArrowButton from "@/Components/ArrowButton/ArrowButton";
-import TextInput from "@/Components/TextInput/TextInput";
-import { useTheme } from "@/Hooks/theme";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import CloseSVG from "@/components/SVGs/Close";
+import ArrowButton from "@/components/ArrowButton/ArrowButton";
+import TextInput from "@/components/TextInput/TextInput";
+import { useTheme } from "@/hooks/theme";
 
 const SelectLocationModal = lazy(() => import("./SelectLocationModal"));
 

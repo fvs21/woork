@@ -6,12 +6,14 @@ function normalizeCountry(country) {
   .replace(/[\u0300-\u036f]/g, "");
 }
 
-export async function loadCities(country, state) {
+export function loadCities(country, state) {
   const normalizedCountry = normalizeCountry(country);
-  return await import(`../../Services/countries/${normalizedCountry}/${state}`);
+  const cities = require(`@/services/countries/${normalizedCountry}/${state}.json`);
+  return cities;
 }
 
-export async function loadStates(country) {
+export function loadStates(country) {
   const normalizedCountry = normalizeCountry(country); 
-  return await import(`../../Services/countries/${normalizedCountry}/states`, { with: { type: "json" }});
+  const states = require(`@/services/countries/${normalizedCountry}/states.json`);
+  return states;
 }

@@ -1,11 +1,11 @@
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from "./PostingsDashboard.module.scss";
-import CloseSVG from "@/Components/SVGs/Close";
-import { svgColor } from "@/Utils/extra/utils";
+import CloseSVG from "@/components/SVGs/Close";
+import { svgColor } from "@/utils/extra/utils";
 import Applicant from "./Applicant";
 import { useQuery } from "@tanstack/react-query";
 import axios from "@/api/axios";
-import LoadingModal from "@/Components/LoadingModal/LoadingModal";
+import LoadingModal from "@/components/LoadingModal/LoadingModal";
 
 export default function JobApplicantsList({closeModal, postingUrl}) {
     const svgClr = svgColor();

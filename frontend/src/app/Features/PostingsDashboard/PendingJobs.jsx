@@ -1,4 +1,4 @@
-import PendingJob from "@/Components/PendingJob/PendingJob";
+import PendingJob from "@/components/PendingJob/PendingJob";
 import styles from "./PostingsDashboard.module.scss";
 
 export default function PendingJobs() {

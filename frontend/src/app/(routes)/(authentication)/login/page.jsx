@@ -1,13 +1,16 @@
-import Logotype from "@/Components/Logotype/Logotype";
+import Logotype from "@/components/Logotype/Logotype";
 import styles from "../Auth.module.scss";
-import LoginForm from "@/Features/Login/LoginForm";
-import Footer from "@/Components/Footer/Footer";
-import "@/css/globals.scss";
+import LoginForm from "@/features/login/LoginForm";
+import Footer from "@/components/Footer/Footer";
+import "@/styles/globals.scss";
+
+export const metadata = {
+    title: "Woork - Inicia sesión"
+}
 
 export default function LoginPage() {
     return (
         <div className="global-container">
-            <title>Woork - Inicia sesión</title>
             <div className={`${styles.loginContainer}`}>
                 <div className={styles['logotype-container']}>
                     <Logotype width={"200px"} />

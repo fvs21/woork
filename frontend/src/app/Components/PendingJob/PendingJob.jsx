@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import styles from "./PendingJob.module.scss";
 import StarSVG from "../SVGs/Star";
-import { svgColor } from "@/Utils/extra/utils";
+import { svgColor } from "@/utils/extra/utils";
 
 export default function PendingJob({title, workerPfpUrl, workerName, workerRating, jobLink}) {
     return (

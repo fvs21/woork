@@ -1,11 +1,11 @@
 import { Head, router } from '@inertiajs/react';
 import "../../../css/globals.scss";
 import styles from "./Auth.module.scss";
-import Footer from '@/Components/Footer/Footer';
-import Logotype from '@/Components/Logotype/Logotype';
-import ForgotPasswordForm from '@/Features/ForgotPassword/ForgotPasswordForm';
-import CloseSVG from '@/Components/SVGs/Close';
-import { useTheme } from '@/Hooks/theme';
+import Footer from '@/components/Footer/Footer';
+import Logotype from '@/components/Logotype/Logotype';
+import ForgotPasswordForm from '@/features/forgotpassword/ForgotPasswordForm';
+import CloseSVG from '@/components/SVGs/Close';
+import { useTheme } from '@/hooks/theme';
 
 export default function ForgotPassword({ status, errors }) {
     const [theme] = useTheme();

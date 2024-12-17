@@ -1,15 +1,15 @@
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from "../AccountPanel/InformationPanel.module.scss";
 import { useEffect, useState } from "react";
-import ArrowBackSVG from "@/Components/SVGs/ArrowBack";
-import InputLabel from "@/Components/ValidatedInput/InputLabel";
-import CountriesSelector from "@/Components/CountriesSelector/CountriesSelector";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
+import ArrowBackSVG from "@/components/SVGs/ArrowBack";
+import InputLabel from "@/components/ValidatedInput/InputLabel";
+import CountriesSelector from "@/components/CountriesSelector/CountriesSelector";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import {default as countries_list} from "@/Services/countries/countries";
-import { validateAddress, validateNumber, validateStreet } from "@/Services/validators";
-import { loadCities, loadStates } from "@/Utils/location/LocationUtils";
-import TextInput from "@/Components/TextInput/TextInput";
-import { useTheme } from "@/Hooks/theme";
+import { validateAddress, validateNumber, validateStreet } from "@/services/validators";
+import { loadCities, loadStates } from "@/utils/location/LocationUtils";
+import TextInput from "@/components/TextInput/TextInput";
+import { useTheme } from "@/hooks/theme";
 
 export default function CreateLocationModal({location, setLocation, setNewLocationModal, setMapModal}) {
     const [theme] = useTheme();

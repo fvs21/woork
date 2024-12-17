@@ -1,7 +1,8 @@
-import AuthProvider from "@/Context/AuthProvider";
-import QueryProvider from "@/Context/QueryProvider";
-import ThemeProvider from "@/Context/ThemeProvider";
-import "@/css/globals.scss";
+import AuthProvider from "@/context/AuthProvider";
+import QueryProvider from "@/context/QueryProvider";
+import ThemeProvider from "@/context/ThemeProvider";
+import "@/styles/globals.scss";
+import FlashRenderer from "@/flash-message/components/FlashRenderer";
 
 export const metadata = {
   title: "Woork"
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
           <ThemeProvider>
             <AuthProvider>
               {children}
+              <FlashRenderer />
             </AuthProvider>
           </ThemeProvider>
         </QueryProvider>

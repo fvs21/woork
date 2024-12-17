@@ -1,12 +1,12 @@
-import ArrowRightSVG from "@/Components/SVGs/ArrowRight";
+import ArrowRightSVG from "@/components/SVGs/ArrowRight";
 import styles from "./SecurityPanel.module.scss";
-import { svgColor } from "@/Utils/extra/utils";
-import LockSVG from "@/Components/SVGs/Lock";
-import SecuritySVG from "@/Components/SVGs/Security";
+import { svgColor } from "@/utils/extra/utils";
+import LockSVG from "@/components/SVGs/Lock";
+import SecuritySVG from "@/components/SVGs/Security";
 import { lazy } from "react";
 import { useState } from "react";
 import { Suspense } from "react";
-import LoadingModal from "@/Components/LoadingModal/LoadingModal";
+import LoadingModal from "@/components/LoadingModal/LoadingModal";
 
 const ChangePasswordModal = lazy(() => import("./ChangePasswordModal"));
 

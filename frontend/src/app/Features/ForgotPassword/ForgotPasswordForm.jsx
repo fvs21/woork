@@ -1,10 +1,10 @@
-import Form from "@/Components/Form/Form";
+import Form from "@/components/Form/Form";
 import styles from "./ForgotPassword.module.scss";
-import InputEmailOrPhone from "../Login/InputEmailOrPhone";
+import InputEmailOrPhone from "../login/InputEmailOrPhone";
 import { useState } from "react";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import { router } from "@inertiajs/react";
-import { isEmail } from "@/Utils/authentication/LoginUtils";
+import { isEmail } from "@/utils/authentication/LoginUtils";
 
 export default function ForgotPasswordForm({status, errors}) {
     const [credential, setCredential] = useState("");

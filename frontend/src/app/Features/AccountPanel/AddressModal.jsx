@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from "./InformationPanel.module.scss";
-import CloseSVG from "@/Components/SVGs/Close";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
-import { validateAddress, validateNumber, validateStreet } from "../../Services/validators";
-import CountriesSelector from "@/Components/CountriesSelector/CountriesSelector";
-import { loadCities, loadStates } from "@/Utils/location/LocationUtils";
-import {default as countries_list} from "@/Services/countries/countries";
-import InputLabel from "@/Components/ValidatedInput/InputLabel";
-import axios from "@/api/axios";
-import ValidatedInput from "@/Components/ValidatedInput/ValidatedInput";
-import { useUser } from "@/jotai/user";
-import { svgColor } from "@/Utils/extra/utils";
+import CloseSVG from "@/components/SVGs/Close";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
+import { validateAddress, validateNumber, validateStreet } from "../../services/validators";
+import CountriesSelector from "@/components/CountriesSelector/CountriesSelector";
+import { loadCities, loadStates } from "@/utils/location/LocationUtils";
+import InputLabel from "@/components/ValidatedInput/InputLabel";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
+import { svgColor } from "@/utils/extra/utils";
+import { useUpdateAddress, useUser } from "@/api/hooks/user";
+import { flash } from "@/flash-message/flashMessageCreator";
 
 export default function AddressModal({closeModal}) {
-    const [user, setUser] = useUser();
+    const [user] = useUser();
 
     const location = user?.address;
 
@@ -23,7 +22,7 @@ export default function AddressModal({closeModal}) {
         country: location?.country || "",
         state: location?.state || "",
         city: location?.city || "",
-        zipCode: location?.zipCode || "",
+        zipCode: location?.zip_code || "",
         street: location?.street || "",
         number: location?.number || ""
     });
@@ -33,37 +32,19 @@ export default function AddressModal({closeModal}) {
     const [streetValid, setStreetValid] = useState(true);
     const [numberValid, setNumberValid] = useState(true);
 
-    const [countries, setCountries] = useState(countries_list);
-    const [states, setStates] = useState(location?.state ? [location.state] : []);
-    const [cities, setCities] = useState(location?.city ? [location.city] : []);
+    const countries = require("@/services/countries/countries.json");
+    const [states, setStates] = useState(address?.state ? loadStates(address.country): []);
+    const [cities, setCities] = useState(address?.city ? loadCities(address.country, address.state) : []);
 
-    useEffect(() => {
-        async function loadLocation() {
-            if(!address.country)
-                return;
+    const { update } = useUpdateAddress();
 
-            const states = await loadStates(location.country);
-            setStates(states.default);
-
-            const cities = await loadCities(location.country, location.state)
-            setCities(cities.default);
-        }
-        loadLocation();
-    }, []);
 
     function changeCountry(value) {
         setAddress({
             ...address,
             country: value
         });
-
-        loadStates(value)
-        .then((states) => {
-            setStates(states.default);
-            if(cities) {
-                setCities([]);
-            }
-        })
+        setStates(loadStates(value));
     }
 
     function changeState(value) {
@@ -71,10 +52,7 @@ export default function AddressModal({closeModal}) {
             ...address,
             state: value
         });
-        loadCities(address.country, value)
-        .then((cities) => {
-            setCities(cities.default);
-        });
+        setCities(loadCities(address.country, value));
     }
 
     function changeCity(value) {
@@ -120,12 +98,9 @@ export default function AddressModal({closeModal}) {
         event.preventDefault();
 
         try {
-            await axios.put("/address/update", address);
-            setUser({
-                ...user,
-                address: address
-            })
-            changeDisplayModal(false);
+            await update(address);
+            flash("Dirección modificada.", 4000, "success");
+            closeModal();
         } catch(error) {
             console.log(error);
         }
@@ -141,8 +116,8 @@ export default function AddressModal({closeModal}) {
                     </button>
                     <div style={{fontSize: "25px", fontWeight: "bold", margin: "15px 0"}}>Dirección</div>
                 </div>
-                <div className={styles.disclaimer}>
-                    Esta información no será visible para todos.
+                <div style={{paddingBottom: "0.25rem"}} className={styles.disclaimer}>
+                    Esta información no será visible al público.
                 </div>
                 {location && 
                     <div style={{marginTop: "4px"}} className={styles.disclaimer}>

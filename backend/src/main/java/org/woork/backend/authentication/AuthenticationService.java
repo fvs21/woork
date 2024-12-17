@@ -2,6 +2,7 @@ package org.woork.backend.authentication;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,9 @@ import org.woork.backend.user.User;
 import org.woork.backend.user.UserRepository;
 import org.woork.backend.utils.AuthenticationUtils;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -109,6 +113,7 @@ public class AuthenticationService {
         user.setPhone(request.getCountryCode() + request.getPhone());
         user.setCountryCode(request.getCountryCode());
         user.setUsername(createUsername(firstname, lastname));
+        user.setDateOfBirth(LocalDate.parse(request.getDateOfBirth(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         try {
@@ -125,14 +130,21 @@ public class AuthenticationService {
     }
 
     public HashMap<String, String> authenticate(String credential, String password) {
+        if(AuthenticationUtils.isEmail(credential)) {
+            User check = userRepository.findByEmail(credential).orElse(null);
+            if(check != null && !check.hasEmailVerified()) {
+                throw new AuthenticationErrorException("El correo electrónico que proporcionaste no se ha verificado.");
+            }
+        }
+
         try {
-            authenticationManager.authenticate(
+            Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             credential,
                             password
                     )
             );
-            User user = userRepository.findByEmailOrPhone(credential, credential).orElseThrow(UserDoesNotExistException::new);
+            User user = (User) auth.getPrincipal();
             String refreshToken = tokenService.generateRefreshToken(user);
             String accessToken = tokenService.generateAccessToken(user);
 

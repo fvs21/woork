@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { appPropsAtom, notificationsAtom, searchLocationAtom, userAtom } from "./store";
 
+/** 
 export const useUser = () => {
     return useAtom(userAtom);
 }
@@ -46,3 +47,4 @@ export const useNotifications = () => {
 export const useSearchLocation = () => {
     return useAtom(searchLocationAtom);
 }
+    */

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ThemeContext } from "@/Context/ThemeContext";
+import { ThemeContext } from "@/context/ThemeContext";
 
 const transitionManager = () => {
     const style = document.createElement('style');

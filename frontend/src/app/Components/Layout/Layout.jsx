@@ -1,13 +1,16 @@
-import { Link, usePage } from "@inertiajs/react";
+"use client";
+
+import Link from "next/link";
 import Logotype from "../Logotype/Logotype";
 import styles from "./Layout.module.scss";
-import { useUser } from "@/jotai/user";
+import { useUser } from "@/api/hooks/user";
 import { useState } from "react";
 import UserDropdown from "../UserDropdown/UserDropdown";
 
 export default function Layout({children}) {
-    const { canLogin } = usePage().props.auth;
     const [user] = useUser();
+    
+    const { canLogin } = user != null;
     
     const [accountDropdown, setAccountDropdown] = useState(false);
 
@@ -36,7 +39,7 @@ export default function Layout({children}) {
                                     }}>
                                     <img 
                                         className={styles.pfp} 
-                                        src={user?.pfp_url || '/images/default-pfp'} 
+                                        src={user.pfp_url} 
                                         alt="Foto de perfil"/>
                                 </button>
                                 {accountDropdown && 

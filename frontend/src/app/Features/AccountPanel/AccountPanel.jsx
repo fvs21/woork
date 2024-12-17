@@ -1,11 +1,11 @@
 import { Suspense, useState } from 'react'
 import styles from './InformationPanel.module.scss'
-import LabeledButton from '@/Components/LabeledButton/LabeledButton';
+import LabeledButton from '@/components/LabeledButton/LabeledButton';
 //import { defaultPfpUrl, formatGender } from '../../utils/account/AccountUtils';
 import { lazy } from 'react';
-import { formatAddress, formatGender } from '@/Utils/account/AccountUtils';
-import { useUser } from '@/jotai/user';
-import LoadingModal from '@/Components/LoadingModal/LoadingModal';
+import { formatAddress, formatGender } from '@/utils/account/AccountUtils';
+import LoadingModal from '@/components/LoadingModal/LoadingModal';
+import { useUser } from '@/api/hooks/user';
 
 const PhoneNumberModal = lazy(() => import("./PhoneNumberModal"));
 const EmailModal = lazy(() => import("./EmailModal"));
@@ -24,13 +24,13 @@ export default function AccountPanel() {
 
     const [user] = useUser();
     
-    const dob = new Date(user?.dateOfBirth.replace(/-/g, "/"));
+    const dob = new Date(user?.dateOfBirth?.replace(/-/g, "/"));
 
     const formattedDate = `${dob.getDate()}/${dob.getMonth()}/${dob.getFullYear()}`;
 
-    const pfpUrl = user?.pfp_url || "/images/default-pfp";
+    const pfpUrl = user?.pfp_url;
 
-    const formattedStreet = formatAddress(user.address); 
+    const formattedStreet = formatAddress(user?.address); 
 
     
     return (
@@ -53,12 +53,12 @@ export default function AccountPanel() {
                         label={"Número"} 
                         text={"+" + user?.phone} 
                         clickedFn={() => setDisplayPhoneModal(true)} 
-                        verified={true}/>
+                        verified={user.phoneVerified}/>
                     <LabeledButton 
                         label={"Correo"} 
                         text={user?.email != null ? user.email : "No agregado"} 
                         clickedFn={() => setDisplayEmailModal(true)} 
-                        verified={user.email_verified}/> 
+                        verified={user.emailVerified}/> 
                 </div>
                 <div className={styles['user-labeled-btn-container']}>
                     <LabeledButton 

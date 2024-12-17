@@ -1,6 +1,6 @@
 import { useState } from "react"
-import InputPhone from "@/Components/InputPhone/InputPhone";
-import { validatePhoneNumber } from "@/Services/validators";
+import InputPhone from "@/components/InputPhone/InputPhone";
+import { validatePhoneNumber } from "@/services/validators";
 import styles from "./Registration.module.scss";
 
 export default function RegisterPhoneInput({phoneNumber, setPhoneNumber}) {

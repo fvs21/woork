@@ -1,6 +1,6 @@
 import { usePage } from "@inertiajs/react";
 import styles from "./JobsListing.module.scss";
-import JobPosting from "@/Components/JobPosting/JobPosting";
+import JobPosting from "@/components/JobPosting/JobPosting";
 
 export default function JobsListings() {
     const postings = usePage().props.postings;

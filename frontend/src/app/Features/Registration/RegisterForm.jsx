@@ -1,14 +1,18 @@
+"use client";
+
 import { useState } from "react";
 import styles from './Registration.module.scss';
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import RegisterNameInput from "./RegisterNameInput";
 import RegisterDateInput from "./RegisterDateInput";
 import RegisterPasswordInput from "./RegisterPasswordInput";
 import RegisterPhoneInput from "./RegisterPhoneInput";
-import { validateAge, validateRegisterBody } from "@/Services/validators";
+import { validateAge, validateRegisterBody } from "@/services/validators";
 import Link from "next/link";
-import { stringifyDateOfBirth } from "@/Utils/authentication/RegisterUtils";
-import Form from "@/Components/Form/Form";
+import { stringifyDateOfBirth } from "@/utils/authentication/RegisterUtils";
+import Form from "@/components/Form/Form";
+import { useRegister } from "@/api/hooks/authentication";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
     const day = new Date().getDate();
@@ -36,6 +40,9 @@ export default function RegisterForm() {
         value: "",
     });
 
+    const { register, isLoading } = useRegister();
+    const router = useRouter();
+
     const body = {
         "firstName": fullName.firstName,
         "lastName": fullName.lastName,
@@ -45,7 +52,7 @@ export default function RegisterForm() {
         "password": password.value
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if(!validateAge(stringifyDateOfBirth(dateOfBirth.year, dateOfBirth.month-1, dateOfBirth.day))) {
@@ -57,6 +64,13 @@ export default function RegisterForm() {
 
         if(!validateRegisterBody(body)) {
             return;
+        }
+
+        try {
+            await register(body);
+            router.push("/verify-phone");
+        } catch(error) {
+            console.log(error);
         }
     };
 

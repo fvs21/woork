@@ -1,10 +1,12 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "react-query";
+import { useState } from "react";
 
-const queryClient = new QueryClient();
 
 export default function QueryProvider({children}) {
+    const [queryClient] = useState(() => new QueryClient())
+
     return (
         <QueryClientProvider client={queryClient}>
             {children}

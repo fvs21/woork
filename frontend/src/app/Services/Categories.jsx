@@ -1,18 +1,18 @@
-import BalloonSVG from "@/Components/SVGs/JobCategories/Balloon";
-import BricksSVG from "@/Components/SVGs/JobCategories/Bricks";
-import CouchSVG from "@/Components/SVGs/JobCategories/Couch";
-import DoorSVG from "@/Components/SVGs/JobCategories/Door";
-import DropSVG from "@/Components/SVGs/JobCategories/Drop";
-import Electrical from "@/Components/SVGs/JobCategories/Electrical";
-import Hammer from "@/Components/SVGs/JobCategories/Hammer";
-import House from "@/Components/SVGs/JobCategories/House";
-import PaintSVG from "@/Components/SVGs/JobCategories/Paint";
-import Pet from "@/Components/SVGs/JobCategories/Pet";
-import Plant from "@/Components/SVGs/JobCategories/Plant";
-import Plumbery from "@/Components/SVGs/JobCategories/Plumbery";
-import Screwdriver from "@/Components/SVGs/JobCategories/Screwdriver";
-import Vehicle from "@/Components/SVGs/JobCategories/Vehicle";
-import WaterSVG from "@/Components/SVGs/JobCategories/Water";
+import BalloonSVG from "@/components/SVGs/JobCategories/Balloon";
+import BricksSVG from "@/components/SVGs/JobCategories/Bricks";
+import CouchSVG from "@/components/SVGs/JobCategories/Couch";
+import DoorSVG from "@/components/SVGs/JobCategories/Door";
+import DropSVG from "@/components/SVGs/JobCategories/Drop";
+import Electrical from "@/components/SVGs/JobCategories/Electrical";
+import Hammer from "@/components/SVGs/JobCategories/Hammer";
+import House from "@/components/SVGs/JobCategories/House";
+import PaintSVG from "@/components/SVGs/JobCategories/Paint";
+import Pet from "@/components/SVGs/JobCategories/Pet";
+import Plant from "@/components/SVGs/JobCategories/Plant";
+import Plumbery from "@/components/SVGs/JobCategories/Plumbery";
+import Screwdriver from "@/components/SVGs/JobCategories/Screwdriver";
+import Vehicle from "@/components/SVGs/JobCategories/Vehicle";
+import WaterSVG from "@/components/SVGs/JobCategories/Water";
 
 export const Categories = {
     "Jardinería": "8DV7AS",

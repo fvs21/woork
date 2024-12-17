@@ -1,9 +1,9 @@
-import Logotype from "@/Components/Logotype/Logotype";
-import PhoneVerification from "@/Features/PhoneVerification/PhoneVerification";
+import Logotype from "@/components/Logotype/Logotype";
+import PhoneVerification from "@/features/phoneverification/PhoneVerification";
 import styles from "./Auth.module.scss";
 import { Head, router } from "@inertiajs/react";
-import Footer from "@/Components/Footer/Footer";
-import Layout from "@/Components/Layout/Layout";
+import Footer from "@/components/Footer/Footer";
+import Layout from "@/components/Layout/Layout";
 
 export default function VerificationPage() {
     function handleLogout(e) {

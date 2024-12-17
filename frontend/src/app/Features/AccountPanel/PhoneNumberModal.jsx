@@ -1,18 +1,18 @@
 import { useState } from "react";
-import Modal from "@/Components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import styles from "./InformationPanel.module.scss";
-import InputPhone from "@/Components/InputPhone/InputPhone";
-import SubmitButton from "@/Components/SubmitButton/SubmitButton";
-import { parsePhoneNumber } from "@/Utils/authentication/RegisterUtils";
-import { validatePhoneNumber } from "@/Services/validators";
-import CloseSVG from "@/Components/SVGs/Close";
-import axios from "@/api/axios";
-import "../../../css/globals.scss";
-import { useUser } from "@/jotai/user";
-import { svgColor } from "@/Utils/extra/utils";
+import InputPhone from "@/components/InputPhone/InputPhone";
+import SubmitButton from "@/components/SubmitButton/SubmitButton";
+import { parsePhoneNumber } from "@/utils/authentication/RegisterUtils";
+import { validatePhoneNumber } from "@/services/validators";
+import CloseSVG from "@/components/SVGs/Close";
+import { api } from "@/api/axios";
+import { useUser } from "@/api/hooks/user";
+import { svgColor } from "@/utils/extra/utils";
 
 export default function PhoneNumberModal({closeModal}) {
-    const [user, setUser] = useUser();
+    const [user] = useUser();
+    
     const defaultCountryCode = String(user?.countryCode);
     const defaultPhoneNumber = parsePhoneNumber(defaultCountryCode, user?.phone);
 
@@ -43,6 +43,7 @@ export default function PhoneNumberModal({closeModal}) {
 
     async function handleSubmitPhone(event) {
         event.preventDefault();
+        return;
         if(phoneNumber.countryCode+phoneNumber.phone === user.phone) {
             return;
         }

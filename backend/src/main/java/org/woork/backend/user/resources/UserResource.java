@@ -19,7 +19,7 @@ public class UserResource {
     private String gender;
     private boolean phoneVerified;
     private boolean emailVerified;
-    private String pfpUrl;
+    private String pfp_url;
     private AddressResource address;
 
     public UserResource(User user) {
@@ -32,7 +32,7 @@ public class UserResource {
         this.gender = user.getGender();
         this.phoneVerified = user.hasPhoneVerified();
         this.emailVerified = user.hasEmailVerified();
-        this.pfpUrl = user.getProfilePictureUrl();
+        this.pfp_url = "http://localhost:8000" + user.getProfilePictureUrl();
         this.address = user.getAddress() != null ? new AddressResource(user.getAddress()) : null;
     }
 }
