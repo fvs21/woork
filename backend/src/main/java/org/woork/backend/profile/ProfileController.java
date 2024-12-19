@@ -52,7 +52,6 @@ public class ProfileController {
         validatorImpl.validateFields(editProfileRequest);
 
         User user = authenticationService.getCurrentUser();
-        profileService.updateAbout(user, editProfileRequest.getAbout());
-        return new PublicProfileResource(user);
+        return profileService.updateAbout(user, editProfileRequest.getAbout());
     }
 }

@@ -1,39 +1,45 @@
-import Layout from "@/components/Layout/Layout";
-import styles from "./Edit.module.scss";
-import { Head, router } from "@inertiajs/react";
-import { useUser } from "@/jotai/user";
-import { useState } from "react";
-import { Suspense } from "react";
-import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
-import { lazy } from "react";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+"use client"
+
+import { useUser } from "@/api/hooks/user";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
+import { lazy, Suspense, useState } from "react";
+import styles from "./Edit.module.scss";
+import { useEditProfile } from "@/api/hooks/profile";
+import { useRouter } from "next/navigation";
+import { flash } from "@/flash-message/flashMessageCreator";
 
-const AboutModal = lazy(() => import("@/features/profile/editprofile/AboutModal"));
+const AboutModal = lazy(() => import("./AboutModal"));
 
-export default function Edit({editInformation}) {
+export default function EditProfile({editInformation}) {
     const [user] = useUser();
 
     const [about, setAbout] = useState(editInformation.about);
     const [aboutModal, setAboutModal] = useState(false);
     const openModal = () => setAboutModal(true);
     const closeModal = () => setAboutModal(false);
+    
+    const { edit } = useEditProfile();
+    const router = useRouter();
 
-    function submitEdit(e) {
+    async function submitEdit(e) {
         e.preventDefault();
 
         if(about == editInformation.about) {
             return;
         }
 
-        router.put("/profile/edit", {
-            'about': about
-        });
+        try {
+            await edit({
+                about: about
+            });
+            router.push("/profile");
+        } catch(error) {
+            flash(error.response.data.message, 4000, "error");
+        }
     }
 
     return (
-        <Layout>
-            <Head title="Edita tu perfil" />
+        <>
             <div className={styles.editProfileContainer}>
                 <section className={styles.editSection}>
                     <div className={styles.profilePictureContainer}>
@@ -88,6 +94,6 @@ export default function Edit({editInformation}) {
                     <AboutModal about={about} setAbout={setAbout} closeModal={closeModal}/>
                 </Suspense>
             }
-        </Layout>
+        </>
     )
 }

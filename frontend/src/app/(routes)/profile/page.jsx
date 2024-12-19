@@ -1,5 +1,5 @@
 import { refreshToken } from "@/api/server/auth";
-import { getProfile } from "@/api/server/profile";
+import { getUserProfile } from "@/api/server/profile";
 import Layout from "@/components/Layout/Layout";
 import ProfileViewer from "@/features/profile/ProfileViewer";
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 export default async function Page() {
     const accessToken = await refreshToken();
-    const profile = await getProfile(accessToken);
+    const profile = await getUserProfile(accessToken);
 
     return (
         <Layout>

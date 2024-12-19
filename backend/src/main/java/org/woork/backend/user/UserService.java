@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.address.requests.UpdateAddressRequest;
 import org.woork.backend.exceptions.*;
@@ -16,7 +17,6 @@ import org.woork.backend.sms.SMSService;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.requests.UpdateGenderRequest;
 import org.woork.backend.user.resources.UserResource;
-import org.woork.backend.utils.AuthenticationUtils;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final TokenService tokenService;

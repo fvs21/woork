@@ -123,8 +123,6 @@
             <artifactId>spring-security-messaging</artifactId>
         </dependency>
     </dependencies>
-
-
     <build>
         <plugins>
             <plugin>

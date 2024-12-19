@@ -1,7 +1,7 @@
 import InputLabel from "@/components/ValidatedInput/InputLabel";
 import styles from "./CreatePosting.module.scss";
 import UploadSVG from "@/components/SVGs/Upload";
-import { lazy, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import CloseSVG from "@/components/SVGs/Close";
 import { checkIfValidImage } from "@/utils/account/AccountUtils";
 import { flash } from "@/flash-message/flashMessageCreator";

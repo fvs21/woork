@@ -17,8 +17,9 @@ import SecurityPanel from '@/features/security/SecurityPanel';
 import { useLogout } from '@/api/hooks/authentication';
 import { useRouter } from 'next/navigation';
 
-export default function Dashboard() {
+export default function Page() {
     const [user] = useUser();
+    
     const [option, setOption] = useState(-1);
     const [panel, setPanel] = useState(0); //0 is options menu, and 1 is panel
     const { width } = useWindowDimensions();

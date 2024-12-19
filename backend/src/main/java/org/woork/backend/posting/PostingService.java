@@ -2,12 +2,17 @@ package org.woork.backend.posting;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.address.AddressRepository;
+import org.woork.backend.address.AddressResource;
 import org.woork.backend.address.records.LocationQuery;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.image.Image;
@@ -32,6 +37,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class PostingService {
     private static final Log log = LogFactory.getLog(PostingService.class);
     private final PostingRepository postingRepository;
@@ -43,6 +49,9 @@ public class PostingService {
     private final PostingApplicationRepository postingApplicationRepository;
     private final UserService userService;
     private final NotificationService notificationService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public PostingService(
@@ -289,5 +298,18 @@ public class PostingService {
         application.acceptApplication();
 
         return 0;
+    }
+
+    public Set<AddressResource> getUserCreatedAddresses(User user) {
+        Set<Posting> postings = postingRepository.findByAuthor(user).orElse(new HashSet<>());
+
+        return postings.stream().filter(
+                posting -> !Objects.equals(posting.getAddress().getId(), user.getAddress().getId())
+        ).map(
+                posting -> {
+                    Address address = posting.getAddress();
+                    return new AddressResource(address);
+                }
+        ).collect(Collectors.toSet());
     }
 }

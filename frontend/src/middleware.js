@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
 const guestRoutes = [
@@ -12,8 +11,14 @@ const guestRoutes = [
 const authenticatedRoutes = [
     '/dashboard',
     '/verify-phone',
-    '/profile'
+    '/profile',
+    '/profile/edit',
+    '/posting/create'
 ];
+
+const dynamicAuthRoutes = [
+    '/profile/show/'
+]
 
 export async function middleware(request) {
     const path = request.nextUrl.pathname;
@@ -25,7 +30,7 @@ export async function middleware(request) {
         return NextResponse.redirect(new URL('/dashboard', request.nextUrl));
     }
 
-    if(!isAuthenticated && authenticatedRoutes.includes(path)) {
+    if(!isAuthenticated && (dynamicAuthRoutes.some((elem) => path.startsWith(elem)) || authenticatedRoutes.includes(path))) {
         return NextResponse.redirect(new URL('/login', request.nextUrl))
     }
 

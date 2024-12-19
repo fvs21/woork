@@ -1,8 +1,6 @@
 import Search from "../SVGs/Search";
 import styles from "./Searchbar.module.scss";
-import "../../../css/globals.scss";
 import { useState } from "react";
-import useWindowDimensions, { usePageScrollTop } from "@/hooks/window";
 import { svgColor } from "@/utils/extra/utils";
 
 export default function Searchbar() {

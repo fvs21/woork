@@ -8,7 +8,7 @@ export const metadata = {
     title: "Woork - Verifica tu número"
 }
 
-export default function VerificationPage() {    
+export default function Page() {    
     return (
         <Layout>
             <div className="global-container">

@@ -8,7 +8,7 @@ export const metadata = {
     title: "Woork - Inicia sesión"
 }
 
-export default function LoginPage() {
+export default function Page() {
     return (
         <div className="global-container">
             <div className={`${styles.loginContainer}`}>

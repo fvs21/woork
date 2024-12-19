@@ -198,61 +198,6 @@
 }
 
 
-.aboutModalContainer {
-    width: 600px;
-    padding: 20px;
-}
-
-.aboutModalHeader {
-    margin-top: 44px;
-    margin-bottom: var.$margin-xs;
-}
-
-.aboutTitle {
-    font-size: 26px;
-    font-weight: 550;
-}
-
-.instructions {
-    padding: 8px 0;
-    font-size: 15px;
-    color: var(--text-secondary-color);
-}
-
-.aboutInput {
-    border-radius: 10px;
-    resize: none;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    height: 150px;
-    min-height: 150px;
-    max-height: 150px;
-    background-color: var(--card-bg);
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.aboutInput:focus {
-    outline: 1px solid var.$primary-color;
-}
-
-.saveBtnContainer {
-    margin-top: var.$margin-xxl;
-    width: 100%;
-    text-align: right;
-}
-
-.saveBtn {
-    padding: 12px 20px;
-    border-radius: 6px;
-    border: none;
-    background-color: var.$primary-color;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-
 .userPictureViewerModal {
     width: 500px;
 }

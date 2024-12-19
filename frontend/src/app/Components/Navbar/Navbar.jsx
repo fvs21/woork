@@ -1,37 +1,39 @@
+"use client"
+
 import styles from "./Navbar.module.scss";
-import "../../../css/globals.scss";
 import Logotype from "../Logotype/Logotype";
-import { Link } from "@inertiajs/react";
+import Link from "next/link";
 import { useState } from "react";
-import useWindowDimensions from "@/hooks/window";
 import NotificationsButton from "../NotificationsButton/NotificationsButton";
-import NotificationsDropdown from "@/features/notificationstab/NotificationsDropdown";
-import { useNotifications, useUser } from "@/jotai/user";
+//import NotificationsDropdown from "@/features/notificationstab/NotificationsDropdown";
+import { useUser } from "@/api/hooks/user";
 import { getUnreadNotificationsCount } from "@/utils/notification";
 import UserDropdown from "../UserDropdown/UserDropdown";
 import { useEffect } from "react";
 import Searchbar from "../Searchbar/Searchbar";
 
-export default function Navbar({ loggedIn }) {
+export default function Navbar() {
     const [user] = useUser();
+    const loggedIn = user != null;
+
     const [accountDropdown, setAccountDropdown] = useState(false);
     const [notificationsDropdown, setNotificationDropdown] = useState(false);
 
-    const { notifications, addNotification } = useNotifications();
-
-    const { width } = useWindowDimensions();
+    //const { notifications, addNotification } = useNotifications();
 
     function isLeftClick(e) {
         return e.buttons === 1 || e.buttons === 0;
     }
 
     useEffect(() => {
+        /**
         window.Echo.private(`notifications.` + user.id).listen(
             ".notification.received",
             (e) => {
                 addNotification(e);
             }
         );
+        */
     }, []);
 
     return (
@@ -49,7 +51,7 @@ export default function Navbar({ loggedIn }) {
                             <div className={styles.notifications}>
                                 <NotificationsButton
                                     count={getUnreadNotificationsCount(
-                                        notifications
+                                        []
                                     )}
                                     click={() => {
                                         setNotificationDropdown(
@@ -59,9 +61,6 @@ export default function Navbar({ loggedIn }) {
                                             setAccountDropdown(false);
                                     }}
                                 />
-                                {notificationsDropdown && (
-                                    <NotificationsDropdown />
-                                )}
                             </div>
                             <Link href={"/posting/create"}>
                                 <button className={styles.createPostingBtn}>

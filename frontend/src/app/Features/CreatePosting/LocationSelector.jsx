@@ -1,11 +1,10 @@
 import { formatAddress } from "@/utils/account/AccountUtils";
 import InputLabel from "../../components/ValidatedInput/InputLabel";
 import styles from "./CreatePosting.module.scss";
-import { usePage } from "@inertiajs/react";
 
 export default function LocationSelector({location, setDisplayModal}) {
 
-    const { errors } = usePage().props;
+    const errors = "";
 
     return (
         <div style={{padding: "10px 0", position: "relative"}}>

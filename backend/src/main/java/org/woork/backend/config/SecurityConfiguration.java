@@ -70,7 +70,8 @@ public class SecurityConfiguration {
                         ).permitAll()
                         .requestMatchers(
                                 "/api/posting/create",
-                                "/api/posting/address/{id}"
+                                "/api/posting/address/{id}",
+                                "/api/posting/addresses"
                         ).authenticated()
                         //WS
                         .requestMatchers("/ws").permitAll()

@@ -2,6 +2,7 @@ package org.woork.backend.profile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.woork.backend.profile.resources.PublicProfileResource;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserRepository;
 
@@ -14,7 +15,8 @@ public class ProfileService {
         this.userRepository = userRepository;
     }
 
-    public void updateAbout(User user, String about) {
+    public PublicProfileResource updateAbout(User user, String about) {
         user.setAbout(about);
+        return new PublicProfileResource(userRepository.save(user));
     }
 }

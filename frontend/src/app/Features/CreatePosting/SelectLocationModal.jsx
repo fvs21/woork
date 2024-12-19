@@ -7,15 +7,15 @@ import CreateLocationModal from "./CreateLocationModal";
 import MapModal from "./MapModal";
 import axios from "axios";
 import TrashcanSVG from "@/components/SVGs/Trashcan";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from "react-query";
 import Alert from "@/components/Alert/Alert";
-import { useAddedAddresses, useUser } from "@/jotai/user";
+import { useUser } from "@/api/hooks/user";
 import { useTheme } from "@/hooks/theme";
 
 export default function SelectLocationModal({location, setLocation, setDisplayModal}) {
     const [user] = useUser();
     const [theme] = useTheme();
-    const [added_addresses, setAddedAddresses] = useAddedAddresses();
+    const [added_addresses, setAddedAddresses] = useState([]);
 
     const [newLocationModal, setNewLocationModal] = useState(false);
     const [mapModal, setMapModal] = useState(false);

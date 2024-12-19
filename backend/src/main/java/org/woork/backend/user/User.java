@@ -1,11 +1,11 @@
 package org.woork.backend.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +17,6 @@ import org.woork.backend.role.Role;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -121,18 +120,18 @@ public class User implements UserDetails {
 
     @Setter
     @Getter
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_picture", referencedColumnName = "image_id")
     private Image profilePicture;
 
     @Setter
     @Getter
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private Set<Posting> postings;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Posting> postings;
 
     @Setter
     @Getter
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address", referencedColumnName = "address_id")
     private Address address;
 
@@ -162,7 +161,7 @@ public class User implements UserDetails {
 
     public User() {
         this.role = Role.USER;
-        this.postings = new HashSet<>();
+        this.postings = new ArrayList<>();
         this.isWorker = false;
         this.createdAt = LocalDate.now();
     }
@@ -185,7 +184,7 @@ public class User implements UserDetails {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.role = role;
-        this.postings = new HashSet<>();
+        this.postings = new ArrayList<>();
         this.isWorker = false;
         this.createdAt = LocalDate.now();
     }
@@ -331,4 +330,5 @@ public class User implements UserDetails {
     public boolean hasIdentityVerified() {
         return identityVerifiedAt != null;
     }
+
 }

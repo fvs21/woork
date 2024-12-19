@@ -1,7 +1,23 @@
-export default function Page() {
+import { refreshToken } from "@/api/server/auth"
+import { getUserProfile } from "@/api/server/profile";
+import Layout from "@/components/Layout/Layout";
+import EditProfile from "@/features/profile/editprofile/EditProfile";
+
+export const metadata = {
+    title: "Woork - Edita tu perfil"
+}
+
+export default async function Page() {
+    const accessToken = await refreshToken();
+    const profile = await getUserProfile(accessToken);
+
+    const editInformation = {
+        about: profile.publicProfile.about
+    }
+
     return (
-        <div>
-            
-        </div>
+        <Layout>
+            <EditProfile editInformation={editInformation} />
+        </Layout>
     )
 }

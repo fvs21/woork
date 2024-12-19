@@ -1,13 +1,15 @@
+"use client"
+
 import styles from "./JobFilters.module.scss";
 import JobCategoryButton from "@/components/JobCategoryButton/JobCategoryButton";
-import { router } from "@inertiajs/react";
+import { useRouter } from "next/navigation";
 import { CategoriesList } from "@/services/Categories";
 import LocationSVG from "@/components/SVGs/Location";
 import { useEffect, useRef, useState } from "react";
 import ArrowBackSVG from "@/components/SVGs/ArrowBack";
 import ArrowRightSVG from "@/components/SVGs/ArrowRight";
 import useWindowDimensions from "@/hooks/window";
-import { useSearchLocation } from "@/jotai/user";
+//import { useSearchLocation } from "@/jotai/user";
 import { useTheme } from "@/hooks/theme";
 import { lazy } from "react";
 import { Suspense } from "react";
@@ -22,18 +24,21 @@ export default function JobFilters({category, setCategory}) {
     const [scrollEnd, setScrollEnd] = useState(false);
     const {width} = useWindowDimensions();
 
-    const [searchLocation] = useSearchLocation();
+    //const [searchLocation] = useSearchLocation();
 
     const [theme] = useTheme();
 
     const color = theme == 'dark' ? "white" : "black";
 
+    const router = useRouter();
+
     function clickCategory(category) {
         setCategory(category);
+        return;
         if(searchLocation?.id)
-            router.visit(`/explore/${searchLocation.id}?category_tag=${category}`);
+            router.push(`/explore/${searchLocation.id}?category_tag=${category}`);
         else
-            router.visit(`/explore?category_tag=${category}`);
+            router.push(`/explore?category_tag=${category}`);
     }
 
     function scrollToRight() {

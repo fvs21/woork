@@ -13,7 +13,7 @@ import { useTheme } from "../../hooks/theme";
 import { loginUser } from "@/services/auth";
 import Link from "next/link";
 
-export default function LandingPage() {
+export default function Page() {
     const [credential, setCredential] = useState("");
     const [countryCode, setCountryCode] = useState("");
     const [password, setPassword] = useState("");

@@ -2,7 +2,6 @@ package org.woork.backend.authentication;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.woork.backend.authentication.requests.RegistrationRequest;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.passwordreset.PasswordResetService;
@@ -22,7 +22,6 @@ import org.woork.backend.user.UserRepository;
 import org.woork.backend.utils.AuthenticationUtils;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +31,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 @Service
+@Transactional
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

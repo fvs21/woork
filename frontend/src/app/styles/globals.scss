@@ -17,7 +17,7 @@
     --auth-forms-bg: white;
     --labeled-btn-bg: white;
     --background-color-secondary: rgb(247, 247, 247);
-    --select-icon: url("./dropdown_icon_light.svg");
+    --select-icon: url("/dropdown_icon_light.svg");
     --clear-btn: rgb(240, 240, 240);
     --auth-background-color: rgb(247, 247, 247);
     --invalid-color: #{var.$invalid-color};
@@ -37,7 +37,7 @@
     --auth-forms-bg: rgb(26,26,26);
     --labeled-btn-bg: #{var.$input-color-dark};
     --background-color-secondary: rgb(43, 43, 43);
-    --select-icon: url("./dropdown_icon_dark.svg");
+    --select-icon: url("/dropdown_icon_dark.svg");
     --clear-btn: rgb(44, 44, 44);
     --auth-background-color: #{var.$dark-bg};
     --invalid-color: rgb(75, 75, 75);

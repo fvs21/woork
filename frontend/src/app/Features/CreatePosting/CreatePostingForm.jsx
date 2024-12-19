@@ -1,3 +1,5 @@
+"use client"
+
 import styles from "./CreatePosting.module.scss";
 import TextArea from "@/components/TextArea/TextArea";
 import CategorySelector from "@/components/CategorySelector/CategorySelector";
@@ -5,12 +7,14 @@ import CurrencyInput from "@/components/CurrencyInput/CurrencyInput";
 import LocationSelector from "./LocationSelector";
 import { lazy, Suspense, useState } from "react";
 import ImagesInput from "./ImagesInput";
-import { router } from "@inertiajs/react";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import CloseSVG from "@/components/SVGs/Close";
 import ArrowButton from "@/components/ArrowButton/ArrowButton";
 import TextInput from "@/components/TextInput/TextInput";
 import { useTheme } from "@/hooks/theme";
+import Link from "next/link";
+import { useCreatePosting } from "@/api/hooks/postings";
+import { useRouter } from "next/navigation";
 
 const SelectLocationModal = lazy(() => import("./SelectLocationModal"));
 
@@ -27,6 +31,9 @@ export default function CreatePostingForm() {
     const [images, setImages] = useState([null, null, null]);
 
     const [selectLocationModal, setSelectLocationModal] = useState(false);
+
+    const { create, isLoading } = useCreatePosting();
+    const router = useRouter();
 
     const body = {
         title: title,
@@ -54,7 +61,7 @@ export default function CreatePostingForm() {
     }
 
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
         const formData = new FormData();
@@ -68,7 +75,15 @@ export default function CreatePostingForm() {
                 count++;
             }
         }
-        router.post("/posting", formData);
+
+        try {
+            const request = await create(formData);
+            console.log(request);
+            router.push("/explore");
+        } catch(error) {
+            console.log(error);
+            
+        }
     }
 
     return (
@@ -77,13 +92,14 @@ export default function CreatePostingForm() {
                 <div className={styles['form-container']}>
                     <div className={styles["create-posting-form"]}>
                         <div className={styles['form-header']}>
-                            <button 
+                            <Link 
                                 className={styles['close-button']}
-                                onClick={() => router.visit("/dashboard")}>
+                                href={"/explore"}
+                            >
                                 <CloseSVG 
                                     width={"25px"}
                                     color={theme == 'dark' ? 'white' : 'black'}/>
-                            </button>
+                            </Link>
                             <div className={styles['form-title']}>Crear anuncio de trabajo</div>
                         </div>
                         <form onSubmit={handleSubmit}>

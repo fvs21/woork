@@ -1,5 +1,5 @@
 import Modal from "@/components/Modal/Modal";
-import styles from "./Profile.module.scss";
+import styles from "./Edit.module.scss";
 import CloseSVG from "@/components/SVGs/Close";
 import { svgColor } from "@/utils/extra/utils";
 import TextArea from "@/components/TextArea/TextArea";

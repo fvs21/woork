@@ -7,7 +7,7 @@ export const metadata = {
     title: "Woork - Regístrate"
 }
 
-export default function Register() {
+export default function Page() {
     return (
         <div className={'global-container'}>
             <div className={`${styles.registerContainer}`}>

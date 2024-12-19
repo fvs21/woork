@@ -7,6 +7,9 @@ import { useState } from "react";
 import { useTheme } from "@/hooks/theme";
 import { useUser } from "@/api/hooks/user";
 import MegaphoneSVG from "../SVGs/Megaphone";
+import { useLogout } from "@/api/hooks/authentication";
+import { useRouter } from "next/navigation";
+import { flash } from "@/flash-message/flashMessageCreator";
 
 export default function UserDropdown() {
     const [user] = useUser();
@@ -19,6 +22,20 @@ export default function UserDropdown() {
     const [dark, setDark] = useState(theme == 'dark' ? true : false);
 
     const color = theme == 'dark' ? 'white' : 'black';
+
+    const logout = useLogout();
+    const router = useRouter();
+
+    async function logoutUser(e) {
+        e.preventDefault();
+
+        try {
+            await logout();
+            router.push("/login");
+        } catch(error) {
+            flash("Un error ha ocurrido", 4000, "error");
+        }
+    }
 
     return (
         <div className={styles.dropdownContent + " " + (theme == 'dark' ? styles.dropdownDark : styles.dropdownLight)}>
@@ -58,7 +75,7 @@ export default function UserDropdown() {
                 </label>
             </div>
             <button
-                onClick={(e) => logoutUser(e)}
+                onClick={logoutUser}
                 className={styles.dropdownItem}
                 onMouseDown={(e) => e.preventDefault()}
             >

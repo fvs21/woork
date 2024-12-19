@@ -1,24 +1,18 @@
 package org.woork.backend.posting;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.woork.backend.address.AddressResource;
 import org.woork.backend.address.AddressService;
 import org.woork.backend.authentication.AuthenticationService;
-import org.woork.backend.exceptions.InvalidLocationException;
-import org.woork.backend.exceptions.PostingDoesNotExistException;
-import org.woork.backend.exceptions.UnableToCreatePostingException;
-import org.woork.backend.exceptions.UserPhoneNotVerifiedException;
-import org.woork.backend.posting.requests.PostingRequest;
 import org.woork.backend.posting.resources.PostingResource;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/posting")
@@ -36,6 +30,7 @@ public class PostingController {
         this.addressService = addressService;
     }
 
+
     @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public PostingResource createPosting(
             @RequestPart String posting,
@@ -52,6 +47,11 @@ public class PostingController {
         return postingService.getPostingByHashId(id);
     }
 
+    @GetMapping("/addresses")
+    public Set<AddressResource> getAddresses() {
+        User user = authenticationService.getCurrentUser();
+        return postingService.getUserCreatedAddresses(user);
+    }
 
     @DeleteMapping("/address/{id}")
     public String deletePosting(@PathVariable Long id) {

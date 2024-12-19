@@ -6,16 +6,16 @@ import "leaflet"
 import { useEffect, useState } from "react";
 import { defaultIcon } from "@/components/MapMarker";
 import CrosshairSVG from "@/components/SVGs/Crosshair";
-import axios from "@/api/axios";
+import { apiGuest } from "@/api/axios";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import { useSearchLocation } from "@/jotai/user";
-import { router, usePage } from "@inertiajs/react";
+//import { useSearchLocation } from "@/jotai/user";
 import { svgColor } from "@/utils/extra/utils";
+import { useRouter } from "next/router";
 
 export default function LocationFilter({setDisplayModal}) {
-    const { category_tag } = usePage().props;
+    const category_tag = "njfdñsnf"
 
-    const [searchLoc, setSearchLocation] = useSearchLocation();
+    const [searchLoc, setSearchLocation] = undefined;
     const [coordinates, setCoordinates] = useState(searchLoc?.latitude && searchLoc?.longitude 
         ? [searchLoc.latitude, searchLoc.longitude] 
         : [20.971434, -89.629161]);
@@ -32,6 +32,8 @@ export default function LocationFilter({setDisplayModal}) {
     const [circle, setCircle] = useState();
 
     const [errorMsg, setErrorMsg] = useState("");
+
+    const router = useRouter();
 
     useEffect(() => {
         let map = L.map('map', {
@@ -118,7 +120,7 @@ export default function LocationFilter({setDisplayModal}) {
         if(location.name == "Ubicación actual") 
             return;
         
-        const request = await axios.post("/location/search", {
+        const request = await apiGuest.post("/location/search", {
             'query': location
         });
         
@@ -191,7 +193,7 @@ export default function LocationFilter({setDisplayModal}) {
                 name: locationName
             });
 
-            router.visit(`/explore/${data.id}?category_tag=${category_tag}`);
+            router.push(`/explore/${data.id}?category_tag=${category_tag}`);
 
         } catch(error) {
             console.log(error);
