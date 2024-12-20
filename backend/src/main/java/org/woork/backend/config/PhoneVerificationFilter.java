@@ -35,16 +35,14 @@ public class PhoneVerificationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        filterChain.doFilter(request, response);
-        return;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!user.hasPhoneVerified()) {
+            logger.error(user.getPhone() + " is not verified");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
 
-//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if(!user.isPhoneVerified()) {
-//            logger.error(user.getPhone() + " is not verified");
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            return;
-//        }
-//        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 
     @Override

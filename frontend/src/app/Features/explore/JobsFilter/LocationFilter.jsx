@@ -8,16 +8,17 @@ import { defaultIcon } from "@/components/MapMarker";
 import CrosshairSVG from "@/components/SVGs/Crosshair";
 import { apiGuest } from "@/api/axios";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-//import { useSearchLocation } from "@/jotai/user";
 import { svgColor } from "@/utils/extra/utils";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Categories } from "@/services/Categories";
+import { useGetCurrentSearchedLocation, useSearchLocationId } from "@/api/hooks/postings";
 
-export default function LocationFilter({setDisplayModal}) {
+export default function LocationFilter({close, locationId}) {
     const searchParams = useSearchParams();
     const category_tag = searchParams.get('category_tag') || Categories.Jardinería;
 
-    const [searchLoc, setSearchLocation] = useState({});
+    const searchLoc = useGetCurrentSearchedLocation(category_tag, locationId);        
+
     const [coordinates, setCoordinates] = useState(searchLoc?.latitude && searchLoc?.longitude 
         ? [searchLoc.latitude, searchLoc.longitude] 
         : [20.971434, -89.629161]);
@@ -34,6 +35,8 @@ export default function LocationFilter({setDisplayModal}) {
     const [circle, setCircle] = useState();
 
     const [errorMsg, setErrorMsg] = useState("");
+
+    const { search } = useSearchLocationId();
 
     const router = useRouter();
 
@@ -122,7 +125,7 @@ export default function LocationFilter({setDisplayModal}) {
         if(location.name == "Ubicación actual") 
             return;
         
-        const request = await apiGuest.post("/location/search", {
+        const request = await apiGuest.post("/address/search", {
             'query': location
         });
         
@@ -136,8 +139,10 @@ export default function LocationFilter({setDisplayModal}) {
         return () => clearTimeout(timer);
     }, [locationName]);
 
+    //function to change the currently selected location for filtering
+
     const changeLocation = (loc) => {
-        const coords = [loc.lat, loc.long]
+        const coords = [loc.lat, loc.lon]
         if(coordinates[0] == coords[0] && coordinates[1] == coords[1])
             return
 
@@ -152,6 +157,8 @@ export default function LocationFilter({setDisplayModal}) {
             setErrorMsg("");
     }
 
+    //get user's current location using the geolocator API
+
     const [userLocLoading, setUserLocLoading] = useState(false);
 
     const getUserLocation = () => {
@@ -164,12 +171,12 @@ export default function LocationFilter({setDisplayModal}) {
                 (position) => {
                     changeLocation({
                         'lat': position.coords.latitude,
-                        'long': position.coords.longitude,
+                        'lon': position.coords.longitude,
                         'name': "Ubicación actual"
                     });
                     setUserLocLoading(false);
                 },
-                (error) => {
+                () => {
                     setErrorMsg("No pudimos detectar tu ubicación. Debes activar permisos de ubicación en tu navegador.");
                     setUserLocLoading(false);
                 }
@@ -181,12 +188,13 @@ export default function LocationFilter({setDisplayModal}) {
         e.preventDefault();
 
         try {
-            const request = await axios.post("/location/getid", {
+            const id = await search({
                 'latitude': coordinates[0],
                 'longitude': coordinates[1],
                 'radius': radius / 1000
             });
-            const data = request.data;
+
+            /**
             setSearchLocation({
                 latitude: coordinates[0],
                 longitude: coordinates[1],
@@ -194,8 +202,9 @@ export default function LocationFilter({setDisplayModal}) {
                 id: data.id,
                 name: locationName
             });
+            */
 
-            router.push(`/explore/${data.id}?category_tag=${category_tag}`);
+            router.push(`/explore/${id}?category_tag=${category_tag}&u=true`);
 
         } catch(error) {
             console.log(error);
@@ -203,12 +212,12 @@ export default function LocationFilter({setDisplayModal}) {
     }
 
     return (
-        <Modal className={styles.locationFilterModal}>
+        <Modal className={styles.locationFilterModal} handleClose={close}>
             <div className={styles.locationFilterContainer}>
                 <div className={styles.locationFilterHeader}>
                     <button 
                         className={styles.closeModalBtn}
-                        onClick={() => setDisplayModal(false)}>
+                        onClick={close}>
                         <CloseSVG width={"22px"} color={svgColor()}/>
                     </button>
                     <div className={styles.locationFilterTitle}>Filtar por ubicación</div>
@@ -237,14 +246,15 @@ export default function LocationFilter({setDisplayModal}) {
                             if(radiusDropup) setRadiusDropup(false);
                             setLocationDropup(true);
                         }}
-                        onBlur={() => setLocationDropup(false)}/>
+                        onBlur={() => setLocationDropup(false)}
+                    />
                     {locationDropup && locations.length > 0 && 
                         <div className={styles.locationDropup}>
                             {locations?.map(function(loc, i) {
-                                return <div key={loc.display_name}>
+                                return <div key={loc.lat}>
                                     <button 
                                         className={styles.locationBtn}
-                                        onMouseDown={(e) => changeLocation(loc)}>
+                                        onMouseDown={() => changeLocation(loc)}>
                                             {loc.display_name}
                                     </button>
                                 </div>
@@ -293,7 +303,7 @@ export default function LocationFilter({setDisplayModal}) {
     )
 }
 
-function RadiusBtn({value, setValue, selected}) {
+const RadiusBtn = ({value, setValue, selected}) => {
     return (
         <button 
             className={`${styles.selectRadiusBtn} ${selected && styles.radiusSelected}`}

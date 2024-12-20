@@ -17,26 +17,22 @@ import { useSearchParams } from "next/navigation";
 
 const LocationFilter = lazy(() => import("./LocationFilter"));
 
-export default function JobFilters() {
+export default function JobFilters({location}) {
     const [locationFilter, setLocationFilter] = useState(false);
     const categoriesRef = useRef(null);
     const [scrollLeft, setScrollLeft] = useState(0);
     const [scrollEnd, setScrollEnd] = useState(false);
     const {width} = useWindowDimensions();
 
-    //const [searchLocation] = useSearchLocation();
-
     const [theme] = useTheme();
     const color = theme == 'dark' ? "white" : "black";
 
     const searchParams = useSearchParams();
     const category = searchParams.get('category_tag') || Categories.Jardinería;
-    
 
     function clickCategory(category) {
-        //setCategory(category);
-        if(false)
-            window.history.replaceState(null, '', `/explore/${searchLocation.id}?category_tag=${category}`);
+        if(location)
+            window.history.replaceState(null, '', `/explore/${location}?category_tag=${category}`);
         else
             window.history.replaceState(null, '', `/explore?category_tag=${category}`);
     }
@@ -116,7 +112,9 @@ export default function JobFilters() {
             {locationFilter && 
                 <Suspense fallback={<LoadingModal />}>
                     <LocationFilter 
-                        setDisplayModal={setLocationFilter}/>
+                        close={() => setLocationFilter(false)}
+                        locationId={location}
+                    />
                 </Suspense>
             }
         </div>

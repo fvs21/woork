@@ -3,7 +3,7 @@ export default async function Posting({params}) {
     
     return (
         <div>
-            Ass
+            {id}
         </div>
     )
 }

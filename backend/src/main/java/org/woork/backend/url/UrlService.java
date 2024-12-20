@@ -54,7 +54,7 @@ public class UrlService {
         );
     }
 
-    public Double convertIntToDecimal(int number, int numOfDecimals) {
+    public Double convertIntToDecimal(long number, long numOfDecimals) {
         return number / Math.pow(10, numOfDecimals);
     }
 
@@ -63,13 +63,13 @@ public class UrlService {
         log.info(coordinates);
 
         Double lat = convertIntToDecimal(
-                Math.toIntExact(coordinates.get(0)),
-                Math.toIntExact(coordinates.get(1))
+                coordinates.get(0),
+                coordinates.get(1)
         ) * (coordinates.get(2) == 1 ? -1 : 1);
 
         Double lng = convertIntToDecimal(
-                Math.toIntExact(coordinates.get(3)),
-                Math.toIntExact(coordinates.get(4))
+                coordinates.get(3),
+                coordinates.get(4)
         ) * (coordinates.get(5) == 1 ? -1 : 1);
 
         Long radius = coordinates.get(6);

@@ -78,7 +78,7 @@ public class SecurityConfiguration {
                         //USER
                         .requestMatchers("/api/user/**").authenticated()
                         //EXPLORE
-                        .requestMatchers("/api/explore").permitAll()
+                        .requestMatchers("/api/explore/**").permitAll()
                         //ADDRESS
                         .requestMatchers("/api/location/**").permitAll()
                         //NOTIFICATIONS

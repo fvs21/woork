@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import { api, apiGuest, apiMultipart } from "../axios"
+import { useRouter } from "next/navigation";
 
-export const useGetCreatedAddresses = () => {
+export const useFetchCreatedAddresses = () => {
     const { data, isLoading } = useQuery({
         queryFn: async () => {
             const request = await api.get("/posting/addresses");
@@ -13,15 +14,23 @@ export const useGetCreatedAddresses = () => {
     return { data, isLoading };
 }
 
-export const useDeleteAddress = () => {
+export const useAddedAddresses = () => {
     const queryClient = useQueryClient();
 
+    const setAddresses = (addresses) => {
+        queryClient.setQueryData(['added-addresses'], addresses);
+    }
+
+    return [
+        queryClient.getQueryData(['added-addresses']),
+        setAddresses
+    ];
+}
+
+export const useDeleteAddress = () => {
     const { mutateAsync: deleteAddrs } = useMutation({
-        mutationFn: async (body) => {
-            return await api.delete("/posting/address/" + body.id);
-        },
-        onSuccess: (data) => {
-            queryClient.setQueryData(['added-addresses'], data.data);
+        mutationFn: async (id) => {
+            return await api.delete("/posting/address/" + id);
         }
     });
 
@@ -38,17 +47,52 @@ export const useCreatePosting = () => {
     return { create, isLoading };
 }
 
-export const useFetchPostings = (category) => {
-    const path = category == null ? "/explore" : `/explore?category_tag=${category}`;
+export const useFetchPostings = (category, location) => {
+    const router = useRouter();
+
+    const path = location != null 
+        ? `/explore/${location}?category_tag=${category}` 
+        : `/explore?category_tag=${category}`;
+
+    const queryKey = location != null 
+        ? ['postings', category, location] 
+        : ['postings', category];
 
     const { data, isLoading } = useQuery({
         queryFn: async() => {
-            const request = await apiGuest.get(path);
+            const request = await api.get(path);
             return request.data;
         },
-        queryKey: ['postings', category],
-        staleTime: Infinity // just for testing
+        queryKey: queryKey,
+        staleTime: Infinity, // just for testing
+        retry: 1,
+        onError: () => {
+            router.push(`/explore?category_tag=${category}`);
+        }
     });
 
     return { data, isLoading };
+}
+
+export const useGetCurrentSearchedLocation = (category, location) => {
+    const queryClient = useQueryClient();
+    const queryKey = location != null 
+        ? ['postings', category, location] 
+        : ['postings', category];
+
+    const queryData = queryClient.getQueryData(queryKey);
+
+    return queryData?.search_location != null ? queryData.search_location : {};
+}
+
+
+export const useSearchLocationId = () => {
+    const { mutateAsync: search } = useMutation({
+        mutationFn: async (body) => {
+            const request = await api.post("/address/getid", body);
+            return request.data;
+        }
+    });
+
+    return { search };
 }

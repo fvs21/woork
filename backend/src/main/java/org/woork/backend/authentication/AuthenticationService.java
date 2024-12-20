@@ -160,7 +160,7 @@ public class AuthenticationService {
 
     public boolean isUserAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return !(authentication instanceof AnonymousAuthenticationToken);
+        return !authentication.getName().equals("anonymousUser");
     }
 
     public User getCurrentUser() {

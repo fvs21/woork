@@ -87,6 +87,7 @@ public class PostingService {
         PostingLocation location = locationRequest.getLocation();
         validator.validateFields(location);
 
+
         if(!locationRequest.isCreate()) {
             if(location.id() == null)
                 throw new UnableToCreatePostingException("Forbidden action.");
@@ -104,7 +105,7 @@ public class PostingService {
             Address addressObject = addressRepository.findById(locId).orElseThrow(() -> new UnableToCreatePostingException("Forbidden action. Invalid location id."));
 
             if(addressObject.getLatitude() == null || addressObject.getLongitude() == null) {
-                if(location.latitude() == null && location.longitude() == null) {
+                if(location.latitude() == null || location.longitude() == null) {
                     throw new UnableToCreatePostingException("Latitude and longitude required");
                 }
 
@@ -113,7 +114,7 @@ public class PostingService {
 
             return addressObject;
         } else {
-            if(location.latitude() == null && location.longitude() == null) {
+            if(location.latitude() == null || location.longitude() == null) {
                 throw new UnableToCreatePostingException("Latitude and longitude required.");
             }
 

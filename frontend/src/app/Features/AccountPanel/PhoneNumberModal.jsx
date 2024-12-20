@@ -6,7 +6,6 @@ import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import { parsePhoneNumber } from "@/utils/authentication/RegisterUtils";
 import { validatePhoneNumber } from "@/services/validators";
 import CloseSVG from "@/components/SVGs/Close";
-import { api } from "@/api/axios";
 import { useUser } from "@/api/hooks/user";
 import { svgColor } from "@/utils/extra/utils";
 

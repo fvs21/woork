@@ -1,5 +1,7 @@
 package org.woork.backend.explore;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -9,7 +11,7 @@ import org.woork.backend.address.AddressService;
 import org.woork.backend.address.records.LocationQuery;
 import org.woork.backend.authentication.AuthenticationService;
 import org.woork.backend.explore.responses.ExploreResponse;
-import org.woork.backend.explore.responses.LocationFilteredExploreResponse;
+import org.woork.backend.explore.responses.FilteredLocationData;
 import org.woork.backend.posting.Categories;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.posting.PostingRepository;
@@ -24,6 +26,7 @@ import java.util.List;
 
 @Service
 public class ExploreService {
+    private static final Log log = LogFactory.getLog(ExploreService.class);
     private final AddressService addressService;
     private final PostingService postingService;
     private final UrlService urlService;
@@ -49,7 +52,6 @@ public class ExploreService {
     }
 
     public ExploreResponse listPostingsDefault(String category) {
-        System.out.println(category);
         if (!Categories.getCodes().contains(category)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Category not found"
@@ -61,19 +63,29 @@ public class ExploreService {
             Address userAddress = user.getAddress();
 
             if (userAddress != null) {
+                LocationQuery query = new LocationQuery(
+                        userAddress.getLatitude(),
+                        userAddress.getLongitude(),
+                        2L
+                );
+
                 List<PostingResource> postings = postingService.filterPostingsByLocationAndCategory(
-                        new LocationQuery(
-                                userAddress.getLatitude(),
-                                userAddress.getLongitude(),
-                                2L
-                        ),
+                        query,
                         category
+                );
+
+                FilteredLocationData searchLocation = new FilteredLocationData(
+                        userAddress.getLatitude(),
+                        userAddress.getLongitude(),
+                        2L,
+                        userAddress.getAddress_name(),
+                        null
                 );
 
                 return new ExploreResponse(
                         postings,
                         category,
-                        addressService.getUsersLocation(user)
+                        searchLocation
                 );
             }
         }
@@ -94,8 +106,18 @@ public class ExploreService {
         );
     }
 
-    public LocationFilteredExploreResponse filterPostingsByLocation(String locHash, String category) {
-        LocationQuery location = urlService.decodeCoordinates(locHash);
+    public ExploreResponse filterPostingsByLocation(String locHash, String category) {
+        LocationQuery location;
+
+        try {
+             location = urlService.decodeCoordinates(locHash);
+        } catch(Exception e) {
+            log.info(e.getMessage());
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Location not found"
+            );
+        }
 
         if(!List.of(2,5,10,15,20,30,50).contains(location.radius().intValue())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid location coordinates");
@@ -113,11 +135,18 @@ public class ExploreService {
 
         List<PostingResource> filtered = postingService.filterPostingsByLocationAndCategory(location, category);
 
-        return new LocationFilteredExploreResponse(
+        FilteredLocationData searchLocation = new FilteredLocationData(
+                location.latitude(),
+                location.longitude(),
+                location.radius(),
+                "Ubicación",
+                locHash
+        );
+
+        return new ExploreResponse(
                 filtered,
                 category,
-                location,
-                locHash
+                searchLocation
         );
     }
 }

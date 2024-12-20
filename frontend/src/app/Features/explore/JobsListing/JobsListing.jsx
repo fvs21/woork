@@ -5,19 +5,21 @@ import styles from "./JobsListing.module.scss";
 import JobPosting from "@/components/JobPosting/JobPosting";
 import { useFetchPostings } from "@/api/hooks/postings";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import { Categories } from "@/services/Categories";
 
-export default function JobsListings() {
+export default function JobsListings({location = null}) {
     const searchParams = useSearchParams();
-    const category_tag = searchParams.get('category_tag');
+    const category_tag = searchParams.get('category_tag') || Categories.Jardinería;
 
-    const { data, isLoading } = useFetchPostings(category_tag);
-
+    const { data, isLoading } = useFetchPostings(category_tag, location);
+    
     if(isLoading)
         return <LoadingScreen />
 
+
     if(data?.postings?.length == 0) {
         return (
-            <div className={styles['noPostings']}>
+            <div className={styles.noPostings}>
                 No hay ningún anuncio de trabajo que cumpla con los filtros de búsqueda...
             </div>
         )
@@ -26,14 +28,17 @@ export default function JobsListings() {
     return (
         <div className={styles.jobsListingContainer}>
             {data?.postings?.map(function(posting, i) {
-                    return <JobPosting 
-                                key={i} 
-                                href={"/posting/" + posting.url} 
-                                images={posting.images_urls} 
-                                title={posting.title}
-                                description={posting.description} 
-                                price={`${posting.price}`}
-                                creator={posting.creator} />
+                    return (
+                        <JobPosting 
+                            key={i} 
+                            href={"/posting/" + posting.url} 
+                            images={posting.images_urls} 
+                            title={posting.title}
+                            description={posting.description} 
+                            price={`${posting.price}`}
+                            creator={posting.creator} 
+                        />
+                    )
                 })
             }
         </div>

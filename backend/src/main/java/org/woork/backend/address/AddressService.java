@@ -37,13 +37,11 @@ import java.util.stream.Collectors;
 @Service
 public class AddressService {
     private static final Log log = LogFactory.getLog(AddressService.class);
-    private final AddressRepository locationRepository;
     private final AddressRepository addressRepository;
     private final PostingRepository postingRepository;
 
     @Autowired
     public AddressService(AddressRepository locationRepository, AddressRepository addressRepository, PostingRepository postingRepository) {
-        this.locationRepository = locationRepository;
         this.addressRepository = addressRepository;
         this.postingRepository = postingRepository;
     }
@@ -94,7 +92,7 @@ public class AddressService {
         address.setZipCode(request.getZipCode());
         address.setNumber(request.getNumber());
         address.setAddress_name(request.getAddress_name());
-        return locationRepository.save(address);
+        return addressRepository.save(address);
     }
 
     public Address createAddress(PostingLocation request) {
@@ -117,15 +115,15 @@ public class AddressService {
         address.setAddress_name(request.address_name());
         address.setNumber(request.number());
         address.setZipCode(request.zip_code());
-        address.setLatitude(address.getLatitude());
-        address.setLongitude(address.getLongitude());
+        address.setLatitude(request.latitude().doubleValue());
+        address.setLongitude(request.longitude().doubleValue());
         address.setDisplay_lat(displayCoords.latitude());
         address.setDisplay_long(displayCoords.longitude());
-        return locationRepository.save(address);
+        return addressRepository.save(address);
     }
 
     public Address updateAddress(Long locationId, UpdateAddressRequest request) {
-        Address address = locationRepository.findById(locationId).orElse(new Address());
+        Address address = addressRepository.findById(locationId).orElse(new Address());
         String country = request.getCountry();
         String state = request.getState();
         String city = request.getCity();
@@ -140,30 +138,7 @@ public class AddressService {
         address.setNumber(request.getNumber());
         address.setZipCode(request.getZipCode());
         address.setAddress_name(request.getAddress_name());
-        return locationRepository.save(address);
-    }
-
-    public AddressResource getAddress(Long id) {
-        Address address = locationRepository.findById(id).orElseThrow(null);
-        return new AddressResource(address);
-    }
-
-    public UserLocation getUsersLocation(User user) {
-        if(user.getAddress() == null)
-            return null;
-
-        Address address = user.getAddress();
-        if(address.getLatitude() != null && address.getLongitude() != null) {
-            return new UserLocation(
-                    new Coordinates(
-                            address.getLatitude(),
-                            address.getLongitude()
-                    ),
-                    address.getAddress_name()
-            );
-        }
-
-        return null;
+        return addressRepository.save(address);
     }
 
     public void deleteAddedAddress(Long id, User user) {
@@ -177,12 +152,12 @@ public class AddressService {
             throw new UnableToDeleteAddressException("You cannot delete other's person address");
         }
 
-        Address address = locationRepository.findById(id).orElse(null);
+        Address address = addressRepository.findById(id).orElse(null);
         if(address == null)
             throw new UnableToDeleteAddressException("Address does not exist");
 
         postingRepository.deleteAll(createdPostings);
-        locationRepository.delete(address);
+        addressRepository.delete(address);
     }
 
     private Double randomDecimal(Double min, Double max, int digits) {
@@ -247,6 +222,7 @@ public class AddressService {
         //display coords
         address.updateCoords(lat, lon);
         address.updateDisplayCoords(coords.latitude(), coords.longitude());
+        addressRepository.save(address);
     }
 
     public List<Address> filterLocationsByCoords(LocationQuery locationQuery) {

@@ -11,15 +11,16 @@ import { useMutation } from "react-query";
 import Alert from "@/components/Alert/Alert";
 import { useUser } from "@/api/hooks/user";
 import { useTheme } from "@/hooks/theme";
-import { useDeleteAddress, useGetCreatedAddresses } from "@/api/hooks/postings";
+import { useAddedAddresses, useDeleteAddress, useFetchCreatedAddresses } from "@/api/hooks/postings";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
 
 export default function SelectLocationModal({location, setLocation, setDisplayModal}) {
     const [user] = useUser();
     const [theme] = useTheme();
 
-    const { data: added_addresses, isLoading } = useGetCreatedAddresses();
+    const { data: added_addresses, isLoading } = useFetchCreatedAddresses();
     const { deleteAddrs } = useDeleteAddress();
+    const [, setAddresses] = useAddedAddresses();
 
     const [newLocationModal, setNewLocationModal] = useState(false);
     const [mapModal, setMapModal] = useState(false);
@@ -48,16 +49,6 @@ export default function SelectLocationModal({location, setLocation, setDisplayMo
         setLocation();
     }
 
-    const { mutateAsync: deleteAddressFn } = useMutation({
-        mutationFn: async (id) => {
-            return axios.delete("/address/" + id,
-                {
-                    withCredentials: true
-                }
-            );
-        }
-    });
-
     if(isLoading) {
         return (
             <LoadingModal />
@@ -66,12 +57,11 @@ export default function SelectLocationModal({location, setLocation, setDisplayMo
 
     async function deleteAddress(id, index) {
         try {
-            await deleteAddressFn(id);
+            await deleteAddrs(id, index);
             setDeleteAlertModal(false);
             let arr = [...added_addresses];
             arr.splice(index, 1);
-            setAddedAddresses(arr);
-            
+            setAddresses(arr);
             if(location?.id == id)
                 setLocation();
         } catch(error) {
@@ -143,7 +133,7 @@ export default function SelectLocationModal({location, setLocation, setDisplayMo
                                 </button>
                             </li>   
                         }
-                        {added_addresses && added_addresses.map(function(address, i) {
+                        {added_addresses && added_addresses?.map(function(address, i) {
                             return (
                                 <li key={address?.id} style={{position: "relative"}}>
                                     <button 

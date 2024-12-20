@@ -42,7 +42,9 @@ export const getUser = async (accessToken) => {
         const json = await data.json();
 
         return json;
-    } catch {
+    } catch(error) {
+        console.log(error);
+        
         return null;
     }
 }

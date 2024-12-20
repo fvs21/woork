@@ -2,23 +2,6 @@ import { useAtom } from "jotai";
 import { appPropsAtom, notificationsAtom, searchLocationAtom, userAtom } from "./store";
 
 /** 
-export const useUser = () => {
-    return useAtom(userAtom);
-}
-
-export const useAddedAddresses = () => {
-    const [props, setProps] = useAtom(appPropsAtom);
-
-    function changeAddedAddresses(addresses) {
-        setProps({
-            ...props,
-            added_addresses: addresses
-        })
-    }
-
-    return [props.added_addresses, changeAddedAddresses];
-}
-
 export const useNotifications = () => {
     const [notifications, setNotifications] = useAtom(notificationsAtom);
 

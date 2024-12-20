@@ -3,6 +3,7 @@ import QueryProvider from "@/context/QueryProvider";
 import ThemeProvider from "@/context/ThemeProvider";
 import "@/styles/globals.scss";
 import FlashRenderer from "@/flash-message/components/FlashRenderer";
+import JotaiProvider from "@/jotai/JotaiProvider";
 
 export const metadata = {
   title: "Woork"
@@ -18,8 +19,10 @@ export default function RootLayout({ children }) {
         <QueryProvider>
           <ThemeProvider>
             <AuthProvider>
-              {children}
-              <FlashRenderer />
+              <JotaiProvider>
+                {children}
+                <FlashRenderer />
+              </JotaiProvider>
             </AuthProvider>
           </ThemeProvider>
         </QueryProvider>
