@@ -5,7 +5,9 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.woork.backend.annotations.InEnum;
 import org.woork.backend.posting.Categories;
@@ -14,7 +16,9 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class PostingRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class CreatePostingRequest {
     @NotBlank(message = "Es requisito colocar un título.")
     private String title;
 
@@ -26,21 +30,9 @@ public class PostingRequest {
     @NotNull(message = "Es requisito elegir un precio.")
     private BigDecimal price;
 
-    private PostingLocationRequest address;
+    private PostingLocationRequest location;
 
     @NotEmpty(message = "Es requisito elegir una categoría.")
     @InEnum(enumClass = Categories.class, message = "Categoría invalida.")
     private String category;
-
-    public PostingRequest(String title, String description, BigDecimal price, PostingLocationRequest addressResource, String category) {
-        this.title = title;
-        this.description = description;
-        this.price = price;
-        this.address = addressResource;
-        this.category = category;
-    }
-
-    public PostingRequest() {
-
-    }
 }

@@ -69,7 +69,7 @@ export const validateAddress = (address) => {
     if(!validateNumber(address?.number)) {
         return false;
     }
-    if(!validateNumber(address?.zipCode)) {
+    if(!validateNumber(address?.zip_code)) {
         return false;
     }
     return true;

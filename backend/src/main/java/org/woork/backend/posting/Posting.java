@@ -35,13 +35,14 @@ public class Posting {
 
     private String title;
 
+    @Column(length = 450)
     private String description;
 
     @Digits(integer = 5, fraction = 2)
     private BigDecimal price;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "posting_address_id", referencedColumnName = "address_id", nullable = false)
     private Address address;
 
     @ManyToOne
@@ -53,7 +54,7 @@ public class Posting {
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Image> images;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "posting")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "posting")
     private Set<PostingApplication> postingApplications;
 
     @OneToOne

@@ -1,8 +1,8 @@
 import Navbar from "@/components/Navbar/Navbar";
 import { useState } from 'react';
-import JobsListings from "@/features/jobslisting/JobsListing";
+import JobsListings from "@/features/explore/JobsListing/JobsListing";
 import styles from "./Explore.module.scss";
-import JobFilters from "@/features/jobfilters/JobFilters";
+import JobFilters from "@/features/explore/JobsFilter/JobFilters";
 
 export default function Explore({ auth, category_tag }) {
     const [category, setCategory] = useState(category_tag);

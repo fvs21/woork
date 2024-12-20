@@ -15,6 +15,8 @@ import { useTheme } from "@/hooks/theme";
 import Link from "next/link";
 import { useCreatePosting } from "@/api/hooks/postings";
 import { useRouter } from "next/navigation";
+import LoadingModal from "@/components/LoadingModal/LoadingModal";
+import { useQueryClient } from "react-query";
 
 const SelectLocationModal = lazy(() => import("./SelectLocationModal"));
 
@@ -27,13 +29,13 @@ export default function CreatePostingForm() {
     const [price, setPrice] = useState("");
     const [location, setLocation] = useState();
     const [equipmentRequired, setEquipmentRequired] = useState(false);
-
     const [images, setImages] = useState([null, null, null]);
 
     const [selectLocationModal, setSelectLocationModal] = useState(false);
 
     const { create, isLoading } = useCreatePosting();
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const body = {
         title: title,
@@ -43,7 +45,7 @@ export default function CreatePostingForm() {
         location: location,
     }
 
-    //images preview variables
+    //right side images preview variables
     const [imagePreviewed, setImagePreviewed] = useState(0);
     const [imagesToPreview, setImagesToPreview] = useState([]);
 
@@ -60,29 +62,29 @@ export default function CreatePostingForm() {
 
     }
 
-
     async function handleSubmit(e) {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append("body", JSON.stringify(body));
+        formData.append("posting", JSON.stringify(body));
 
         let count = 1;
         for(let i = 0; i<images.length; i++) {
             const img = images[i];
             if(img != null) {
-                formData.append("img" + count, images[i]);
+                formData.append("images", images[i]);
                 count++;
             }
         }
 
         try {
-            const request = await create(formData);
-            console.log(request);
+            await create(formData);
+            queryClient.invalidateQueries({
+                queryKey: ['posting', category]
+            });
             router.push("/explore");
         } catch(error) {
-            console.log(error);
-            
+            flash(error.response.data.message, 4000, "error");
         }
     }
 
@@ -169,7 +171,7 @@ export default function CreatePostingForm() {
                         </form>
                     </div>
                     {selectLocationModal && 
-                        <Suspense fallback={<LoadingScreen />}>
+                        <Suspense fallback={<LoadingModal />}>
                             <SelectLocationModal 
                                 setDisplayModal={setSelectLocationModal}
                                 location={location}

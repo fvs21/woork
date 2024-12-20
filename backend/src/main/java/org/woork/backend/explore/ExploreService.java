@@ -49,15 +49,13 @@ public class ExploreService {
     }
 
     public ExploreResponse listPostingsDefault(String category) {
-        if(category != null) {
-            if (!Categories.getCodes().contains(category)) {
-                throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Category not found"
-                );
-            }
-        } else {
-            category = Categories.JARDINERIA.toString();
+        System.out.println(category);
+        if (!Categories.getCodes().contains(category)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Category not found"
+            );
         }
+
         if (authenticationService.isUserAuthenticated()) {
             User user = authenticationService.getCurrentUser();
             Address userAddress = user.getAddress();

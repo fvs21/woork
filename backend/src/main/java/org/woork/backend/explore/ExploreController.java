@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.woork.backend.explore.responses.ExploreResponse;
 import org.woork.backend.explore.responses.LocationFilteredExploreResponse;
+import org.woork.backend.posting.Categories;
 
 
 import java.util.*;
@@ -23,17 +24,17 @@ public class ExploreController {
 
 
     @GetMapping()
-    public ExploreResponse index(@RequestParam("category") Optional<String> category_tag) {
-        String category = category_tag.orElse(null);
+    public ExploreResponse index(@RequestParam("category_tag") Optional<String> category_tag) {
+        String category = category_tag.orElse(Categories.JARDINERIA.toString());
         return exploreService.listPostingsDefault(category);
     }
 
     @GetMapping("/{loc}")
     public LocationFilteredExploreResponse filterByLocation(
             @PathVariable String loc,
-            @RequestParam("category") Optional<String> category_tag
+            @RequestParam("category_tag") Optional<String> category_tag
     ) {
-        String category = category_tag.orElse(null);
+        String category = category_tag.orElse(Categories.JARDINERIA.toString());
         return exploreService.filterPostingsByLocation(loc, category);
     }
 }

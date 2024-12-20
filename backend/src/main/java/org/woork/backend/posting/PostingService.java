@@ -6,7 +6,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +21,9 @@ import org.woork.backend.address.AddressService;
 import org.woork.backend.notification.NotificationService;
 import org.woork.backend.notification.NotificationType;
 import org.woork.backend.notification.records.NotificationData;
+import org.woork.backend.posting.records.PostingLocation;
 import org.woork.backend.posting.requests.PostingLocationRequest;
-import org.woork.backend.posting.requests.PostingRequest;
+import org.woork.backend.posting.requests.CreatePostingRequest;
 import org.woork.backend.posting.resources.PostingResource;
 import org.woork.backend.postingapplication.PostingApplication;
 import org.woork.backend.postingapplication.PostingApplicationRepository;
@@ -73,22 +73,25 @@ public class PostingService {
         this.notificationService = notificationService;
     }
 
-    private PostingRequest decodeJson(String body) {
+    private CreatePostingRequest decodeJson(String body) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(body, PostingRequest.class);
+            return objectMapper.readValue(body, CreatePostingRequest.class);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
             throw new UnableToCreatePostingException();
         }
     }
 
-    public Address getLocationForPosting(User author, PostingLocationRequest addressRequest) {
-        if(!addressRequest.isCreate()) {
-            if(addressRequest.getId() == null)
+    public Address getLocationForPosting(User author, PostingLocationRequest locationRequest) {
+        PostingLocation location = locationRequest.getLocation();
+        validator.validateFields(location);
+
+        if(!locationRequest.isCreate()) {
+            if(location.id() == null)
                 throw new UnableToCreatePostingException("Forbidden action.");
 
-            Long locId = addressRequest.getId();
+            Long locId = location.id();
 
             if(!Objects.equals(author.getAddress().getId(), locId)) {
                 Set<Posting> userLocations = postingRepository.findByAuthor_Id(author.getId()).orElse(new HashSet<>());
@@ -98,26 +101,24 @@ public class PostingService {
                 }
             }
 
-            Address addressObject = addressRepository.findById(locId).orElse(null);
-            if(addressObject == null) {
-                throw new UnableToCreatePostingException("Forbidden action. Invalid location id.");
-            }
+            Address addressObject = addressRepository.findById(locId).orElseThrow(() -> new UnableToCreatePostingException("Forbidden action. Invalid location id."));
 
-            if(addressObject.getLatitude() == null) {
-                if(addressRequest.getLatitude() == null && addressRequest.getLongitude() == null) {
+            if(addressObject.getLatitude() == null || addressObject.getLongitude() == null) {
+                if(location.latitude() == null && location.longitude() == null) {
                     throw new UnableToCreatePostingException("Latitude and longitude required");
                 }
-                addressService.storeCoordinates(addressObject, addressRequest.getLatitude().doubleValue(), addressRequest.getLongitude().doubleValue());
+
+                addressService.storeCoordinates(addressObject, location.latitude().doubleValue(), location.longitude().doubleValue());
             }
 
             return addressObject;
         } else {
-            if(addressRequest.getLatitude() == null && addressRequest.getLongitude() == null) {
+            if(location.latitude() == null && location.longitude() == null) {
                 throw new UnableToCreatePostingException("Latitude and longitude required.");
             }
 
             try {
-                return addressService.createAddress(addressRequest);
+                return addressService.createAddress(location);
             } catch(InvalidLocationException e) {
                 throw new UnableToCreatePostingException(e.getMessage());
             }
@@ -125,9 +126,9 @@ public class PostingService {
     }
 
     public PostingResource createPosting(User author, String body, List<MultipartFile> images) {
-        PostingRequest postingRequest = decodeJson(body);
-        PostingLocationRequest addressRequest = postingRequest.getAddress();
-        validator.validateFields(postingRequest);
+        CreatePostingRequest createPostingRequest = decodeJson(body);
+        PostingLocationRequest addressRequest = createPostingRequest.getLocation();
+        validator.validateFields(createPostingRequest);
         validator.validateFields(addressRequest);
         if(images.size() > 3)
             throw new UnableToCreatePostingException("Image upload size exceeded.");
@@ -138,10 +139,10 @@ public class PostingService {
         Address postingLocation = getLocationForPosting(author, addressRequest);
 
         Posting posting = new Posting();
-        posting.setTitle(postingRequest.getTitle());
-        posting.setDescription(postingRequest.getDescription());
-        posting.setCategory(postingRequest.getCategory());
-        posting.setPrice(postingRequest.getPrice());
+        posting.setTitle(createPostingRequest.getTitle());
+        posting.setDescription(createPostingRequest.getDescription());
+        posting.setCategory(createPostingRequest.getCategory());
+        posting.setPrice(createPostingRequest.getPrice());
         posting.setAddress(postingLocation);
         posting.setAuthor(author);
 

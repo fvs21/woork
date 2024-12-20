@@ -23,7 +23,7 @@ public class BackendApplication {
         SpringApplication.run(BackendApplication.class, args);
     }
 
-
+//
 //    @Bean
 //    CommandLineRunner run(ImageRepository imageRepository) {
 //        return args -> {

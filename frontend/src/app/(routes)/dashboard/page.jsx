@@ -105,7 +105,7 @@ export default function Page() {
                     <li className={styles['nav-bar-header']}>
                         <div className={styles['header-container']}>
                             <div style={{display: "flex", alignItems: "center"}}>
-                                <Link href="/">
+                                <Link href="/explore">
                                     <ArrowBackSVG width={"20px"} color={theme == 'dark' ? 'white' : 'black'} />
                                 </Link>
                             </div>

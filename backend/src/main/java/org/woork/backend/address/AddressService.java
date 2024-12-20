@@ -19,7 +19,7 @@ import org.woork.backend.exceptions.UnableToDeleteAddressException;
 import org.woork.backend.exceptions.UnableToFetchSearchLocationException;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.posting.PostingRepository;
-import org.woork.backend.posting.requests.PostingLocationRequest;
+import org.woork.backend.posting.records.PostingLocation;
 import org.woork.backend.posting.resources.FetchedLocationResource;
 import org.woork.backend.user.User;
 import org.woork.backend.utils.CustomStringUtils;
@@ -97,26 +97,26 @@ public class AddressService {
         return locationRepository.save(address);
     }
 
-    public Address createAddress(PostingLocationRequest request) {
+    public Address createAddress(PostingLocation request) {
         Address address = new Address();
 
-        String country = request.getCountry();
-        String state = request.getState();
-        String city = request.getCity();
+        String country = request.country();
+        String state = request.state();
+        String city = request.city();
 
         if(!validateCountryStateAndCity(country, state, city)) {
             throw new InvalidLocationException();
         }
 
-        Coordinates displayCoords = createRandomCoordsForDisplay(request.getLatitude().doubleValue(), request.getLongitude().doubleValue());
+        Coordinates displayCoords = createRandomCoordsForDisplay(request.latitude().doubleValue(), request.latitude().doubleValue());
 
-        address.setCountry(request.getCountry());
-        address.setCity(request.getCity());
-        address.setState(request.getState());
-        address.setStreet(request.getStreet());
-        address.setAddress_name(request.getAddress_name());
-        address.setNumber(request.getNumber());
-        address.setZipCode(request.getZipCode());
+        address.setCountry(request.country());
+        address.setCity(request.city());
+        address.setState(request.state());
+        address.setStreet(request.street());
+        address.setAddress_name(request.address_name());
+        address.setNumber(request.number());
+        address.setZipCode(request.zip_code());
         address.setLatitude(address.getLatitude());
         address.setLongitude(address.getLongitude());
         address.setDisplay_lat(displayCoords.latitude());

@@ -41,7 +41,7 @@ public class PostingResource {
 
         Set<Image> images = posting.getImages();
         this.images_urls = images.stream().map(
-                Image::getImageUrl
+                image -> "http://localhost:8000" + image.getImageUrl()
         ).collect(Collectors.toSet());
         this.url = url;
         this.creator = posting.getAuthor().getFullName()    ;

@@ -27,7 +27,7 @@ export async function middleware(request) {
     const isAuthenticated = cookie != null;
 
     if(isAuthenticated && guestRoutes.includes(path)) {
-        return NextResponse.redirect(new URL('/dashboard', request.nextUrl));
+        return NextResponse.redirect(new URL('/explore', request.nextUrl));
     }
 
     if(!isAuthenticated && (dynamicAuthRoutes.some((elem) => path.startsWith(elem)) || authenticatedRoutes.includes(path))) {

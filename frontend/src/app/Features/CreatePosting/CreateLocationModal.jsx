@@ -5,11 +5,10 @@ import ArrowBackSVG from "@/components/SVGs/ArrowBack";
 import InputLabel from "@/components/ValidatedInput/InputLabel";
 import CountriesSelector from "@/components/CountriesSelector/CountriesSelector";
 import SubmitButton from "@/components/SubmitButton/SubmitButton";
-import {default as countries_list} from "@/Services/countries/countries";
 import { validateAddress, validateNumber, validateStreet } from "@/services/validators";
 import { loadCities, loadStates } from "@/utils/location/LocationUtils";
-import TextInput from "@/components/TextInput/TextInput";
 import { useTheme } from "@/hooks/theme";
+import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
 
 export default function CreateLocationModal({location, setLocation, setNewLocationModal, setMapModal}) {
     const [theme] = useTheme();
@@ -19,16 +18,16 @@ export default function CreateLocationModal({location, setLocation, setNewLocati
         country: location?.location?.country || "",
         state: location?.location?.state || "",
         city: location?.location?.city || "",
-        zipCode: location?.location?.zipCode || "",
+        zip_code: location?.location?.zip_code || "",
         street: location?.location?.street || "",
         number: location?.location?.number || "",
         latitude: location?.location?.latitude || "",
         longitude: location?.location?.longitude || ""
     });
     
-    const [countries, setCountries] = useState(countries_list);
-    const [states, setStates] = useState(address?.state ? [address.state] : []);
-    const [cities, setCities] = useState(address?.city ? [address.city] : []);
+    const countries = require("@/services/countries/countries.json");
+    const [states, setStates] = useState(address?.state ? loadStates(address.country): []);
+    const [cities, setCities] = useState(address?.city ? loadCities(address.country, address.state) : []);
 
     const [nameValid, setNameValid] = useState(true);
     const [zipCodeValid, setZipCodeValid] = useState(true);
@@ -53,16 +52,8 @@ export default function CreateLocationModal({location, setLocation, setNewLocati
         setAddress({
             ...address,
             country: value
-
         });
-
-        loadStates(value)
-        .then((states) => {
-            setStates(states.default);
-            if(cities) {
-                setCities([]);
-            }
-        })
+        setStates(loadStates(value));
     }
 
     function changeState(value) {
@@ -70,23 +61,20 @@ export default function CreateLocationModal({location, setLocation, setNewLocati
             ...address,
             state: value
         });
-        loadCities(address?.country, value)
-        .then((cities) => {
-            setCities(cities.default);
-        });
+        setCities(loadCities(address.country, value));
     }
 
     function changeCity(value) {
         setAddress({
             ...address,
             city: value
-        });
+        })
     }
 
     function changeZipCode(value) {
         setAddress({
             ...address,
-            zipCode: value
+            zip_code: value
         });
         setZipCodeValid(validateNumber(value));
     }
@@ -144,7 +132,7 @@ export default function CreateLocationModal({location, setLocation, setNewLocati
                 <form onSubmit={handleSubmit}>
                     <div className={styles['address-container']}>
                         <div className={styles['input-field']}>
-                            <TextInput 
+                            <ValidatedInput 
                                 name={"address_name"}
                                 className={styles.createLocationModalInputs}
                                 valid={nameValid} 
@@ -180,7 +168,7 @@ export default function CreateLocationModal({location, setLocation, setNewLocati
                             </div>
                         </div>
                         <div className={styles['input-field']}>
-                            <TextInput 
+                            <ValidatedInput 
                                 name={"street"}
                                 className={styles.createLocationModalInputs}
                                 valid={streetValid} 
@@ -190,7 +178,7 @@ export default function CreateLocationModal({location, setLocation, setNewLocati
                                 setValue={changeStreet}/>
                         </div>
                         <div className={`${styles['address-fields']} ${styles['input-field']}`}>
-                            <TextInput  
+                            <ValidatedInput  
                                 name={"number"}    
                                 className={styles.createLocationModalInputs}                     
                                 valid={numberValid} 
@@ -198,18 +186,20 @@ export default function CreateLocationModal({location, setLocation, setNewLocati
                                 label={"Departamento/Número de casa"} 
                                 value={address?.number}
                                 setValue={changeHouseNumber}/>
-                            <TextInput 
+                            <ValidatedInput 
                                 name={"zip_code"}
                                 className={styles.createLocationModalInputs}
                                 valid={zipCodeValid} 
                                 placeholder={"Código postal"} 
                                 label={"Código postal"} 
-                                value={address?.zipCode} 
+                                value={address?.zip_code} 
                                 setValue={changeZipCode}/>
                         </div>
                     </div>
                     <div className={styles['save-btn-container']}>
-                        <SubmitButton active={validateAddress(address)}>Guardar</SubmitButton>
+                        <SubmitButton active={validateAddress(address)}>
+                            Guardar
+                        </SubmitButton>
                     </div>
                 </form>
             </div>

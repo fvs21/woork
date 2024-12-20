@@ -10,12 +10,14 @@ import { apiGuest } from "@/api/axios";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 //import { useSearchLocation } from "@/jotai/user";
 import { svgColor } from "@/utils/extra/utils";
-import { useRouter } from "next/router";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Categories } from "@/services/Categories";
 
 export default function LocationFilter({setDisplayModal}) {
-    const category_tag = "njfdñsnf"
+    const searchParams = useSearchParams();
+    const category_tag = searchParams.get('category_tag') || Categories.Jardinería;
 
-    const [searchLoc, setSearchLocation] = undefined;
+    const [searchLoc, setSearchLocation] = useState({});
     const [coordinates, setCoordinates] = useState(searchLoc?.latitude && searchLoc?.longitude 
         ? [searchLoc.latitude, searchLoc.longitude] 
         : [20.971434, -89.629161]);

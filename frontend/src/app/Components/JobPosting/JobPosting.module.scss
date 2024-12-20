@@ -1,16 +1,13 @@
 @use "@/styles/variables" as var;
 
 .posting {
-    border: 1px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
-    background-color: var(--card-bg);
     
     a {
         color: black;
     }
 
-    max-width: 300px;
     min-width: 200px;
 }
 
@@ -22,12 +19,13 @@
 .postingImagesDisplay {
     width: 100%;
     height: 100%;
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
+    //border-bottom-left-radius: 0 !important;
+    //border-bottom-right-radius: 0 !important;
 }
 
 .postingInformation {
-    padding: 8px 12px 12px;
+    //padding: 8px 12px 12px;
+    padding: 8px 0 12px;
 }
 
 .postingTitle {
@@ -37,14 +35,15 @@
 }
 
 .postingDescription {
-    margin-top: .25rem;
-    font-size: 13px;
+    margin-top: var.$margin-xxs;
+    margin-bottom: var.$margin-xs;
+    font-size: 14px;
     color: var(--text-secondary-color);
-    height: 50px;
+    max-height: 50px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     white-space: pre-wrap;
     overflow-wrap: break-word;

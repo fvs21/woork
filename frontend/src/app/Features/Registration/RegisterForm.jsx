@@ -13,6 +13,7 @@ import { stringifyDateOfBirth } from "@/utils/authentication/RegisterUtils";
 import Form from "@/components/Form/Form";
 import { useRegister } from "@/api/hooks/authentication";
 import { useRouter } from "next/navigation";
+import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
 
 export default function RegisterForm() {
     const day = new Date().getDate();
@@ -102,8 +103,8 @@ export default function RegisterForm() {
                             <Link className={styles['disclaimer-links']} href="#"> política de privacidad</Link>.</span>
                     </div>
                     <div className={styles['submit-button-container']}>
-                        <SubmitButton 
-                            active={true}>Regístrate
+                        <SubmitButton active={true}>
+                            {isLoading ? <LoadingSpinnerClear width={"18px"} /> : "Regístrate"}
                         </SubmitButton>
                     </div>
                 </form>

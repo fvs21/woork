@@ -22,7 +22,7 @@ export default function AddressModal({closeModal}) {
         country: location?.country || "",
         state: location?.state || "",
         city: location?.city || "",
-        zipCode: location?.zip_code || "",
+        zip_code: location?.zip_code || "",
         street: location?.street || "",
         number: location?.number || ""
     });
@@ -65,7 +65,7 @@ export default function AddressModal({closeModal}) {
     function changeZipCode(value) {
         setAddress({
             ...address,
-            zipCode: value
+            zip_code: value
         });
         setZipCodeValid(validateNumber(value));
     }
@@ -187,7 +187,7 @@ export default function AddressModal({closeModal}) {
                                 valid={zipCodeValid} 
                                 placeholder={"Código postal"} 
                                 label={"Código postal"} 
-                                value={address.zipCode} 
+                                value={address.zip_code} 
                                 setValue={changeZipCode}/>
                         </div>
                     </div>

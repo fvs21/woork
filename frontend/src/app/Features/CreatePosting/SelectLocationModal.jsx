@@ -11,11 +11,15 @@ import { useMutation } from "react-query";
 import Alert from "@/components/Alert/Alert";
 import { useUser } from "@/api/hooks/user";
 import { useTheme } from "@/hooks/theme";
+import { useDeleteAddress, useGetCreatedAddresses } from "@/api/hooks/postings";
+import LoadingModal from "@/components/LoadingModal/LoadingModal";
 
 export default function SelectLocationModal({location, setLocation, setDisplayModal}) {
     const [user] = useUser();
     const [theme] = useTheme();
-    const [added_addresses, setAddedAddresses] = useState([]);
+
+    const { data: added_addresses, isLoading } = useGetCreatedAddresses();
+    const { deleteAddrs } = useDeleteAddress();
 
     const [newLocationModal, setNewLocationModal] = useState(false);
     const [mapModal, setMapModal] = useState(false);
@@ -25,15 +29,15 @@ export default function SelectLocationModal({location, setLocation, setDisplayMo
         index: ""
     }); 
 
-    function changeLocation(loc) {
-        if(location?.location?.id != loc.id) {
+    function changeLocation(newLocation) {
+        if(location?.location?.id != newLocation.id) {
             setLocation({
-                location: loc,
+                location: newLocation,
                 create: false
             });
         }
 
-        if(!loc?.latitude && !loc?.longitude)
+        if(!newLocation?.latitude && !newLocation?.longitude)
             setMapModal(true);
         else
             setDisplayModal(false);
@@ -52,7 +56,13 @@ export default function SelectLocationModal({location, setLocation, setDisplayMo
                 }
             );
         }
-    })
+    });
+
+    if(isLoading) {
+        return (
+            <LoadingModal />
+        )
+    }
 
     async function deleteAddress(id, index) {
         try {

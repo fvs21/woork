@@ -2,8 +2,7 @@
 
 import styles from "./JobFilters.module.scss";
 import JobCategoryButton from "@/components/JobCategoryButton/JobCategoryButton";
-import { useRouter } from "next/navigation";
-import { CategoriesList } from "@/services/Categories";
+import { Categories, CategoriesList } from "@/services/Categories";
 import LocationSVG from "@/components/SVGs/Location";
 import { useEffect, useRef, useState } from "react";
 import ArrowBackSVG from "@/components/SVGs/ArrowBack";
@@ -14,10 +13,11 @@ import { useTheme } from "@/hooks/theme";
 import { lazy } from "react";
 import { Suspense } from "react";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
+import { useSearchParams } from "next/navigation";
 
 const LocationFilter = lazy(() => import("./LocationFilter"));
 
-export default function JobFilters({category, setCategory}) {
+export default function JobFilters() {
     const [locationFilter, setLocationFilter] = useState(false);
     const categoriesRef = useRef(null);
     const [scrollLeft, setScrollLeft] = useState(0);
@@ -27,18 +27,18 @@ export default function JobFilters({category, setCategory}) {
     //const [searchLocation] = useSearchLocation();
 
     const [theme] = useTheme();
-
     const color = theme == 'dark' ? "white" : "black";
 
-    const router = useRouter();
+    const searchParams = useSearchParams();
+    const category = searchParams.get('category_tag') || Categories.Jardinería;
+    
 
     function clickCategory(category) {
-        setCategory(category);
-        return;
-        if(searchLocation?.id)
-            router.push(`/explore/${searchLocation.id}?category_tag=${category}`);
+        //setCategory(category);
+        if(false)
+            window.history.replaceState(null, '', `/explore/${searchLocation.id}?category_tag=${category}`);
         else
-            router.push(`/explore?category_tag=${category}`);
+            window.history.replaceState(null, '', `/explore?category_tag=${category}`);
     }
 
     function scrollToRight() {
