@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class UnsupportedImageTypeException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class UnsupportedImageTypeException extends DefaultException {
+    private static final String code = "unsupported_image_type";
 
     public UnsupportedImageTypeException() {
-        super("Unsupported image type");
+        super("Unsupported image type", code);
     }
 }

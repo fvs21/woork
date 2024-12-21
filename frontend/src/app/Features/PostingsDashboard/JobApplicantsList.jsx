@@ -3,7 +3,7 @@ import styles from "./PostingsDashboard.module.scss";
 import CloseSVG from "@/components/SVGs/Close";
 import { svgColor } from "@/utils/extra/utils";
 import Applicant from "./Applicant";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "react-query";
 import axios from "@/api/axios";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
 

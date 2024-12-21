@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class InvalidCountryCodeException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class InvalidCountryCodeException extends DefaultException {
+    private static final String code = "invalid_country_code";
 
     public InvalidCountryCodeException() {
-        super("Invalid country code");
+        super("Invalid country code", code);
     }
 }

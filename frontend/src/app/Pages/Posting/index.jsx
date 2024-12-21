@@ -13,7 +13,7 @@ import LoadingModal from "@/components/LoadingModal/LoadingModal";
 
 const JobApplicantsList = lazy(() => import("@/features/postingsdashboard/JobApplicantsList"));
 
-export default function Posting({ data, application_status, flash }) {
+export default function Posting({ data, application_status }) {
     const postingData = data.data;
     const images = postingData?.images_urls;
 

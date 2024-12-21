@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class UnableToUpdateUserException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class UnableToUpdateUserException extends DefaultException {
+    private static final String code = "edit_user_failure";
 
     public UnableToUpdateUserException(String message) {
-        super(message);
+        super(message, code);
     }
 }

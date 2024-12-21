@@ -25,7 +25,7 @@ public class PostingApplication {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "posting_id")
     private Posting posting;
 

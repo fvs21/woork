@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class RefreshTokenExpiredException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class RefreshTokenExpiredException extends DefaultException {
+    private static final String code = "auth_token_expired";
 
     public RefreshTokenExpiredException() {
-        super("Refresh token has expired");
+        super("Refresh token has expired", code);
     }
 }

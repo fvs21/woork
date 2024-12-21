@@ -6,9 +6,6 @@ import org.springframework.security.oauth2.server.resource.InvalidBearerTokenExc
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.List;
-import java.util.Map;
-
 @ControllerAdvice
 public class DefaultExceptionHandler {
     //CONFLICT
@@ -17,11 +14,11 @@ public class DefaultExceptionHandler {
             EmailAlreadyTakenException.class,
             PhoneNumberAlreadyTakenException.class,
             EmailNotAddedException.class,
-            UnableToGenerateVerificationCodeException.class}
-    )
-    public ResponseEntity<DefaultExceptionResponse> handleConflictedRequest(Exception e) {
+            UnableToGenerateVerificationCodeException.class
+    })
+    public ResponseEntity<DefaultExceptionResponse> handleConflictedRequest(DefaultException e) {
         return new ResponseEntity<>(
-                new DefaultExceptionResponse(e.getMessage()),
+                new DefaultExceptionResponse(e.getMessage(), e.getCode() ),
                 HttpStatus.CONFLICT
         );
     }
@@ -37,9 +34,9 @@ public class DefaultExceptionHandler {
             NotificationDoesNotExistException.class,
             PostingDoesNotExistException.class
     })
-    public ResponseEntity<DefaultExceptionResponse> handleNotFoundRequest(Exception e) {
+    public ResponseEntity<DefaultExceptionResponse> handleNotFoundRequest(DefaultException e) {
         return new ResponseEntity<>(
-                new DefaultExceptionResponse(e.getMessage()),
+                new DefaultExceptionResponse(e.getMessage(), e.getCode()),
                 HttpStatus.NOT_FOUND
         );
     }
@@ -47,30 +44,35 @@ public class DefaultExceptionHandler {
 
 
     //TOO MANY REQUEST
-
     @ExceptionHandler({
             CannotRequestResetPasswordException.class
     })
-    public ResponseEntity<DefaultExceptionResponse> handleTooManyRequests(Exception e) {
+    public ResponseEntity<DefaultExceptionResponse> handleTooManyRequests(DefaultException e) {
         return new ResponseEntity<>(
-                new DefaultExceptionResponse(e.getMessage()),
+                new DefaultExceptionResponse(e.getMessage(), e.getCode()),
                 HttpStatus.TOO_MANY_REQUESTS
         );
     }
 
 
-
+    @ExceptionHandler({
+            IncorrectCredentialsException.class
+    })
+    public ResponseEntity<DefaultExceptionResponse> handleIncorrectCredentials(DefaultException e) {
+        return new ResponseEntity<>(
+                new DefaultExceptionResponse(e.getMessage(), e.getCode()),
+                HttpStatus.BAD_REQUEST
+        );
+    }
 
 
     //BAD REQUEST
 
     @ExceptionHandler({
-            IncorrectCredentialsException.class,
             CredentialsNotProvidedException.class,
             InvalidPhoneNumberException.class,
             InvalidCountryCodeException.class,
             InvalidTokenException.class,
-            InvalidBearerTokenException.class,
             RegistrationException.class,
             VerificationCodeExpiredException.class,
             UnsupportedImageTypeException.class,
@@ -81,9 +83,9 @@ public class DefaultExceptionHandler {
             IncorrectVerificationCodeException.class,
             AuthenticationErrorException.class
     })
-    public ResponseEntity<DefaultExceptionResponse> handleBadRequest(Exception e) {
+    public ResponseEntity<DefaultExceptionResponse> handleBadRequest(DefaultException e) {
         return new ResponseEntity<>(
-                new DefaultExceptionResponse(e.getMessage()),
+                new DefaultExceptionResponse(e.getMessage(), e.getCode()),
                 HttpStatus.BAD_REQUEST
         );
     }
@@ -98,6 +100,14 @@ public class DefaultExceptionHandler {
         );
     }
 
+    @ExceptionHandler({InvalidBearerTokenException.class})
+    public ResponseEntity<DefaultExceptionResponse> handleInvalidBearerToken(Exception e) {
+        return new ResponseEntity<>(
+                new DefaultExceptionResponse(e.getMessage()),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
 
     //INTERNAL SERVER ERROR
 
@@ -107,9 +117,9 @@ public class DefaultExceptionHandler {
             UnableToCreatePostingException.class,
             UnableToDeleteImageException.class
     })
-    public ResponseEntity<DefaultExceptionResponse> handleInternalServerError(Exception e) {
+    public ResponseEntity<DefaultExceptionResponse> handleInternalServerError(DefaultException e) {
         return new ResponseEntity<>(
-                new DefaultExceptionResponse(e.getMessage()),
+                new DefaultExceptionResponse(e.getMessage(), e.getCode()),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
@@ -124,14 +134,12 @@ public class DefaultExceptionHandler {
             AccessTokenExpiredException.class,
             RefreshTokenNotPresentException.class
     })
-    public ResponseEntity<DefaultExceptionResponse> handleUnauthorizedRequest(Exception e) {
+    public ResponseEntity<DefaultExceptionResponse> handleUnauthorizedRequest(DefaultException e) {
         return new ResponseEntity<>(
-                new DefaultExceptionResponse(e.getMessage()),
+                new DefaultExceptionResponse(e.getMessage(), e.getCode()),
                 HttpStatus.UNAUTHORIZED
         );
     }
-
-
 
 
     //FORBIDDEN
@@ -140,9 +148,9 @@ public class DefaultExceptionHandler {
             UnableToDeletePostingException.class,
             UnableToApplyToJobException.class
     })
-    public ResponseEntity<DefaultExceptionResponse> handleForbiddenRequest(Exception e) {
+    public ResponseEntity<DefaultExceptionResponse> handleForbiddenRequest(DefaultException e) {
         return new ResponseEntity<>(
-                new DefaultExceptionResponse(e.getMessage()),
+                new DefaultExceptionResponse(e.getMessage(), e.getCode()),
                 HttpStatus.FORBIDDEN
         );
     }

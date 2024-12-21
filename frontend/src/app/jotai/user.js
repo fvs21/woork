@@ -1,5 +1,5 @@
-import { useAtom } from "jotai";
-import { appPropsAtom, notificationsAtom, searchLocationAtom, userAtom } from "./store";
+import { atom } from "jotai";
+export const searchLocationAtom = atom({});
 
 /** 
 export const useNotifications = () => {

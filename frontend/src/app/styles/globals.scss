@@ -129,6 +129,7 @@ select {
     font-size: small;
     color: rgb(199, 0, 0);
     position: absolute;
+    margin-top: var.$margin-xxs;
 }
 
 .success-msg {

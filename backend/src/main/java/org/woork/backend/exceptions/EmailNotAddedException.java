@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class EmailNotAddedException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class EmailNotAddedException extends DefaultException {
+    private static final String code = "";
 
     public EmailNotAddedException() {
-        super("Email not added");
+        super("Something went wrong", code);
     }
 }

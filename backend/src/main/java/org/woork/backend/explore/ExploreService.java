@@ -62,7 +62,7 @@ public class ExploreService {
             User user = authenticationService.getCurrentUser();
             Address userAddress = user.getAddress();
 
-            if (userAddress != null) {
+            if (userAddress != null && (userAddress.getLatitude() != null && userAddress.getLongitude() != null)) {
                 LocationQuery query = new LocationQuery(
                         userAddress.getLatitude(),
                         userAddress.getLongitude(),

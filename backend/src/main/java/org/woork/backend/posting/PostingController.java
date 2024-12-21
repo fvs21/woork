@@ -1,5 +1,7 @@
 package org.woork.backend.posting;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -7,16 +9,19 @@ import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.address.AddressResource;
 import org.woork.backend.address.AddressService;
 import org.woork.backend.authentication.AuthenticationService;
+import org.woork.backend.posting.records.PostingResponse;
 import org.woork.backend.posting.resources.PostingResource;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
 @RequestMapping("api/posting")
 public class PostingController {
+    private static final Log log = LogFactory.getLog(PostingController.class);
     private final PostingService postingService;
     private final UserService userService;
     private final AuthenticationService authenticationService;
@@ -43,7 +48,7 @@ public class PostingController {
 
 
     @GetMapping("/{id}")
-    public PostingResource getPosting(@PathVariable("id") String id) {
+    public PostingResponse getPosting(@PathVariable("id") String id) {
         return postingService.getPostingByHashId(id);
     }
 
@@ -59,5 +64,12 @@ public class PostingController {
 
         addressService.deleteAddedAddress(id, user);
         return "Dirección eliminada.";
+    }
+
+    @PostMapping("/apply")
+    public String applyToJob(@RequestBody Map<String, String> body) {
+        User user = authenticationService.getCurrentUser();
+
+        return postingService.applyToJob(user, body.get("id"));
     }
 }

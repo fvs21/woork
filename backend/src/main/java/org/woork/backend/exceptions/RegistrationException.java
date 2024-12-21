@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class RegistrationException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class RegistrationException extends DefaultException {
+    private static final String code = "invalid_registration";
 
-    public RegistrationException(String message) {
-        super("Registration error: " + message);
+    public RegistrationException(String type) {
+        super("Registration error: " + type, code);
     }
 }

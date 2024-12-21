@@ -32,7 +32,7 @@ public class NotificationService {
         notificationObjectRepository.save(notificationObject);
 
         List<Notification> notifications = data.receivers().stream().map(
-                recevier -> new Notification(recevier, notificationObject)
+                receiver -> new Notification(receiver, notificationObject)
         ).toList();
 
         notificationRepository.saveAll(notifications);

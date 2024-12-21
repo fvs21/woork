@@ -14,6 +14,7 @@ import Form from "@/components/Form/Form";
 import { useRegister } from "@/api/hooks/authentication";
 import { useRouter } from "next/navigation";
 import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
+import { useDobError, useNamesError, usePasswordError, usePhoneNumberError } from "@/jotai/registration/registrationState";
 
 export default function RegisterForm() {
     const day = new Date().getDate();
@@ -24,11 +25,13 @@ export default function RegisterForm() {
         firstName: "",
         lastName: "",
     });
+    const [, setNamesError] = useNamesError();
     
     const [phoneNumber, setPhoneNumber] = useState({
         countryCode: "",
         phone: "",
     });
+    const [, setPhoneNumberError] = usePhoneNumberError();
 
     const [dateOfBirth, setDateOfBirth] = useState({
         month: month,
@@ -36,10 +39,12 @@ export default function RegisterForm() {
         day: day,
         error: false
     });
+    const [, setDobError] = useDobError();
 
     const [password, setPassword] = useState({
         value: "",
     });
+    const [, setPasswordError] = usePasswordError();
 
     const { register, isLoading } = useRegister();
     const router = useRouter();
@@ -53,14 +58,19 @@ export default function RegisterForm() {
         "password": password.value
     }
 
+    const clearErrors = () => {
+        setDobError("");
+        setNamesError("");
+        setPasswordError("");
+        setPhoneNumberError("");
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        clearErrors();
 
         if(!validateAge(stringifyDateOfBirth(dateOfBirth.year, dateOfBirth.month-1, dateOfBirth.day))) {
-            setDateOfBirth({
-                ...dateOfBirth,
-                error: true
-            });
+            setDobError("No cumples con el requisito de edad para poder registrarte.");
         }
 
         if(!validateRegisterBody(body)) {
@@ -71,7 +81,9 @@ export default function RegisterForm() {
             await register(body);
             router.push("/verify-phone");
         } catch(error) {
-            console.log(error);
+            const data = error.response.data;
+
+            setPhoneNumberError(data.message);
         }
     };
 
@@ -94,7 +106,7 @@ export default function RegisterForm() {
                     <RegisterDateInput 
                         dateOfBirth={dateOfBirth} 
                         setDateOfBirth={setDateOfBirth} 
-                        label={true}/>
+                        label={true} />
                     <div className={styles['registration-disclaimers']}>
                         <span>Debes tener más de 18 años para poder registrarte en Woork.</span>
                         <br/><br/>

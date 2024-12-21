@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class ImageNotFoundException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class ImageNotFoundException extends DefaultException {
+    private static final String code = "image_not_found";
 
     public ImageNotFoundException() {
-        super("The image you are looking for could not be found");
+        super("La imagen que buscas no fue encontrada.", code);
     }
 }

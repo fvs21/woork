@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.address.AddressRepository;
 import org.woork.backend.address.AddressResource;
 import org.woork.backend.address.records.LocationQuery;
+import org.woork.backend.authentication.AuthenticationService;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.image.Image;
 import org.woork.backend.image.ImageService;
@@ -22,6 +23,7 @@ import org.woork.backend.notification.NotificationService;
 import org.woork.backend.notification.NotificationType;
 import org.woork.backend.notification.records.NotificationData;
 import org.woork.backend.posting.records.PostingLocation;
+import org.woork.backend.posting.records.PostingResponse;
 import org.woork.backend.posting.requests.PostingLocationRequest;
 import org.woork.backend.posting.requests.CreatePostingRequest;
 import org.woork.backend.posting.resources.PostingResource;
@@ -49,6 +51,7 @@ public class PostingService {
     private final PostingApplicationRepository postingApplicationRepository;
     private final UserService userService;
     private final NotificationService notificationService;
+    private final AuthenticationService authenticationService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -61,7 +64,7 @@ public class PostingService {
             ImageService imageService,
             UrlService urlService,
             ValidatorImpl validator,
-            PostingApplicationRepository postingApplicationRepository, UserService userService, NotificationService notificationService) {
+            PostingApplicationRepository postingApplicationRepository, UserService userService, NotificationService notificationService, AuthenticationService authenticationService) {
         this.postingRepository = postingRepository;
         this.addressService = addressService;
         this.addressRepository = addressRepository;
@@ -71,6 +74,7 @@ public class PostingService {
         this.postingApplicationRepository = postingApplicationRepository;
         this.userService = userService;
         this.notificationService = notificationService;
+        this.authenticationService = authenticationService;
     }
 
     private CreatePostingRequest decodeJson(String body) {
@@ -169,9 +173,23 @@ public class PostingService {
         return posting.getImages();
     }
 
-    public PostingResource getPostingByHashId(String hashId) {
+    public PostingResponse getPostingByHashId(String hashId) {
         Long postingId = urlService.decodeIdFromUrl(hashId).get(0);
-        return getPosting(postingId);
+
+        if(authenticationService.isUserAuthenticated()) {
+            User user = authenticationService.getCurrentUser();
+            String status = getUsersPostingApplicationStatus(user.getId(), postingId);
+
+            return new PostingResponse(
+                    getPosting(postingId),
+                    status
+            );
+        }
+
+        return new PostingResponse(
+                getPosting(postingId),
+                ""
+        );
     }
 
     public PostingResource getPosting(Long id) {
@@ -238,7 +256,9 @@ public class PostingService {
         return postingApplicationRepository.save(postingApplication);
     }
 
-    public String applyToJob(User user, Long postingId) {
+    public String applyToJob(User user, String hashId) {
+        Long postingId = urlService.decodeIdFromUrl(hashId).get(0);
+
         if(!isJobAvailable(postingId)) {
             throw new UnableToApplyToJobException("Job is no longer available.");
         }

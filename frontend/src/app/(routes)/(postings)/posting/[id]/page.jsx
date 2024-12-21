@@ -1,9 +1,12 @@
+import Layout from "@/components/Layout/Layout";
+import PostingView from "@/features/posting/PostingView";
+
 export default async function Posting({params}) {
     const id = (await params).id;
     
     return (
-        <div>
-            {id}
-        </div>
+        <Layout>
+            <PostingView id={id} />
+        </Layout>
     )
 }

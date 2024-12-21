@@ -1,6 +1,8 @@
 package org.woork.backend.posting;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public enum Categories {
@@ -39,5 +41,16 @@ public enum Categories {
 
     public static List<String> getCodes() {
         return Stream.of(Categories.values()).map(Categories::toString).toList();
+    }
+
+    private static final Map<String, Categories> stringToCategory = new HashMap<>();
+    static {
+        for(Categories type : Categories.values()) {
+            stringToCategory.put(type.toString(), type);
+        }
+    }
+
+    public static Categories fromCode(String code) {
+        return stringToCategory.get(code);
     }
 }

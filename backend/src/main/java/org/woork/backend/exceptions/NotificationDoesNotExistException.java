@@ -1,13 +1,13 @@
 package org.woork.backend.exceptions;
 
-public class NotificationDoesNotExistException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class NotificationDoesNotExistException extends DefaultException {
+    private static final String code = "notification_not_found";
 
     public NotificationDoesNotExistException() {
-        super("Notification does not exist");
+        super("Notification does not exist", code);
     }
 
     public NotificationDoesNotExistException(String message) {
-        super(message);
+        super(message, code);
     }
 }

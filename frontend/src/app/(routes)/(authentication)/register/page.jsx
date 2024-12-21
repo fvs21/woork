@@ -16,9 +16,7 @@ export default function Page() {
                 </div>
                 <RegisterForm />
             </div>
-            <div>
-                <Footer />
-            </div>
+            <Footer />
         </div>
     );
 }

@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class InvalidPhoneNumberException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class InvalidPhoneNumberException extends DefaultException {
+    private static final String code = "invalid_phone_number";
 
     public InvalidPhoneNumberException() {
-        super("Invalid phone number");
+        super("Número de telefono invalido.", code);
     }
 }

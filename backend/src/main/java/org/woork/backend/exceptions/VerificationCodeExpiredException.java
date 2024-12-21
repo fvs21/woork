@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class VerificationCodeExpiredException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class VerificationCodeExpiredException extends DefaultException {
+    private static final String code = "verification_code_expired";
 
     public VerificationCodeExpiredException() {
-        super("Verification code expired");
+        super("El código de verificación expiró.", code);
     }
 }

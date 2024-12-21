@@ -8,10 +8,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.woork.backend.image.Image;
+import org.woork.backend.posting.Categories;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.posting.requests.PostingLocationRequest;
 import org.woork.backend.url.UrlService;
 import org.woork.backend.user.User;
+import org.woork.backend.utils.PostingUtils;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -31,6 +33,7 @@ public class PostingResource {
     private boolean isUserCreator;
     private String location_name;
     private Map<String, Double> display_coordinates;
+    private String category;
 
     public PostingResource() {}
 
@@ -51,6 +54,9 @@ public class PostingResource {
         this.display_coordinates = Map.of(
                 "latitude", posting.getAddress().getDisplay_lat(),
                 "longitude", posting.getAddress().getDisplay_long()
+        );
+        this.category = PostingUtils.convertCodeToCategory(
+                posting.getCategory()
         );
     }
 

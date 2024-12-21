@@ -1,10 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class EmailAlreadyTakenException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
+public class EmailAlreadyTakenException extends DefaultException {
+    private static final String code = "email_already_taken";
 
     public EmailAlreadyTakenException() {
-        super("Email provided is already taken");
+        super("El correo electrónico que proporcionaste ya existe", code);
     }
 }

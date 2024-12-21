@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class AccessTokenExpiredException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class AccessTokenExpiredException extends DefaultException {
+    private static final String code = "auth_token_expired";
 
     public AccessTokenExpiredException() {
-        super("Access token has expired");
+        super("Access token has expired", code);
     }
 }

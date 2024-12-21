@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class CredentialsNotProvidedException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class CredentialsNotProvidedException extends DefaultException {
+    private static final String code = "credentials_missing";
 
-    public CredentialsNotProvidedException(String message) {
-        super("Credentials were not provided: " + message);
+    public CredentialsNotProvidedException() {
+        super("Credentials were not provided" , code);
     }
 }

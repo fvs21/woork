@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class InvalidTokenException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class InvalidTokenException extends DefaultException {
+    private static final String code = "invalid_token";
 
     public InvalidTokenException() {
-        super("Invalid token");
+        super("Invalid token", code);
     }
 }

@@ -2,11 +2,12 @@ import { useState } from "react"
 import InputPhone from "@/components/InputPhone/InputPhone";
 import { validatePhoneNumber } from "@/services/validators";
 import styles from "./Registration.module.scss";
+import { usePhoneNumberError } from "@/jotai/registration/registrationState";
 
 export default function RegisterPhoneInput({phoneNumber, setPhoneNumber}) {
     const [phoneNumberValid, setPhoneNumberValid] = useState(true);
 
-    //const errorMsg = usePage().props.errors?.phone || "";
+    const [error] = usePhoneNumberError();
 
     const changeNumber = (value) => {
         setPhoneNumber({
@@ -26,15 +27,15 @@ export default function RegisterPhoneInput({phoneNumber, setPhoneNumber}) {
         <div className={styles['input-field']} >
             <InputPhone
                 className={styles.formInput} 
-                valid={phoneNumberValid} 
+                valid={phoneNumberValid && !error} 
                 countryCode={phoneNumber.countryCode} 
                 number={phoneNumber.phone} 
                 changeNumber={changeNumber} 
                 changeCountryCode={changeCountryCode}
                 label={"Número de teléfono"} 
                 autofocus={false} 
-                errorMsg={""}/>
-            {false && <span className="error-msg">{errorMsg}</span>}
+                errorMsg={""} />
+            {error && <span className="error-msg">{error}</span>}
         </div>
     )
 }

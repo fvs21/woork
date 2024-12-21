@@ -1,9 +1,12 @@
 package org.woork.backend.exceptions;
 
-public class UserDoesNotExistException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+import lombok.Getter;
+import lombok.Setter;
+
+public class UserDoesNotExistException extends DefaultException {
+    private static final String code = "user_does_not_exist";
 
     public UserDoesNotExistException() {
-        super("User does not exist");
+        super("El usuario no existe", code);
     }
 }

@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class UnableToUploadImageException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class UnableToUploadImageException extends DefaultException {
+    private static final String code = "image_upload_failure";
 
     public UnableToUploadImageException() {
-        super("Unable to upload image");
+        super("Ocurrió un error al subir la imagen.", code);
     }
 }

@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class UnableToDownloadImageException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class UnableToDownloadImageException extends DefaultException {
+    private static final String code = "image_download_failure";
 
     public UnableToDownloadImageException() {
-        super("Unable to download image");
+        super("Ocurrió un error al descargar la imagen.", code);
     }
 }

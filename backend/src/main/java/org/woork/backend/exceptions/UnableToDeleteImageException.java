@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class UnableToDeleteImageException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class UnableToDeleteImageException extends DefaultException {
+    private static final String code = "image_deletion_failure";
 
     public UnableToDeleteImageException(String message) {
-        super(message);
+        super(message, code);
     }
 }

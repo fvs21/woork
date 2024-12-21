@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import { api, apiGuest, apiMultipart } from "../axios"
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 
 export const useFetchCreatedAddresses = () => {
     const { data, isLoading } = useQuery({
@@ -95,4 +95,35 @@ export const useSearchLocationId = () => {
     });
 
     return { search };
+}
+
+
+export const usePosting = (id) => {
+    const router = useRouter();
+
+    const { data, isLoading, isError } = useQuery({
+        queryFn: async () => {
+            const request = await api.get(`/posting/${id}`)
+            return request.data;
+        },
+        staleTime: Infinity,
+        retry: false,
+        onError: () => {
+            router.push("/explore");
+        }
+    });
+
+    return { data, isLoading, isError };
+}
+
+export const useApplyToJob = () => {
+    const { mutateAsync: apply, isLoading } = useMutation({
+        mutationFn: async (id) => {
+            return await api.post("/posting/apply", {
+                id: id
+            });
+        }
+    });
+
+    return { apply, isLoading };
 }

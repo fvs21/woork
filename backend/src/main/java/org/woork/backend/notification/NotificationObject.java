@@ -29,7 +29,7 @@ public class NotificationObject {
 
     private Long entity_id;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     private User author;
 
     public NotificationObject() {}

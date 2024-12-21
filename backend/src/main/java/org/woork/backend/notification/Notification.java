@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.woork.backend.user.User;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,11 +27,11 @@ public class Notification {
     @Column(name = "notification_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "notifier_id", referencedColumnName = "user_id")
     private User receiver;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private NotificationObject notificationObject;
 
     private boolean hasRead;
@@ -45,8 +46,8 @@ public class Notification {
         this.isHidden = false;
     }
 
-    public Notification(User notifier, NotificationObject notificationObject) {
-        this.receiver = notifier;
+    public Notification(User receiver, NotificationObject notificationObject) {
+        this.receiver = receiver;
         this.notificationObject = notificationObject;
         this.createdAt = LocalDate.now();
         this.hasRead = false;

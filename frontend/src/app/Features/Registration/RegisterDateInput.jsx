@@ -4,6 +4,7 @@ import InputDate from "@/components/InputDate/InputDate";
 import { validateAge } from "@/services/validators";
 import InputLabel from "@/components/ValidatedInput/InputLabel";
 import styles from "./Registration.module.scss";
+import { useDobError } from "@/jotai/registration/registrationState";
 
 export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}) {
     const [active, setActive] = useState(false);
@@ -13,10 +14,7 @@ export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}) 
     const default_month = new Date().getMonth()+1;
     const default_year = new Date().getFullYear();
 
-    //const { errors } = usePage().props;
-    //const errorMsg = "No cumples con el requisito de edad para poder registrarte.";
-
-    const errors = "";
+    const [error] = useDobError();
 
 
     const changeDateOfBirth = (e) => {
@@ -41,12 +39,8 @@ export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}) 
         }
     }
 
-    function displayError() {
-        if(!dateValid) {
-            if(errors.dob || dateOfBirth.error)
-                return true;
-        }
-    }
+
+    const displayError = !dateValid && error;
 
     useEffect(() => {
         function checkDateOfBirth() {
@@ -78,7 +72,7 @@ export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}) 
                 setActive={setActive} 
                 yearsArray={[...Array(101)].map((x, i) => default_year-100+i)}/>
             {
-                (displayError()) &&  <span style={{position: "absolute"}} className="error-msg">{errorMsg || errors.dob}</span>
+                displayError &&  <span style={{position: "absolute"}} className="error-msg">{error}</span>
             }  
         </div>
     )

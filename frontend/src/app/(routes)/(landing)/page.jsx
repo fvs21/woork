@@ -10,7 +10,7 @@ import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import { useState } from "react";
 import { isEmail } from "@/utils/authentication/LoginUtils";
 import { useTheme } from "../../hooks/theme";
-import { loginUser } from "@/services/auth";
+import { useLogin } from "@/api/hooks/authentication";
 import Link from "next/link";
 
 export default function Page() {
@@ -18,10 +18,12 @@ export default function Page() {
     const [countryCode, setCountryCode] = useState("");
     const [password, setPassword] = useState("");
 
+    const { login } = useLogin();
+
     function handleSubmit(e) {
         e.preventDefault();
 
-        loginUser(
+        login(
             isEmail(credential) ? credential : countryCode+credential,
             password
         );

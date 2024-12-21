@@ -1,13 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class AuthenticationErrorException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-
-    public AuthenticationErrorException() {
-        super("Error authenticating user");
-    }
+public class AuthenticationErrorException extends DefaultException {
+    private static final String code = "authentication_error";
 
     public AuthenticationErrorException(String message) {
-        super(message);
+        super(message, code);
     }
 }

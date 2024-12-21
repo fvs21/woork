@@ -1,9 +1,11 @@
 package org.woork.backend.exceptions;
 
-public class IncorrectCredentialsException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+import org.woork.backend.exceptions.DefaultException;
+
+public class IncorrectCredentialsException extends DefaultException {
+    private static final String code = "login_failure";
 
     public IncorrectCredentialsException() {
-        super("La contraseña que colocaste no es correcta.");
+        super("La contraseña que colocaste no es correcta.", code);
     }
 }

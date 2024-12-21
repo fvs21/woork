@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class PhoneNumberAlreadyTakenException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class PhoneNumberAlreadyTakenException extends DefaultException {
+    private static final String code = "phone_already_taken";
 
     public PhoneNumberAlreadyTakenException() {
-        super("Phone number provided is already taken");
+        super("El número de teléfono que proporcionaste ya está en uso.", code);
     }
 }

@@ -1,9 +1,10 @@
 package org.woork.backend.authentication;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,7 +12,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.woork.backend.authentication.requests.RegistrationRequest;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.passwordreset.PasswordResetService;
@@ -31,8 +31,8 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 @Service
-@Transactional
 public class AuthenticationService {
+    private static final Log log = LogFactory.getLog(AuthenticationService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -107,16 +107,16 @@ public class AuthenticationService {
         ArrayList<String> firstname = normalizeName(request.getFirstName());
         ArrayList<String> lastname = normalizeName(request.getLastName());
 
-        User user = new User();
-        user.setFirstName(arrayToName(firstname));
-        user.setLastName(arrayToName(lastname));
-        user.setPhone(request.getCountryCode() + request.getPhone());
-        user.setCountryCode(request.getCountryCode());
-        user.setUsername(createUsername(firstname, lastname));
-        user.setDateOfBirth(LocalDate.parse(request.getDateOfBirth(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
         try {
+            User user = new User();
+            user.setFirstName(arrayToName(firstname));
+            user.setLastName(arrayToName(lastname));
+            user.setPhone(request.getCountryCode() + request.getPhone());
+            user.setCountryCode(request.getCountryCode());
+            user.setUsername(createUsername(firstname, lastname));
+            user.setDateOfBirth(LocalDate.parse(request.getDateOfBirth(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+
             String verificationCode = AuthenticationUtils.generateVerificationCode();
             user.setPhoneVerificationCode(
                     passwordEncoder.encode(verificationCode)

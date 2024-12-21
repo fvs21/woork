@@ -10,7 +10,7 @@ import UserDropdown from "../UserDropdown/UserDropdown";
 export default function Layout({children}) {
     const [user] = useUser();
     
-    const { canLogin } = user != null;
+    const canLogin = user == null;
     
     const [accountDropdown, setAccountDropdown] = useState(false);
 
