@@ -38,7 +38,7 @@ public class Worker {
     @Column(name = "jobs_completed")
     private int jobsCompleted;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<CategoryTag> categories;
 
     public Worker(User user) {

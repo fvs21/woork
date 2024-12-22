@@ -1,18 +1,18 @@
+"use client"
+
 import Layout from "@/components/Layout/Layout";
 import styles from "./PostingsDashboard.module.scss";
-import { Head, Link } from "@inertiajs/react";
+import Link from "next/link";
 import Footer from "@/components/Footer/Footer";
-import { useUser } from "@/jotai/user";
 import dayjs from "dayjs";
+import { useUser } from "@/api/hooks/user";
 
 export default function PostingsDashboardLayout({option, children}) {
     const [user] = useUser();
     const time = dayjs().hour();
 
-
     return (
-        <Layout>
-            <Head title="Panel de publicaciones" />
+        <section>
             <div className={styles.postingsDashboardContainer}>
                 <div className={`${styles.postingsDashboardHeader} ${styles.spacer}`}>
                     ¡{time >= 12 ? "Buenas tardes" : "Buenos días"}, {user.firstName}!
@@ -34,6 +34,6 @@ export default function PostingsDashboardLayout({option, children}) {
                 </div>
             </div>
             <Footer />
-        </Layout>
+        </section>
     )
 }

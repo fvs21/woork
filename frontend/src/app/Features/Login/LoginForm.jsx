@@ -12,17 +12,19 @@ import { useLogin } from "@/api/hooks/authentication";
 import { useRouter } from "next/navigation";
 import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
 
-export default function LoginForm({errors}) {
+export default function LoginForm({error}) {
     const [credential, setCredential] = useState("");
     const [countryCode, setCountryCode] = useState("");
     const [password, setPassword] = useState("");
-    const [errorMsg, setErrorMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState(error);
 
     const { login, isLoading } = useLogin();
     const router = useRouter();
 
     async function handleSubmit(e) {
         e.preventDefault();
+
+        setErrorMsg("");
 
         const cred = isEmail(credential) ? credential : countryCode+credential;
 

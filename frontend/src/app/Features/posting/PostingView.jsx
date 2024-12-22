@@ -38,7 +38,7 @@ export default function PostingView({ id }) {
 
   const [jobApplicantsModal, setJobApplicantsModal] = useState(false);
 
-  const { apply } = useApplyToJob();
+  const { apply } = useApplyToJob(id);
   const router = useRouter();
 
   function changeImagePreviewed(value) {
@@ -56,8 +56,7 @@ export default function PostingView({ id }) {
     }
 
     try {
-      const request = await apply(id);
-      console.log(request);
+      await apply();
     } catch(error) {
       console.log(error);
     }
@@ -90,7 +89,7 @@ export default function PostingView({ id }) {
     }).addTo(map);
 
     return () => map.remove();
-  }, [data, isLoading]);
+  }, [isLoading]);
 
   if(isLoading || isError) 
     return <LoadingScreen />;

@@ -6,17 +6,12 @@ import Applicant from "./Applicant";
 import { useQuery } from "react-query";
 import axios from "@/api/axios";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
+import { useFetchPostingApplicants } from "@/api/hooks/postings";
 
 export default function JobApplicantsList({closeModal, postingUrl}) {
     const svgClr = svgColor();
 
-    const { isLoading, data } = useQuery({
-        queryFn: async () => {
-            const request = await axios.get(`/posting/${postingUrl}/applicants`);
-            return request.data.data;
-        },
-        queryKey: ['applicants', postingUrl]
-    });
+    const { data, isLoading } = useFetchPostingApplicants(postingUrl);
 
     if(isLoading)
         return <LoadingModal />

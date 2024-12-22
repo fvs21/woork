@@ -68,7 +68,7 @@ export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}) 
                 day={dateOfBirth.day} 
                 year={dateOfBirth.year} 
                 changeDateOfBirth={changeDateOfBirth} 
-                valid={true} 
+                valid={!displayError} 
                 setActive={setActive} 
                 yearsArray={[...Array(101)].map((x, i) => default_year-100+i)}/>
             {

@@ -34,6 +34,23 @@ export async function middleware(request) {
         return NextResponse.redirect(new URL('/login', request.nextUrl))
     }
 
+    const cookieStore = await cookies();
+    if(!cookieStore.get('theme')) {
+        const year = new Date().getFullYear();
+        const month = new Date().getMonth();
+        const day = new Date().getDate();
+
+        const expiration = new Date(year+1, month, day);
+        
+
+        cookieStore.set(
+            'theme', 'light', {
+                sameSite: true,
+                expires: expiration
+            }
+        )
+    }
+
     return NextResponse.next();
 }
 

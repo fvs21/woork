@@ -1,7 +1,16 @@
+"use client";
+
 import CreatedPostingCard from "@/components/CreatedJobCard/CreatedPostingCard";
 import styles from "./PostingsDashboard.module.scss";
+import { useCreatedPostings } from "@/api/hooks/postings";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
-export default function CreatedPostingsListing({postings}) {
+export default function CreatedPostingsListing() {
+    const { data: postings, isLoading } = useCreatedPostings();
+
+    if(isLoading)
+        return <LoadingScreen />
+
     if(postings.length == 0) {
         return <div style={{fontSize: "18px", width: "100%", textAlign: "center", fontWeight: "500"}}>
             No has creado ninguna pubicación

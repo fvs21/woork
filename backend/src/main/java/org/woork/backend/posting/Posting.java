@@ -11,7 +11,9 @@ import org.woork.backend.postingapplication.PostingApplication;
 import org.woork.backend.user.User;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -55,7 +57,7 @@ public class Posting {
     private Set<Image> images;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "posting")
-    private Set<PostingApplication> postingApplications;
+    private List<PostingApplication> postingApplications;
 
     @OneToOne
     @JoinColumn(name = "completed_by")
@@ -63,7 +65,7 @@ public class Posting {
 
     public Posting() {
         images = new HashSet<>();
-        postingApplications = new HashSet<>();
+        postingApplications = new ArrayList<>();
     }
 
     public Posting(String title, String description, BigDecimal price, String category, Address address,

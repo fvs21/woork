@@ -3,7 +3,7 @@ import Modal from "../Modal/Modal";
 import CloseSVG from "../SVGs/Close";
 import TrashcanSVG from "../SVGs/Trashcan";
 import styles from "./CreatedPostingCard.module.scss";
-import { Link } from "@inertiajs/react";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function PostingControllerModal({ title, id, closeModal, deleteFn }) {

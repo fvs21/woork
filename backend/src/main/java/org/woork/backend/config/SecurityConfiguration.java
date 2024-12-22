@@ -72,7 +72,8 @@ public class SecurityConfiguration {
                                 "/api/posting/create",
                                 "/api/posting/address/{id}",
                                 "/api/posting/addresses",
-                                "/api/posting/posting/apply"
+                                "/api/posting/posting/apply",
+                                "/api/posting/{id}/applicants"
                         ).authenticated()
                         //WS
                         .requestMatchers("/ws").permitAll()

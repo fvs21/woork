@@ -21,6 +21,7 @@
     --clear-btn: rgb(240, 240, 240);
     --auth-background-color: rgb(247, 247, 247);
     --invalid-color: #{var.$invalid-color};
+    --color-error: rgb(199, 0, 0);
 }
 
 .dark {
@@ -41,8 +42,8 @@
     --clear-btn: rgb(44, 44, 44);
     --auth-background-color: #{var.$dark-bg};
     --invalid-color: rgb(75, 75, 75);
+    --color-error: rgb(223, 4, 4);
 }
-
 
 
 html, body, #app {
@@ -127,7 +128,7 @@ select {
 
 .error-msg {
     font-size: small;
-    color: rgb(199, 0, 0);
+    color: var(--color-error);
     position: absolute;
     margin-top: var.$margin-xxs;
 }

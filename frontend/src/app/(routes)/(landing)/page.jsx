@@ -12,21 +12,29 @@ import { isEmail } from "@/utils/authentication/LoginUtils";
 import { useTheme } from "../../hooks/theme";
 import { useLogin } from "@/api/hooks/authentication";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
 
 export default function Page() {
     const [credential, setCredential] = useState("");
     const [countryCode, setCountryCode] = useState("");
     const [password, setPassword] = useState("");
 
-    const { login } = useLogin();
+    const { login, isLoading } = useLogin();
+    const router = useRouter();
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
-        login(
-            isEmail(credential) ? credential : countryCode+credential,
-            password
-        );
+        try {
+            await login({
+                credential: isEmail(credential) ? credential : countryCode+credential,
+                password: password
+            });
+            router.push("/explore");
+        } catch(error){
+            router.push("/login?failed=true");
+        }
     }
 
     const [theme] = useTheme();
@@ -82,9 +90,10 @@ export default function Page() {
                                         setValue={setPassword}/>
                                 </div>
                                 <SubmitButton active={true}>
-                                    <span style={{fontWeight: 600, fontSize: "16px"}}>
-                                        Inicia sesión
-                                    </span>
+                                    {isLoading
+                                        ? <LoadingSpinnerClear width={"18px"} />
+                                        : "Inicia sesión"
+                                    }
                                 </SubmitButton>
                             </form>   
                             <div style={{textAlign: "center", padding: "14px"}}>

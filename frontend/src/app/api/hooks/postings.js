@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import { api, apiGuest, apiMultipart } from "../axios"
 import { notFound, useRouter } from "next/navigation";
+import axios from "axios";
 
 export const useFetchCreatedAddresses = () => {
     const { data, isLoading } = useQuery({
@@ -106,6 +107,7 @@ export const usePosting = (id) => {
             const request = await api.get(`/posting/${id}`)
             return request.data;
         },
+        queryKey: ['posting', id],
         staleTime: Infinity,
         retry: false,
         onError: () => {
@@ -116,14 +118,65 @@ export const usePosting = (id) => {
     return { data, isLoading, isError };
 }
 
-export const useApplyToJob = () => {
+export const useApplyToJob = (postingId) => {
+    const queryClient = useQueryClient();
+
     const { mutateAsync: apply, isLoading } = useMutation({
-        mutationFn: async (id) => {
+        mutationFn: async () => {
             return await api.post("/posting/apply", {
-                id: id
+                id: postingId
             });
+        },
+        onSuccess: (data) => {
+            const status = data.data;
+
+            queryClient.setQueryData(['posting', postingId], 
+                (prevData) => ({
+                    ...prevData,
+                    postingApplicationStatus: status == 'requested' ? status : null
+                })
+            );
         }
     });
 
     return { apply, isLoading };
+}
+
+export const useFetchPostingApplicants = (id) => {
+    const { data, isLoading } = useQuery({
+        queryFn: async () => {
+            const request = await api.get(`/posting/${id}/applicants`);
+            return request.data;
+        },
+        queryKey: ['applicants', id],
+        staleTime: Infinity
+    });
+
+    return { data, isLoading };
+}
+
+export const useCreatedPostings = () => {
+    const queryClient = useQueryClient();
+
+    const { data, isLoading } = useQuery({
+        queryFn: async () => {
+            const request = await api.get("/posting/created");
+            return request.data;
+        },
+        queryKey: ['created-postings'],
+        staleTime: Infinity,
+        onSuccess: (data) => {
+            for(let i = 0; i<data.length; i++) {
+                const posting = data[i];
+                console.log(posting);
+                
+                queryClient.setQueryData(['posting', posting.url], {
+                    data: posting,
+                    postingApplicationStatus: null
+                });
+            }
+        }
+    });
+
+    return { data, isLoading };
 }

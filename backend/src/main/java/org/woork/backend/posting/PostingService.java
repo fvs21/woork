@@ -7,9 +7,11 @@ import jakarta.persistence.PersistenceContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.woork.backend.address.AddressRepository;
 import org.woork.backend.address.AddressResource;
 import org.woork.backend.address.records.LocationQuery;
@@ -30,6 +32,7 @@ import org.woork.backend.posting.resources.PostingResource;
 import org.woork.backend.postingapplication.PostingApplication;
 import org.woork.backend.postingapplication.PostingApplicationRepository;
 import org.woork.backend.postingapplication.Status;
+import org.woork.backend.postingapplication.resources.ApplicantResource;
 import org.woork.backend.url.UrlService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;
@@ -303,6 +306,27 @@ public class PostingService {
         return filteredPostings.stream().map(filtered -> new PostingResource(filtered, urlService.encodeIdToUrl(filtered.getId()))).collect(Collectors.toList());
     }
 
+    public List<ApplicantResource> getJobPostingApplicants(User user, String hashId) {
+        Long postingId = urlService.decodeIdFromUrl(hashId).get(0);
+
+        Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
+
+        if(!posting.belongsToUser(user)){
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Forbidden"
+            );
+        }
+
+        List<PostingApplication> applications = posting.getPostingApplications();
+        return applications.stream().map(
+                application -> {
+                    User applicant = application.getUser();
+                    return new ApplicantResource(applicant);
+                }
+        ).toList();
+    }
+
     public int acceptJobApplicantRequest(User creator, String applicantUsername, Long postingId) {
         Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
         if(!posting.belongsToUser(creator)) {
@@ -331,6 +355,17 @@ public class PostingService {
                 posting -> {
                     Address address = posting.getAddress();
                     return new AddressResource(address);
+                }
+        ).collect(Collectors.toSet());
+    }
+
+    public Set<PostingResource> getUserCreatedPostings(User user) {
+        Set<Posting> postings = postingRepository.findByAuthor(user).orElse(new HashSet<>());
+
+        return postings.stream().map(
+                posting -> {
+                    String hashId = urlService.encodeIdToUrl(posting.getId());
+                    return new PostingResource(posting, hashId);
                 }
         ).collect(Collectors.toSet());
     }

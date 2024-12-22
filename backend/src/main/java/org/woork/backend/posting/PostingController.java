@@ -11,8 +11,10 @@ import org.woork.backend.address.AddressService;
 import org.woork.backend.authentication.AuthenticationService;
 import org.woork.backend.posting.records.PostingResponse;
 import org.woork.backend.posting.resources.PostingResource;
+import org.woork.backend.postingapplication.resources.ApplicantResource;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;
+import org.woork.backend.user.resources.UserResource;
 
 import java.util.List;
 import java.util.Map;
@@ -71,5 +73,19 @@ public class PostingController {
         User user = authenticationService.getCurrentUser();
 
         return postingService.applyToJob(user, body.get("id"));
+    }
+
+    @GetMapping("/{id}/applicants")
+    public List<ApplicantResource> getApplicants(@PathVariable("id") String id) {
+        User user = authenticationService.getCurrentUser();
+
+        return postingService.getJobPostingApplicants(user, id);
+    }
+
+    @GetMapping("/created")
+    public Set<PostingResource> getCreatedPostings() {
+        User user = authenticationService.getCurrentUser();
+
+        return postingService.getUserCreatedPostings(user);
     }
 }

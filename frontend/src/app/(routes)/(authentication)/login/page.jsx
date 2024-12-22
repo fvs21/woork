@@ -8,14 +8,18 @@ export const metadata = {
     title: "Woork - Inicia sesión"
 }
 
-export default function Page() {
+export default async function Page({searchParams}) {
+    const search = await searchParams;
+    
+    const message = search.failed == 'true' ? "La contraseña que colocaste no es correcta." : "";    
+
     return (
         <div className="global-container">
             <div className={`${styles.loginContainer}`}>
                 <div className={styles['logotype-container']}>
                     <Logotype width={"200px"} />
                 </div>
-                <LoginForm />
+                <LoginForm error={message} />
             </div>
             <Footer />
         </div>
