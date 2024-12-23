@@ -9,6 +9,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -40,7 +41,6 @@ public class SecurityConfiguration {
         return new ProviderManager(provider);
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -49,6 +49,7 @@ public class SecurityConfiguration {
                         //AUTH
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .requestMatchers(
+                                HttpMethod.POST,
                                 "/api/auth/register",
                                 "/api/auth/login",
                                 "/api/auth/forgot-password/"
@@ -57,13 +58,19 @@ public class SecurityConfiguration {
                                 "/api/auth/reset-password/**"
                         ).permitAll()
                         .requestMatchers(
-                                "/api/auth/email/update",
+                                HttpMethod.GET,
+                                "/api/auth/logout"
+                        ).authenticated()
+                        .requestMatchers(
+                                HttpMethod.POST,
                                 "/api/auth/verify-email/**",
-                                "/api/auth/logout",
                                 "/api/auth/verify-phone/**",
-                                "/api/auth/email/**",
-                                "/api/auth/phone/**",
-                                "/api/auth/forgot-password/authenticated",
+                                "/api/auth/forgot-password/authenticated"
+                        ).authenticated()
+                        .requestMatchers(
+                                HttpMethod.PATCH,
+                                "/api/auth/email/update",
+                                "/api/auth/phone/update",
                                 "/api/auth/password/update"
                         ).authenticated()
                         //POSTING
@@ -72,15 +79,19 @@ public class SecurityConfiguration {
                                 "/api/posting/{id}"
                         ).permitAll()
                         .requestMatchers(
+                                HttpMethod.POST,
                                 "/api/posting/create",
-                                "/api/posting/address/{id}",
-                                "/api/posting/addresses",
-                                "/api/posting/posting/apply",
-                                "/api/posting/{id}/applicants"
+                                "/api/posting/posting/apply"
                         ).authenticated()
                         .requestMatchers(
                                 HttpMethod.DELETE,
+                                "/api/posting/address/{id}",
                                 "/api/posting/{id}"
+                        ).authenticated()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/posting/addresses",
+                                "/api/posting/{id}/applicants"
                         ).authenticated()
                         //WS
                         .requestMatchers("/ws").permitAll()
@@ -97,6 +108,12 @@ public class SecurityConfiguration {
                         //PROFILE
                         .requestMatchers(
                                 "/api/profile/**"
+                        ).authenticated()
+
+                        //WORKER
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/worker/register"
                         ).authenticated()
                         .anyRequest().permitAll()
                 )

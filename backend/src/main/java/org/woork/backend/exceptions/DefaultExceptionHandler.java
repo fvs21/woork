@@ -133,7 +133,8 @@ public class DefaultExceptionHandler {
             UserPhoneNotVerifiedException.class,
             RefreshTokenExpiredException.class,
             AccessTokenExpiredException.class,
-            RefreshTokenNotPresentException.class
+            RefreshTokenNotPresentException.class,
+            UserIsNotRegisteredAsWorkerException.class
     })
     public ResponseEntity<DefaultExceptionResponse> handleUnauthorizedRequest(DefaultException e) {
         return new ResponseEntity<>(

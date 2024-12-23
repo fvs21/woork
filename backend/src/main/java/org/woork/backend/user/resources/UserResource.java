@@ -21,6 +21,7 @@ public class UserResource {
     private boolean emailVerified;
     private String pfp_url;
     private AddressResource address;
+    private boolean is_worker;
 
     public UserResource(User user) {
         this.firstName = user.getFirstName();
@@ -34,5 +35,6 @@ public class UserResource {
         this.emailVerified = user.hasEmailVerified();
         this.pfp_url = "http://localhost:8000" + user.getProfilePictureUrl();
         this.address = user.getAddress() != null ? new AddressResource(user.getAddress()) : null;
+        this.is_worker = user.isWorker();
     }
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.user.User;
+import org.woork.backend.worker.Worker;
 
 @Entity(name = "posting_applications")
 @Getter
@@ -29,9 +30,9 @@ public class PostingApplication {
     @JoinColumn(name = "posting_id")
     private Posting posting;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Worker worker;
 
     private String status;
 
@@ -39,9 +40,9 @@ public class PostingApplication {
         this.status = Status.REQUESTED.name();
     }
 
-    public PostingApplication(Posting posting, User user) {
+    public PostingApplication(Posting posting, Worker worker) {
         this.posting = posting;
-        this.user = user;
+        this.worker = worker;
         this.status = Status.REQUESTED.toString();
     }
 

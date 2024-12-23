@@ -33,11 +33,11 @@ public class Rating {
     @Column(name = "rating_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "host_id")
     private User host;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "worker_id")
     private Worker worker;
 
