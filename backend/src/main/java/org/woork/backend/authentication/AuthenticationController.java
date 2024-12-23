@@ -5,11 +5,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.woork.backend.annotations.Authenticated;
+import org.woork.backend.authentication.requests.AuthenticatedUpdatePasswordRequest;
 import org.woork.backend.authentication.requests.RegistrationRequest;
 import org.woork.backend.authentication.requests.ResetPasswordRequest;
 import org.woork.backend.authentication.responses.AuthenticationResponse;
@@ -78,7 +77,7 @@ public class AuthenticationController {
         );
     }
 
-    @PutMapping("/phone/update")
+    @PatchMapping("/phone/update")
     public UserResource updatePhoneNumber(
             @RequestBody LinkedHashMap<String, String> body
     ) {
@@ -114,7 +113,7 @@ public class AuthenticationController {
         return new UserResource(user);
     }
 
-    @PutMapping("/email/update")
+    @PatchMapping("/email/update")
     public UserResource updateEmail(
             @RequestBody LinkedHashMap<String, String> body
     ) {
@@ -248,5 +247,14 @@ public class AuthenticationController {
                 request.getPassword(),
                 request.getConfirmPassword()
         );
+    }
+
+    @PatchMapping("/password/update")
+    public String updatePassword(@RequestBody AuthenticatedUpdatePasswordRequest request) {
+        validatorImpl.validateFields(request);
+
+        User user = authenticationService.getCurrentUser();
+
+        return authenticationService.changePassword(user, request);
     }
 }

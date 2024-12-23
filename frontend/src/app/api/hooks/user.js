@@ -21,7 +21,7 @@ export const useUpdatePfp = () => {
         mutationFn: async (image) => {
             const formdata = new FormData();
             formdata.append("image", image);
-            return await apiMultipart.put("/user/pfp/update", formdata);
+            return await apiMultipart.patch("/user/pfp/update", formdata);
         }, 
         onSuccess: (data) => {
             setUser(data.data);
@@ -36,7 +36,7 @@ export const useUpdateAddress = () => {
 
     const { mutateAsync: update } = useMutation({
         mutationFn: async (body) => {
-            return await api.put("/user/address/update", body);
+            return await api.patch("/user/address/update", body);
         },
         onSuccess: (data) => {
             setUser(data.data);
@@ -51,7 +51,7 @@ export const useUpdateDob = () => {
 
     const { mutateAsync: update } = useMutation({
         mutationFn: async (body) => {
-            return await api.put("/user/dob/update", body);
+            return await api.patch("/user/dob/update", body);
         },
         onSuccess: (data) => {
             setUser(data.data);
@@ -66,7 +66,7 @@ export const useUpdateGender = () => {
 
     const { mutateAsync: update } = useMutation({
         mutationFn: async (body) => {
-            return await api.put("/user/gender/update", body);
+            return await api.patch("/user/gender/update", body);
         },
         onSuccess: (data) => {
             setUser(data.data);

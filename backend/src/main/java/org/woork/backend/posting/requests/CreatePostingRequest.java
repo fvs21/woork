@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.woork.backend.annotations.InEnum;
+import org.woork.backend.annotations.validators.InEnum;
 import org.woork.backend.posting.Categories;
 
 import java.math.BigDecimal;

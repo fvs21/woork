@@ -131,7 +131,7 @@ export const useUpdatePhone = () => {
 
     const { mutateAsync: updatePhone, isLoading } = useMutation({
         mutationFn: async (body) => {
-            return await api.put("/auth/phone/update", body);
+            return await api.patch("/auth/phone/update", body);
         },
         onSuccess: (data) => {            
             setUser(data.data);
@@ -146,7 +146,7 @@ export const useUpdateEmail = () => {
 
     const { mutateAsync: updateEmail, isLoading } = useMutation({
         mutationFn: async (body) => {
-            return await api.put("/auth/email/update", body);
+            return await api.patch("/auth/email/update", body);
         },
         onSuccess: (data) => {
             setUser(data.data);
@@ -206,5 +206,19 @@ export const useResetPassword = () => {
         resetPassword,
         isLoading,
         resetPasswordInvalid: isLoading || isSuccess
+    };
+}
+
+export const useUpdatePassword = () => {
+    const { mutateAsync: update, isLoading, isSuccess } = useMutation({
+        mutationFn: async (body) => {
+            return await api.patch("/auth/password/update", body);
+        }
+    });
+
+    return { 
+        update,
+        isLoading,
+        updatePasswordInvalid: isLoading || isSuccess
     };
 }

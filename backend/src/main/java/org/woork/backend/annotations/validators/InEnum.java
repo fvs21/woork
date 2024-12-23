@@ -1,7 +1,8 @@
-package org.woork.backend.annotations;
+package org.woork.backend.annotations.validators;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,10 +11,11 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = AgeLimitValidator.class)
-public @interface AgeLimit {
-    int minimumAge() default 18;
-    String message() default "User must be at least 18 years old";
+@Constraint(validatedBy = InEnumValidator.class)
+@NotNull
+public @interface InEnum {
+    Class<? extends Enum<?>> enumClass();
+    String message() default "Invalid enum value";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

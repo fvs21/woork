@@ -81,7 +81,8 @@ public class DefaultExceptionHandler {
             UnableToParseLocationException.class,
             UnableToUpdateUserException.class,
             IncorrectVerificationCodeException.class,
-            AuthenticationErrorException.class
+            AuthenticationErrorException.class,
+            PasswordsDontMatchException.class
     })
     public ResponseEntity<DefaultExceptionResponse> handleBadRequest(DefaultException e) {
         return new ResponseEntity<>(

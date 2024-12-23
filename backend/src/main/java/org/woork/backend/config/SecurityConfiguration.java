@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 @Configuration
 public class SecurityConfiguration {
@@ -62,7 +63,8 @@ public class SecurityConfiguration {
                                 "/api/auth/verify-phone/**",
                                 "/api/auth/email/**",
                                 "/api/auth/phone/**",
-                                "/api/auth/forgot-password/authenticated"
+                                "/api/auth/forgot-password/authenticated",
+                                "/api/auth/password/update"
                         ).authenticated()
                         //POSTING
                         .requestMatchers(

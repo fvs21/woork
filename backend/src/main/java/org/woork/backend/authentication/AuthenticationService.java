@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.woork.backend.authentication.requests.AuthenticatedUpdatePasswordRequest;
 import org.woork.backend.authentication.requests.RegistrationRequest;
 import org.woork.backend.exceptions.*;
 import org.woork.backend.passwordreset.PasswordResetService;
@@ -339,5 +340,23 @@ public class AuthenticationService {
             throw new UnableToUpdateUserException("Cambiaste tu contraseña recientemente. Vuelvelo a intentar en un rato.");
         }
         user.setPassword(passwordEncoder.encode(newPassword));
+    }
+
+    public String changePassword(User user, AuthenticatedUpdatePasswordRequest request) {
+        String currentPassword = request.getCurrentPassword();
+        String newPassword = request.getNewPassword();
+        String confirmPassword = request.getConfirmPassword();
+
+        if(!newPassword.equals(confirmPassword)) {
+            throw new PasswordsDontMatchException();
+        }
+
+        if(!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new IncorrectCredentialsException();
+        }
+
+        user.setPassword(newPassword);
+        userRepository.save(user);
+        return "Contraseña actualizada";
     }
 }

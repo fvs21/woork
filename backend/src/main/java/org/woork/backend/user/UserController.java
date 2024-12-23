@@ -35,14 +35,14 @@ public class UserController {
         );
     }
 
-    @PutMapping("/gender/update")
+    @PatchMapping("/gender/update")
     public UserResource updateGender(@RequestBody UpdateGenderRequest request) {
         User user = authenticationService.getCurrentUser();
 
         return userService.updateGender(user, request);
     }
 
-    @PutMapping("/address/update")
+    @PatchMapping("/address/update")
     public UserResource updateLocation(@Valid @RequestBody UpdateAddressRequest updateAddressRequest) {
         validatorImpl.validateFields(updateAddressRequest);
         User user = authenticationService.getCurrentUser();
@@ -50,14 +50,14 @@ public class UserController {
         return userService.updateAddress(user, updateAddressRequest);
     }
 
-    @PutMapping("/pfp/update")
+    @PatchMapping("/pfp/update")
     public UserResource updateProfilePicture(@RequestParam("image") MultipartFile multipartFile) {
         User user = authenticationService.getCurrentUser();
 
         return userService.updateProfilePicture(user, multipartFile);
     }
 
-    @PutMapping("/dob/update")
+    @PatchMapping("/dob/update")
     public UserResource updateDateOfBirth(@RequestBody Map<String, String> map) {
         User user = authenticationService.getCurrentUser();
         return userService.updateDateOfBirth(user, map.get("dateOfBirth"));

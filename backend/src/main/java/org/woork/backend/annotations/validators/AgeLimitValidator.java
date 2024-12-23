@@ -1,4 +1,4 @@
-package org.woork.backend.annotations;
+package org.woork.backend.annotations.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

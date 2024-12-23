@@ -1,9 +1,9 @@
 package org.woork.backend.exceptions;
 
-public class PasswordsDontMatchException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+public class PasswordsDontMatchException extends DefaultException {
+    private static final String code = "passwords_dont_match";
 
     public PasswordsDontMatchException() {
-        super("Passwords don't match!");
+        super("Las contraseñas no son iguales.", code);
     }
 }

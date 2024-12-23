@@ -2,7 +2,7 @@ package org.woork.backend.authentication.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.woork.backend.annotations.AgeLimit;
+import org.woork.backend.annotations.validators.AgeLimit;
 
 public class RegistrationRequest {
 
