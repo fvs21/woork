@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
 import { api, apiGuest } from "../axios";
 import { useUser } from "./user";
+import { logoutServer } from "../server/actions";
 
 export const refresh = async () => {
     try {
@@ -33,7 +34,7 @@ export const useAuth = () => {
 }
 
 export const useLogin = () => {
-    const[, setUser] = useUser();
+    const[,setUser] = useUser();
     const [,setToken] = useAuth();
 
     const { mutateAsync: login, isLoading, isSuccess } = useMutation({
@@ -86,11 +87,13 @@ export const useLogout = () => {
         mutationFn: async () => {
             return await api.get("/auth/logout");
         }, 
-        onSuccess: () => {
+        onSuccess: async () => {
             setTimeout(() => {
                 queryClient.removeQueries(['user-info']);
                 queryClient.removeQueries(['access-token']);
             }, 2000);
+
+            await logoutServer();
         }
     });
 
@@ -220,5 +223,19 @@ export const useUpdatePassword = () => {
         update,
         isLoading,
         updatePasswordInvalid: isLoading || isSuccess
+    };
+}
+
+export const useAuthenticatedForgotPassword = () => {
+    const { mutateAsync: forgotPassword, isLoading, isSuccess } = useMutation({
+        mutationFn: async () => {
+            return await api.post("/auth/forgot-password/authenticated");
+        }
+    });
+
+    return {
+        forgotPassword,
+        isLoading,
+        forgotPasswordInvalid: isLoading || isSuccess
     };
 }

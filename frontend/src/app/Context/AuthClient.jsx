@@ -6,7 +6,6 @@ import { useLayoutEffect } from "react";
 import { useQuery } from "react-query";
 
 export default function AuthClient({accessToken, user, children}) {
-    
     useQuery({
         initialData: accessToken?.access_token || null,
         queryFn: () => refresh(),

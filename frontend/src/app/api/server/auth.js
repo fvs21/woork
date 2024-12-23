@@ -7,7 +7,7 @@ export const refreshToken = async () => {
     if(parsed.get('user_r') === undefined) {
         return null;
     }
-    
+
     try {
         const data = await fetch("http://localhost:8000/api/auth/refresh", {
             method: "GET",
@@ -16,7 +16,9 @@ export const refreshToken = async () => {
                 Cookie: (await cookies()).toString(),
                 'Content-Type': 'application/json'
             },
-    
+            next: {
+                revalidate: 0
+            }
         });
         return await data.json();
     } catch {
@@ -25,7 +27,7 @@ export const refreshToken = async () => {
 }
 
 export const getUser = async (accessToken) => {
-    if(accessToken?.error == true) {
+    if(accessToken?.error == true || accessToken == null) {
         return null;
     }
 

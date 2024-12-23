@@ -73,7 +73,6 @@ export default function Page() {
         
         try {
             await logout();
-            router.push("/login");
         } catch(error) {
             console.log(error);
         }

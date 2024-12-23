@@ -251,7 +251,8 @@ public class AuthenticationService {
     }
 
     public String generateNewPhoneVerificationCode(User user) {
-        log.info(user);
+        log.info(user.getPhoneVerifiedAt());
+
         if(!user.canRequestPhoneVerificationCode()) {
             throw new UnableToGenerateVerificationCodeException("There is a refresh time between code generation");
         }
@@ -267,7 +268,7 @@ public class AuthenticationService {
             );
             //sendPhoneVerificationCode("+" + user.getPhone(), verificationCode);
             userRepository.save(user);
-            return "Phone verification code successfully sent";
+            return "Código de verificación enviado.";
         } catch (Exception e) {
             throw new UnableToGenerateVerificationCodeException();
         }
@@ -355,7 +356,10 @@ public class AuthenticationService {
             throw new IncorrectCredentialsException();
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(
+                passwordEncoder.encode(newPassword)
+        );
+
         userRepository.save(user);
         return "Contraseña actualizada";
     }

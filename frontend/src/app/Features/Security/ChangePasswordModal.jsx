@@ -4,9 +4,10 @@ import CloseSVG from "@/components/SVGs/Close";
 import { svgColor } from "@/utils/extra/utils";
 import { useState } from "react";
 import { validatePassword } from "@/services/validators";
-import { api } from "@/api/axios";
 import { flash } from "@/flash-message/flashMessageCreator";
 import PasswordInput from "@/components/PasswordInput/PasswordInput";
+import { useAuthenticatedForgotPassword, useUpdatePassword } from "@/api/hooks/authentication";
+import MutationButton from "@/components/MutationButton";
 
 export default function ChangePasswordModal({closeModal}) {
     const [currentPassword, setCurrentPassword] = useState("");
@@ -17,6 +18,9 @@ export default function ChangePasswordModal({closeModal}) {
 
     const [reNewPassword, setReNewPassword] = useState("");
     const [reNewPasswordValid, setReNewPasswordValid] = useState(true);
+    
+    const { update, isLoading, updatePasswordInvalid } = useUpdatePassword();
+    const { forgotPassword, forgotPasswordInvalid } = useAuthenticatedForgotPassword();
 
     const changeCurrentPassword = (value) => {
         setCurrentPassword(value);
@@ -42,7 +46,7 @@ export default function ChangePasswordModal({closeModal}) {
             return;
 
         try {
-            await api.put("/password/update", {
+            await update({
                 currentPassword: currentPassword,
                 newPassword: newPassword,
                 confirmPassword: reNewPassword
@@ -62,7 +66,7 @@ export default function ChangePasswordModal({closeModal}) {
         e.preventDefault();
         
         try {
-            const request = await axios.post("/auth/forgot-password");
+            const request = await forgotPassword();
             const mean = request.data.mean;
             const response = request.data.message;
             
@@ -127,7 +131,9 @@ export default function ChangePasswordModal({closeModal}) {
                         </span>
                     </div>
                     <div className={styles.submitChangePasswordContainer}>
-                        <button className={`${styles.submitChangePasswordBtn}`}>Cambiar contraseña</button>
+                        <MutationButton classname={`${styles.submitChangePasswordBtn}`} disable={updatePasswordInvalid}>
+                            Cambiar contraseña
+                        </MutationButton>
                     </div>
                 </form>
             </div>

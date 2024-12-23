@@ -35,7 +35,7 @@ public class PasswordResetService {
     public static String RESET_LINK_SENT = "El link de recuperación fue enviado.";
     public static String PASSWORD_RESET = "Contraseña cambiada.";
     public static String INVALID_USER = "No se encontró ningun usuario con esas credenciales.";
-    public static String INVALID_TOKEN = "Link de verificación incorrecto.";
+    public static String INVALID_TOKEN = "El link de verificación no existe.";
     public static String RESET_THROTTLED = "Espera unos minutos antes de solicitar otro link.";
     public static String RECENTLY_UPDATED_PASSWORD = "Cambiaste tu contraseña recientemente. Debes esperar 1 día desde que la actualizaste para solicitar cambiarla.";
 

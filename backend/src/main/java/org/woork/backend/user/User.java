@@ -322,7 +322,8 @@ public class User implements UserDetails {
     public boolean canUpdatePassword() {
         if(this.passwordUpdatedAt == null)
             return true;
-        return ChronoUnit.HOURS.between(this.passwordUpdatedAt, Instant.now()) >= 24;
+
+        return ChronoUnit.HOURS.between(this.passwordUpdatedAt, LocalDateTime.now()) >= 24;
     }
 
     public String getFullName() {

@@ -30,8 +30,6 @@ export default function UserDropdown() {
 
         try {
             await logout();
-            router.push("/login");
-            return;
         } catch(error) {
             flash("Un error ha ocurrido", 4000, "error");
         }
