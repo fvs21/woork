@@ -30,7 +30,7 @@ public class BackendApplication {
 //            imageRepository.save(new Image(
 //                    "default-pfp",
 //                    "image/jpg",
-//                    Dotenv.load().get("images_path")+"/default-pfp.jpg",
+//                    Dotenv.load().get("images_path") + "/default-pfp.jpg",
 //                    "http://localhost:8000/api/images/default-pfp"
 //            ));
 //        };

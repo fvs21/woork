@@ -1,10 +1,14 @@
+"use client";
+
 import Form from "@/components/Form/Form";
 import styles from "./ResetPasswordForm.module.scss";
 import { useState } from "react";
 import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import { validatePassword } from "@/services/validators";
-import { router } from "@inertiajs/react";
 import PasswordInput from "@/components/PasswordInput/PasswordInput";
+import { useResetPassword } from "@/api/hooks/authentication";
+import { useRouter } from "next/navigation";
+import { flash } from "@/flash-message/flashMessageCreator";
 
 export default function ResetPasswordForm({credential, token}) {
     const [newPassword, setNewPassword] = useState("");
@@ -14,9 +18,30 @@ export default function ResetPasswordForm({credential, token}) {
     const [validConfirmPassword, setValidConfirmPassword] = useState(true);
 
     const [submitActive, setSubmitActive] = useState(false);
+ 
+    const { resetPassword, isLoading, resetPasswordInvalid } = useResetPassword();
 
-    function handleSubmit(e) {
+    const [errorMsg, setErrorMsg] = useState("");
+
+    const router = useRouter();
+
+    async function handleSubmit(e) {
         e.preventDefault();
+
+        try {
+            await resetPassword({
+                token: token,
+                credential: credential,
+                password: newPassword,
+                confirmPassword: confirmPassword
+            });
+            flash("Contraseña cambiada. Redirigiendote...", 3000, "success");
+            setTimeout(() => {
+                router.push("/login");
+            }, 3000);
+        } catch(error) {
+            setErrorMsg(error.response.data.message);
+        }
     }
 
     const changeNewPassword = (value) => {
@@ -24,10 +49,10 @@ export default function ResetPasswordForm({credential, token}) {
 
         setValidNewPassword(validatePassword(value) || value == "");
 
-        if(!validConfirmPassword && validatePassword(value) || value == "")
+        if(!validConfirmPassword && validatePassword(value) || value == "") {
             if(value == confirmPassword)
                 setValidConfirmPassword(true);
-
+        }
         setSubmitActive((value == confirmPassword) && (value != ""));
     }
 
@@ -38,17 +63,6 @@ export default function ResetPasswordForm({credential, token}) {
         setValidConfirmPassword(value == newPassword || value == "");
 
         setSubmitActive(newPassword == value && (value != ""));
-    }
-
-    function handleSubmit(e) {
-        e.preventDefault();
-
-        router.post("/reset-password", {
-            token: token,
-            credential: credential,
-            password: newPassword,
-            password_confirmation: confirmPassword
-        });
     }
 
     return (
@@ -79,9 +93,14 @@ export default function ResetPasswordForm({credential, token}) {
                         </div>
                     <span className={styles['disclaimer']}>La contraseña debe contener al menos 8 caracteres.</span>
                     <div style={{paddingTop: "12px"}}>
-                        <SubmitButton active={submitActive}>Cambiar contraseña</SubmitButton>
+                        <SubmitButton active={submitActive && !resetPasswordInvalid}>Cambiar contraseña</SubmitButton>
                     </div>
                 </form>
+                {errorMsg && 
+                    <div style={{marginTop: "0.25rem"}}>
+                        <span className="error-msg">{errorMsg}</span>
+                    </div>
+                }
             </div>
         </Form>
     );

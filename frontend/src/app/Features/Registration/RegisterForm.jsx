@@ -28,7 +28,7 @@ export default function RegisterForm() {
     const [, setNamesError] = useNamesError();
     
     const [phoneNumber, setPhoneNumber] = useState({
-        countryCode: "",
+        countryCode: "52",
         phone: "",
     });
     const [, setPhoneNumberError] = usePhoneNumberError();
@@ -46,7 +46,7 @@ export default function RegisterForm() {
     });
     const [, setPasswordError] = usePasswordError();
 
-    const { register, isLoading } = useRegister();
+    const { register, isLoading, registerDisabled } = useRegister();
     const router = useRouter();
 
     const body = {
@@ -115,7 +115,7 @@ export default function RegisterForm() {
                             <Link className={styles['disclaimer-links']} href="#"> política de privacidad</Link>.</span>
                     </div>
                     <div className={styles['submit-button-container']}>
-                        <SubmitButton active={true}>
+                        <SubmitButton active={!registerDisabled}>
                             {isLoading ? <LoadingSpinnerClear width={"18px"} /> : "Regístrate"}
                         </SubmitButton>
                     </div>

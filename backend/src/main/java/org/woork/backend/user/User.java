@@ -143,7 +143,7 @@ public class User implements UserDetails {
     @Column(name = "password_updated_at")
     @Setter
     @Getter
-    private Instant passwordUpdatedAt;
+    private LocalDateTime passwordUpdatedAt;
 
     @Column(columnDefinition = "TEXT")
     @Size(min = 1, max = 450)
@@ -313,8 +313,10 @@ public class User implements UserDetails {
     }
 
     public void setPassword(String password) {
+        if(this.password != null) {
+            this.passwordUpdatedAt = LocalDateTime.now();
+        }
         this.password = password;
-        this.passwordUpdatedAt = Instant.now();
     }
 
     public boolean canUpdatePassword() {

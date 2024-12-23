@@ -6,6 +6,7 @@ import styles from "./Layout.module.scss";
 import { useUser } from "@/api/hooks/user";
 import { useState } from "react";
 import UserDropdown from "../UserDropdown/UserDropdown";
+import Image from "next/image";
 
 export default function Layout({children}) {
     const [user] = useUser();
@@ -40,7 +41,8 @@ export default function Layout({children}) {
                                     <img 
                                         className={styles.pfp} 
                                         src={user.pfp_url} 
-                                        alt="Foto de perfil"/>
+                                        alt="Foto de perfil"
+                                    />
                                 </button>
                                 {accountDropdown && 
                                     <UserDropdown />

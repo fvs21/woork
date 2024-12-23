@@ -14,13 +14,16 @@ export default async function RootLayout({ children }) {
   const cookieStore = await cookies();
   const theme = cookieStore.get('theme');
 
+  const value = theme?.value || 'light';
+  
+
   return (
-    <html className={theme.value}>
+    <html className={value}>
       <head>
         <link rel="icon" type="image/svg+xml" href="/woork-logo.png" />
       </head>
       <body>
-        <ThemeProvider initialTheme={theme.value}>
+        <ThemeProvider initialTheme={value}>
           <QueryProvider>
             <AuthProvider>
                 <JotaiProvider>

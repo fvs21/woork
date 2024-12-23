@@ -10,6 +10,9 @@ public class ResetPasswordRequest {
     @NotBlank(message = "Token cannot be null")
     private String token;
 
+    @NotBlank(message = "Credential cannot be null")
+    private String credential;
+
     @NotBlank(message = "Password cannot be null")
     private String password;
 
@@ -18,7 +21,8 @@ public class ResetPasswordRequest {
 
     public ResetPasswordRequest() {}
 
-    public ResetPasswordRequest(String token, String password, String confirmPassword) {
+    public ResetPasswordRequest(String token, String credential, String password, String confirmPassword) {
+        this.credential = credential;
         this.token = token;
         this.password = password;
         this.confirmPassword = confirmPassword;

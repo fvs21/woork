@@ -36,7 +36,7 @@ export const useLogin = () => {
     const[, setUser] = useUser();
     const [,setToken] = useAuth();
 
-    const { mutateAsync: login, isLoading } = useMutation({
+    const { mutateAsync: login, isLoading, isSuccess } = useMutation({
         mutationFn: async (body) => {
             return await apiGuest.post("/auth/login", body);
         },
@@ -46,13 +46,17 @@ export const useLogin = () => {
         }
     });
 
-    return { login, isLoading };
+    return { 
+        login,
+        isLoading,
+        loginDisabled: (isLoading || isSuccess)
+    };
 }
 
 export const useRegister = () => {
     const queryClient = useQueryClient();
     
-    const { mutateAsync: register, isLoading } = useMutation({
+    const { mutateAsync: register, isLoading, isSuccess } = useMutation({
         mutationFn: async (body) => {
             return await apiGuest.post("/auth/register", body);
         },
@@ -68,13 +72,17 @@ export const useRegister = () => {
         }
     });
 
-    return { register, isLoading };
+    return { 
+        register, 
+        isLoading, 
+        registerDisabled: isLoading || isSuccess 
+    };
 }
 
 export const useLogout = () => {
     const queryClient = useQueryClient();
 
-    const { mutateAsync: logout } = useMutation({
+    const { mutateAsync: logout, isLoading, isSuccess } = useMutation({
         mutationFn: async () => {
             return await api.get("/auth/logout");
         }, 
@@ -86,7 +94,11 @@ export const useLogout = () => {
         }
     });
 
-    return logout;
+    return { 
+        logout, 
+        isLoading,
+        logoutDisabled: isLoading || isSuccess 
+    };
 }
 
 export const useVerifyPhone = () => {
@@ -167,4 +179,32 @@ export const useResendEmailVerificationCode = () => {
     });
 
     return { resend };
+}
+
+export const useForgotPassword = () => {
+    const { mutateAsync: forgotPassword, isLoading, isSuccess } = useMutation({
+        mutationFn: async(body) => {
+            return await api.post("/auth/forgot-password", body);
+        }
+    });
+
+    return { 
+        forgotPassword, 
+        isLoading, 
+        forgotPasswordInvalid: isLoading || isSuccess 
+    };
+}
+
+export const useResetPassword = () => {
+    const { mutateAsync: resetPassword, isLoading, isSuccess } = useMutation({
+        mutationFn: async (body) => {
+            return await apiGuest.post("/auth/reset-password", body);
+        }
+    });
+
+    return {
+        resetPassword,
+        isLoading,
+        resetPasswordInvalid: isLoading || isSuccess
+    };
 }

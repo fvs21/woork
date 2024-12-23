@@ -14,6 +14,7 @@ import { useApplyToJob, usePosting } from "@/api/hooks/postings";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { useUser } from "@/api/hooks/user";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const JobApplicantsList = lazy(() =>
   import("@/features/postingsdashboard/JobApplicantsList")
@@ -69,7 +70,8 @@ export default function PostingView({ id }) {
   const coordinates = postingData?.display_coordinates;
 
   useLayoutEffect(() => {
-    if (isLoading || isError) return;
+    if (isLoading || isError) 
+      return;
 
     setContentHeight(contentRef.current.clientHeight);
 
@@ -103,12 +105,13 @@ export default function PostingView({ id }) {
             {images[0] != null || images[1] != null || images[2] != null ? (
               //if an image has been uploaded
               <>
-                <img
+                <Image
                   src={images[imagePreviewed]}
                   className={styles.image}
                   alt={`Imagen ${imagePreviewed + 1} de anuncio de ${
                     postingData.title
                   }`}
+                  fill
                 />
                 {images.length > 1 && (
                   <>

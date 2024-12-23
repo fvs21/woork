@@ -7,9 +7,9 @@ import ForgotPasswordForm from '@/features/forgotpassword/ForgotPasswordForm';
 import CloseSVG from '@/components/SVGs/Close';
 import { useTheme } from '@/hooks/theme';
 
-export default function ForgotPassword({ status, errors }) {
+export default function ForgotPassword() {
     const [theme] = useTheme();
-
+    
     return (
         <div className='global-container'>
             <Head title='Restablecer contraseña' />
@@ -20,7 +20,7 @@ export default function ForgotPassword({ status, errors }) {
                 <div className={styles['logotype-container']}>
                     <Logotype width={"200px"} />
                 </div>
-                <ForgotPasswordForm status={status} errors={errors}/>
+                <ForgotPasswordForm />
             </div>
             <Footer />
         </div>

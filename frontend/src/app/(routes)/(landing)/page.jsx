@@ -17,7 +17,7 @@ import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
 
 export default function Page() {
     const [credential, setCredential] = useState("");
-    const [countryCode, setCountryCode] = useState("");
+    const [countryCode, setCountryCode] = useState("52");
     const [password, setPassword] = useState("");
 
     const { login, isLoading } = useLogin();

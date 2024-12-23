@@ -19,6 +19,7 @@ import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.resources.UserResource;
 import org.woork.backend.user.UserService;
+import org.woork.backend.utils.AuthenticationUtils;
 import org.woork.backend.validators.ValidatorImpl;
 
 import java.util.HashMap;
@@ -196,10 +197,20 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestBody LinkedHashMap<String, String> body, HttpServletResponse response) {
+    public String forgotPassword(@RequestBody LinkedHashMap<String, String> body) {
         String credential = body.get("credential");
 
-        return authenticationService.sendPasswordResetLink(credential);
+        StringBuilder message = new StringBuilder();
+
+        String response = authenticationService.sendPasswordResetLink(credential);
+        message.append(response);
+
+        if(AuthenticationUtils.isEmail(credential))
+            message.append("Revisa tu bandeja de correo.");
+        else
+            message.append("Revisa tus mensajes.");
+        
+        return message.toString();
     }
 
     @PostMapping("/forgot-password/authenticated")
@@ -212,7 +223,6 @@ public class AuthenticationController {
                 "mean", mean
         );
     }
-
 
     @GetMapping("/reset-password/verification")
     public ResetTokenExistsResponse verifyResetTokenExists(
@@ -230,14 +240,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/reset-password")
-    public String resetPassword(ResetPasswordRequest request) {
+    public String resetPassword(@RequestBody ResetPasswordRequest request) {
         validatorImpl.validateFields(request);
         return authenticationService.resetPassword(
                 request.getToken(),
+                request.getCredential(),
                 request.getPassword(),
                 request.getConfirmPassword()
         );
-
-
     }
 }

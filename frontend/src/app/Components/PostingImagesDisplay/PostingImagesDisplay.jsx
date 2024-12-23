@@ -19,7 +19,8 @@ export default function PostingImagesDisplay({urls, className}) {
                 ref={ref}
                 className={`${styles['job-image']} ${className}`} 
                 src={urls[imageDisplayed] || "/no-image.jpg"} 
-                alt=""/>
+                alt=""
+            />
             {(urls.length > 1 && imageDisplayed != urls.length-1) &&
                 <ArrowButton width={"30px"} direction={"right"} click={(e) => changeImageDisplayed(e, imageDisplayed+1)} />
             }

@@ -202,14 +202,19 @@ public class PostingService {
         return new PostingResource(posting, url);
     }
 
-    public void deletePosting(Long id, User user) {
-        if(id == null)
-            throw new PostingDoesNotExistException();
-
-        Posting posting = postingRepository.findPostingById(id).orElse(null);
-        if(posting == null) {
+    public String deletePosting(String hashId, User user) {
+        Long id;
+        try {
+            id = urlService.decodeIdFromUrl(hashId).get(0);
+        } catch(Exception e) {
+            System.out.println(e.getClass());
             throw new PostingDoesNotExistException();
         }
+
+        if(hashId == null)
+            throw new PostingDoesNotExistException();
+
+        Posting posting = postingRepository.findPostingById(id).orElseThrow(PostingDoesNotExistException::new);
 
         if(!posting.getAuthor().getId().equals(user.getId())) {
             throw new UnableToDeletePostingException("Forbidden action.");
@@ -221,6 +226,7 @@ public class PostingService {
         }
 
         postingRepository.delete(posting);
+        return "Publicación eliminada";
     }
 
     public Set<PostingResource> getPostingsByUser(User user) {

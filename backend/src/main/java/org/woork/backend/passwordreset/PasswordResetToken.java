@@ -16,10 +16,7 @@ import java.time.temporal.ChronoUnit;
 @Table(name = "password_reset_tokens")
 public class PasswordResetToken {
     @Id
-    private String phone;
-
-    @Column(unique = true)
-    private String email;
+    private Long userId;
 
     @JsonIgnore
     @Column(unique = true)

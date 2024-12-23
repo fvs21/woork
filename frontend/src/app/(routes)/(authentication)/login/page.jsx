@@ -11,7 +11,7 @@ export const metadata = {
 export default async function Page({searchParams}) {
     const search = await searchParams;
     
-    const message = search.failed == 'true' ? "La contraseña que colocaste no es correcta." : "";    
+    const error = search.failed == 'true' ? "La contraseña que colocaste no es correcta." : ""; 
 
     return (
         <div className="global-container">
@@ -19,7 +19,7 @@ export default async function Page({searchParams}) {
                 <div className={styles['logotype-container']}>
                     <Logotype width={"200px"} />
                 </div>
-                <LoginForm error={message} />
+                <LoginForm error={error} />
             </div>
             <Footer />
         </div>

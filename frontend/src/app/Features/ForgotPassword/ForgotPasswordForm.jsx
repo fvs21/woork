@@ -1,24 +1,40 @@
+"use client";
+
 import Form from "@/components/Form/Form";
 import styles from "./ForgotPassword.module.scss";
 import InputEmailOrPhone from "../login/InputEmailOrPhone";
 import { useState } from "react";
 import SubmitButton from "@/components/SubmitButton/SubmitButton";
-import { router } from "@inertiajs/react";
 import { isEmail } from "@/utils/authentication/LoginUtils";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useForgotPassword } from "@/api/hooks/authentication";
 
-export default function ForgotPasswordForm({status, errors}) {
+export default function ForgotPasswordForm() {
     const [credential, setCredential] = useState("");
     const [countryCode, setCountryCode] = useState("");
 
-    function handleSubmit(e) {
+    const { forgotPassword, forgotPasswordInvalid } = useForgotPassword();
+
+    const [successMsg, setSuccessMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+
+    async function handleSubmit(e) {
         e.preventDefault(); 
 
         if(!credential) 
             return;
 
-        router.post("/forgot-password", {
-            'credential': isEmail(credential) ? credential : countryCode+credential
-        });
+        setErrorMsg("");
+
+        try {
+            const request = await forgotPassword({
+                'credential': isEmail(credential) ? credential : countryCode+credential
+            });
+            setSuccessMsg(request.data);
+        } catch(error) {
+           setErrorMsg(error.response.data.message);
+        }
     }
 
     return (
@@ -39,11 +55,15 @@ export default function ForgotPasswordForm({status, errors}) {
                             changeCredential={setCredential}
                             countryCode={countryCode}
                             changeCountryCode={setCountryCode}/>
-                        {status && <span className="success-msg">{status}</span>}
-                        {errors && <span className="error-msg">{errors.email || errors.phone}</span>}
+                        {successMsg && <span className="success-msg">{successMsg}</span>}
+                        {errorMsg && <span className="error-msg">{errorMsg}</span>}
                     </div>
-                    <SubmitButton active={true}>Enviar</SubmitButton>
+                    <SubmitButton active={!forgotPasswordInvalid}>
+                        Enviar
+                    </SubmitButton>
                 </form>
+                <hr className="hr-line" style={{margin: "1.25rem 0"}}/>
+                <Link href="/login" className={styles.returnBtn}>Regresar a inicio de sesión</Link>
             </div>
         </Form>
     )

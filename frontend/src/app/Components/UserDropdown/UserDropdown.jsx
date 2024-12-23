@@ -10,20 +10,19 @@ import MegaphoneSVG from "../SVGs/Megaphone";
 import { useLogout } from "@/api/hooks/authentication";
 import { useRouter } from "next/navigation";
 import { flash } from "@/flash-message/flashMessageCreator";
+import Profile from "../SVGs/Profile";
+import MutationButton from "../MutationButton";
 
 export default function UserDropdown() {
     const [user] = useUser();
     
-    function logoutUser(e) {
-        e.preventDefault();
-
-    }
     const [theme, switchTheme] = useTheme();
     const [dark, setDark] = useState(theme == 'dark' ? true : false);
 
     const color = theme == 'dark' ? 'white' : 'black';
 
-    const logout = useLogout();
+    const {logout, isLoading, logoutDisabled} = useLogout();
+    
     const router = useRouter();
 
     async function logoutUser(e) {
@@ -32,6 +31,7 @@ export default function UserDropdown() {
         try {
             await logout();
             router.push("/login");
+            return;
         } catch(error) {
             flash("Un error ha ocurrido", 4000, "error");
         }
@@ -48,6 +48,10 @@ export default function UserDropdown() {
                     <Link className={styles.dropdownItem + " " + styles.link} href="/jobs" onMouseDown={(e) => e.preventDefault()}>
                         <MegaphoneSVG width={"22px"} color={color}/>
                         Publicaciones
+                    </Link>
+                    <Link className={styles.dropdownItem + " " + styles.link} href="/profile" onMouseDown={(e) => e.preventDefault()}>
+                        <Profile width={"25px"} color={color} />
+                        Perfil
                     </Link>
                 </>
             }
@@ -74,14 +78,15 @@ export default function UserDropdown() {
                     <span className={`${styles.slider} ${styles.round}`}></span>
                 </label>
             </div>
-            <button
-                onClick={logoutUser}
-                className={styles.dropdownItem}
+            <MutationButton
+                click={logoutUser}
+                classname={styles.dropdownItem}
                 onMouseDown={(e) => e.preventDefault()}
+                disabled={logoutDisabled}
             >
                 <LogoutSVG width={"25px"} color={color}/>
                 Cerrar sesión
-            </button>
+            </MutationButton>
         </div>
     );
 }

@@ -42,6 +42,10 @@ export const useCreatePosting = () => {
     const { mutateAsync: create, isLoading } = useMutation({
         mutationFn: async (formData) => {
             return await apiMultipart.post("/posting/create", formData);
+        },
+        onSuccess: (body) => {
+            console.log(body);
+            
         }
     });
 
@@ -168,7 +172,6 @@ export const useCreatedPostings = () => {
         onSuccess: (data) => {
             for(let i = 0; i<data.length; i++) {
                 const posting = data[i];
-                console.log(posting);
                 
                 queryClient.setQueryData(['posting', posting.url], {
                     data: posting,
@@ -179,4 +182,14 @@ export const useCreatedPostings = () => {
     });
 
     return { data, isLoading };
+}
+
+export const useDeletePosting = () => {
+    const { mutateAsync: deletePosting } = useMutation({
+        mutationFn: async (id) => {
+            return await api.delete(`posting/${id}`);
+        }
+    });
+
+    return { deletePosting };
 }

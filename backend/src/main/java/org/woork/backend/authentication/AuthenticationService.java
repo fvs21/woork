@@ -133,7 +133,7 @@ public class AuthenticationService {
         if(AuthenticationUtils.isEmail(credential)) {
             User check = userRepository.findByEmail(credential).orElse(null);
             if(check != null && !check.hasEmailVerified()) {
-                throw new AuthenticationErrorException("El correo electrónico que proporcionaste no se ha verificado.");
+                throw new IncorrectCredentialsException();
             }
         }
 
@@ -167,18 +167,33 @@ public class AuthenticationService {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    private String createPasswordResetLink(String credential, String credentialType, String token) {
+        StringBuilder link = new StringBuilder("http://localhost:3000/reset-password/" + token);
+
+        if(credentialType.equals("phone"))
+            link.append("?phone=").append(credential);
+        else
+            link.append("?email=").append(credential);
+
+        return link.toString();
+    }
+
     public String sendPasswordResetLink(String phoneOrEmail) {
         String credential = AuthenticationUtils.isEmail(phoneOrEmail) ? "email" : "phone";
-        User user = userRepository.findByEmailOrPhone(credential, credential).orElseThrow(UserDoesNotExistException::new);
+        User user = userRepository.findByEmailOrPhone(phoneOrEmail, phoneOrEmail).orElseThrow(UserDoesNotExistException::new);
+
+        if(credential.equals("email") && !user.hasEmailVerified()) {
+            throw new UserDoesNotExistException();
+        }
 
         if(!user.canUpdatePassword()) {
             throw new CannotRequestResetPasswordException(PasswordResetService.RECENTLY_UPDATED_PASSWORD);
         }
 
-        String generatedToken = passwordResetService.createPasswordResetToken(credential, phoneOrEmail);
+        String generatedToken = passwordResetService.createPasswordResetToken(user);
 
         //emailService.sendPasswordResetLink(...args);
-        logger.info("Token for " + phoneOrEmail + ": " + generatedToken);
+        logger.info("Link for " + phoneOrEmail + ": " + createPasswordResetLink(phoneOrEmail, credential, generatedToken));
         return PasswordResetService.RESET_LINK_SENT;
     }
 
@@ -186,11 +201,11 @@ public class AuthenticationService {
         return passwordResetService.resetTokenExists(token);
     }
 
-    public String resetPassword(String token, String newPassword, String confirmPassword) {
+    public String resetPassword(String token, String credential, String newPassword, String confirmPassword) {
         if(!newPassword.equals(confirmPassword)) {
             throw new PasswordsDontMatchException();
         }
-        passwordResetService.resetPassword(token, newPassword);
+        passwordResetService.resetPassword(token, credential, newPassword);
         return PasswordResetService.PASSWORD_RESET;
     }
 
@@ -223,18 +238,19 @@ public class AuthenticationService {
     }
 
     public void checkPhoneVerificationCode(User user, String verificationCode) {
-        if(!user.isPhoneVerificationCodeValid()) {
-            throw new VerificationCodeExpiredException();
-        }
         String storedVerificationCode = user.getPhoneVerificationCode();
         if(!passwordEncoder.matches(verificationCode, storedVerificationCode)) {
             throw new IncorrectVerificationCodeException();
+        }
+        if(!user.isPhoneVerificationCodeValid()) {
+            throw new VerificationCodeExpiredException();
         }
         user.markPhoneAsVerified();
         userRepository.save(user);
     }
 
     public String generateNewPhoneVerificationCode(User user) {
+        log.info(user);
         if(!user.canRequestPhoneVerificationCode()) {
             throw new UnableToGenerateVerificationCodeException("There is a refresh time between code generation");
         }

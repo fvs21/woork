@@ -88,4 +88,11 @@ public class PostingController {
 
         return postingService.getUserCreatedPostings(user);
     }
+
+    @DeleteMapping("/{id}")
+    public String deletePosting(@PathVariable("id") String id) {
+        User user = authenticationService.getCurrentUser();
+
+        return postingService.deletePosting(id, user);
+    }
 }

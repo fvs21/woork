@@ -16,6 +16,7 @@ import WorkPanel from '@/features/workpanel/WorkPanel';
 import SecurityPanel from '@/features/security/SecurityPanel';
 import { useLogout } from '@/api/hooks/authentication';
 import { useRouter } from 'next/navigation';
+import MutationButton from '@/components/MutationButton';
 
 export default function Page() {
     const [user] = useUser();
@@ -33,7 +34,7 @@ export default function Page() {
     const svgClr = svgColor();
 
     const router = useRouter();
-    const logout = useLogout();
+    const {logout, isLoading, logoutDisabled} = useLogout();
 
     useEffect(() => {
         function determineContainerStyles() {
@@ -173,13 +174,16 @@ export default function Page() {
                                     checked={dark} 
                                     className={styles.darkmodeInput} 
                                     type="checkbox"
-                                    onChange={() => {}}/>
+                                    onChange={() => {}}
+                                />
                                 <span className={`${styles.slider} ${styles.round}`}></span>
                             </label>
                         </button>
                     </li>
                     <li>
-                        <button onClick={logoutUser} className={`${styles['option-btn']}`}>Cerrar sesión</button>
+                        <MutationButton click={logoutUser} className={styles['option-btn']} disabled={logoutDisabled}>
+                            Cerrar sesión
+                        </MutationButton>
                     </li>
                 </ul>
             </div>

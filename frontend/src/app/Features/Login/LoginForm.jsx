@@ -14,11 +14,12 @@ import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
 
 export default function LoginForm({error}) {
     const [credential, setCredential] = useState("");
-    const [countryCode, setCountryCode] = useState("");
+    const [countryCode, setCountryCode] = useState("52");
     const [password, setPassword] = useState("");
+
     const [errorMsg, setErrorMsg] = useState(error);
 
-    const { login, isLoading } = useLogin();
+    const { login, isLoading, loginDisabled } = useLogin();
     const router = useRouter();
 
     async function handleSubmit(e) {
@@ -29,11 +30,17 @@ export default function LoginForm({error}) {
         const cred = isEmail(credential) ? credential : countryCode+credential;
 
         try {
-            await login({
+            const request = await login({
                 credential: cred,
                 password: password
             });
-            router.push("/dashboard");
+
+            const user = request.data.user;
+            if(!user.phoneVerified)
+                router.push("/verify-phone");
+            else
+                router.push("/dashboard");
+
         } catch(error) {
             setErrorMsg(error.response.data.message);
         }
@@ -70,9 +77,8 @@ export default function LoginForm({error}) {
                             {errorMsg && <span className="error-msg">{errorMsg}</span>}
                     </div>
                     <div className={styles['submit-btn-container']}>
-                        <SubmitButton 
-                            active={true}>
-                                {isLoading ? <LoadingSpinnerClear width={"18px"} /> : "Iniciar sesión"}
+                        <SubmitButton active={!loginDisabled}>
+                            {isLoading ? <LoadingSpinnerClear width={"18px"} /> : "Iniciar sesión"}
                         </SubmitButton>
                     </div>
                 </form>

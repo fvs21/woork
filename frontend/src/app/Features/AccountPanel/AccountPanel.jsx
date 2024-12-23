@@ -6,6 +6,7 @@ import { lazy } from 'react';
 import { formatAddress, formatGender } from '@/utils/account/AccountUtils';
 import LoadingModal from '@/components/LoadingModal/LoadingModal';
 import { useUser } from '@/api/hooks/user';
+import Image from 'next/image';
 
 const PhoneNumberModal = lazy(() => import("./PhoneNumberModal"));
 const EmailModal = lazy(() => import("./EmailModal"));
@@ -37,8 +38,12 @@ export default function AccountPanel() {
         <div className={styles.accountPanelContainer}>
             <div className={styles['basic-info-container']}>
                 <div className={styles['pfp-container']}>
-                    <img src={pfpUrl}
-                        className={styles['profile-picture']} onClick={() => setDisplayPfpModal(true)}/>
+                    <img 
+                        src={pfpUrl}
+                        className={styles['profile-picture']} 
+                        onClick={() => setDisplayPfpModal(true)}
+                        alt='Foto de perfil'
+                    />
                 </div>
                 <div className={styles['name-container']}>
                     <h1>{user?.firstName + " " + user?.lastName}</h1>

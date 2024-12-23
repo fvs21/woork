@@ -4,16 +4,13 @@ import { useState } from "react";
 import PostingControllerModal from "./PostingControllerModal";
 
 
-export default function CreatedPostingCard({title, id, description, price, images_urls, category, location_name}) {
+export default function CreatedPostingCard(
+    {title, id, description, price, images_urls, category, location_name, deletePosting}
+) {
     const [onClickModal, setOnClickModal] = useState(false);
 
-    function deletePosting(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        router.delete(`/posting/${id}`, {
-            preserveScroll: true
-        });
+    const deleteFn = async () => {
+        await deletePosting();
         setOnClickModal(false);
     }
 
@@ -48,7 +45,12 @@ export default function CreatedPostingCard({title, id, description, price, image
                 </div>
             </div>
             { onClickModal && 
-                <PostingControllerModal title={title} id={id} closeModal={() => setOnClickModal(false)} deleteFn={deletePosting}/>
+                <PostingControllerModal 
+                    title={title} 
+                    id={id} 
+                    closeModal={() => setOnClickModal(false)} 
+                    deleteFn={deleteFn}
+                />
             }
         </>
     )

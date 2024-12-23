@@ -1,7 +1,7 @@
 @use "./variables" as var;
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
-@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap");
+//@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap");
 
 :root {
     --background-color: white;
@@ -69,16 +69,14 @@ input:-webkit-autofill:active{
     caret-color: var(--text-color);
 }
 
-/**
 @font-face {
     font-family: 'League Spartan';
     font-style: normal;
     font-weight: 100 900;
     font-display: swap;
-    src: url("./fonts/League_Spartan/LeagueSpartan-VariableFont_wght.ttf");
+    src: url("/fonts/League_Spartan/LeagueSpartan-VariableFont_wght.ttf");
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-*/
 
 
 .border-dark {
@@ -137,6 +135,7 @@ select {
     color: green;
     font-size: small;
     position: absolute;
+    margin-top: var.$margin-xxs;
 }
 
 .normal-border {

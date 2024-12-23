@@ -45,7 +45,7 @@ export default function ChangePasswordModal({closeModal}) {
             await api.put("/password/update", {
                 currentPassword: currentPassword,
                 newPassword: newPassword,
-                password_confirmation: reNewPassword
+                confirmPassword: reNewPassword
             });
 
             flash("Contraseña actualizada", 3000);

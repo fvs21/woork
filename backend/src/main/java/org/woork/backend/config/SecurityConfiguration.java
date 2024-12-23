@@ -66,6 +66,7 @@ public class SecurityConfiguration {
                         ).authenticated()
                         //POSTING
                         .requestMatchers(
+                                HttpMethod.GET,
                                 "/api/posting/{id}"
                         ).permitAll()
                         .requestMatchers(
@@ -74,6 +75,10 @@ public class SecurityConfiguration {
                                 "/api/posting/addresses",
                                 "/api/posting/posting/apply",
                                 "/api/posting/{id}/applicants"
+                        ).authenticated()
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/api/posting/{id}"
                         ).authenticated()
                         //WS
                         .requestMatchers("/ws").permitAll()
