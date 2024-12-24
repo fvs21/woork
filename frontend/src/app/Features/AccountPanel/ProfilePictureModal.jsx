@@ -46,7 +46,6 @@ export default function ProfilePictureModal({closeModal}) {
     async function handleSubmit(event) {
         event.preventDefault();
 
-
         try {
             await update(image);
             flash("Foto de perfil actualizada.", 4000, "success");

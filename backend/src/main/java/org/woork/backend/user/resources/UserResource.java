@@ -1,5 +1,6 @@
 package org.woork.backend.user.resources;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.woork.backend.address.AddressResource;
@@ -21,7 +22,9 @@ public class UserResource {
     private boolean emailVerified;
     private String pfp_url;
     private AddressResource address;
-    private boolean is_worker;
+
+    @JsonProperty(value = "is_worker")
+    private boolean isWorker;
 
     public UserResource(User user) {
         this.firstName = user.getFirstName();
@@ -35,6 +38,6 @@ public class UserResource {
         this.emailVerified = user.hasEmailVerified();
         this.pfp_url = "http://localhost:8000" + user.getProfilePictureUrl();
         this.address = user.getAddress() != null ? new AddressResource(user.getAddress()) : null;
-        this.is_worker = user.isWorker();
+        this.isWorker = user.isWorker();
     }
 }

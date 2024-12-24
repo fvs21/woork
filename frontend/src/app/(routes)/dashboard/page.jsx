@@ -12,7 +12,7 @@ import { useUser } from '@/api/hooks/user';
 import { useTheme } from '@/hooks/theme';
 import LogotypeWhite from '@/components/Logotype/LogotypeWhite';
 import { svgColor } from '@/utils/extra/utils';
-import WorkPanel from '@/features/workpanel/WorkPanel';
+import WorkPanel from '@/features/workpanel/components/WorkPanel';
 import SecurityPanel from '@/features/security/SecurityPanel';
 import { useLogout } from '@/api/hooks/authentication';
 import { useRouter } from 'next/navigation';
@@ -21,7 +21,7 @@ import MutationButton from '@/components/MutationButton';
 export default function Page() {
     const [user] = useUser();
     
-    const [option, setOption] = useState(-1);
+    const [option, setOption] = useState(2);
     const [panel, setPanel] = useState(0); //0 is options menu, and 1 is panel
     const { width } = useWindowDimensions();
 
@@ -34,7 +34,7 @@ export default function Page() {
     const svgClr = svgColor();
 
     const router = useRouter();
-    const {logout, isLoading, logoutDisabled} = useLogout();
+    const {logout, logoutDisabled} = useLogout();
 
     useEffect(() => {
         function determineContainerStyles() {

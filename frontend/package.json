@@ -19,6 +19,9 @@
     "react-query": "^3.39.3"
   },
   "devDependencies": {
-    "sass": "^1.83.0"
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "sass": "^1.83.0",
+    "typescript": "^5.7.2"
   }
 }

@@ -19,7 +19,7 @@ export default function ChangePasswordModal({closeModal}) {
     const [reNewPassword, setReNewPassword] = useState("");
     const [reNewPasswordValid, setReNewPasswordValid] = useState(true);
     
-    const { update, isLoading, updatePasswordInvalid } = useUpdatePassword();
+    const { update, updatePasswordInvalid } = useUpdatePassword();
     const { forgotPassword, forgotPasswordInvalid } = useAuthenticatedForgotPassword();
 
     const changeCurrentPassword = (value) => {
@@ -124,11 +124,12 @@ export default function ChangePasswordModal({closeModal}) {
                             errorMsg={"Las contraseñas no coinciden."}/>
                     </div>
                     <div className={styles.forgotPassword}>
-                        <span 
+                        <MutationButton 
                             className={styles.forgotPasswordBtn}
-                            onClick={(e) => handleForgotPassword(e)}>
+                            onClick={(e) => handleForgotPassword(e)}
+                            disable={forgotPasswordInvalid}>
                                 ¿Se te olvido tu contraseña?
-                        </span>
+                        </MutationButton>
                     </div>
                     <div className={styles.submitChangePasswordContainer}>
                         <MutationButton classname={`${styles.submitChangePasswordBtn}`} disable={updatePasswordInvalid}>

@@ -23,8 +23,6 @@ export default function UserDropdown() {
 
     const {logout, isLoading, logoutDisabled} = useLogout();
     
-    const router = useRouter();
-
     async function logoutUser(e) {
         e.preventDefault();
 
