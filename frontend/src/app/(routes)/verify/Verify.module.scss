@@ -1,0 +1,46 @@
+@use "@/styles/variables" as var;
+
+.content-container {
+    padding: 130px 20%;
+}
+
+.title {
+    font-size: 60px;
+    font-weight: 700;
+}
+
+.start-verification-btn {
+    background-color: #15b67c;
+    color: white;
+    border: none;
+    padding: 20px 100px;
+    border-radius: 6px;
+    font-size: large;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.start-verification-btn:hover {
+    background-color: #18c787;
+}
+
+.requirements {
+    padding-bottom: 15px;
+}
+
+.steps {
+    li {
+        margin-bottom: 10px;
+    }
+}
+
+.information-disclaimer {
+    color: var.$primary-color;
+    text-decoration: none;
+}
+
+.information-disclaimer:hover {
+    text-decoration: underline;
+}

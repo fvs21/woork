@@ -24,6 +24,10 @@ import org.woork.backend.address.AddressService;
 import org.woork.backend.notification.NotificationService;
 import org.woork.backend.notification.NotificationType;
 import org.woork.backend.notification.records.NotificationData;
+import org.woork.backend.pendingjob.PendingJob;
+import org.woork.backend.pendingjob.PendingJobService;
+import org.woork.backend.pendingjob.resources.HostPendingJobResource;
+import org.woork.backend.posting.records.AcceptJobApplicationResponse;
 import org.woork.backend.posting.records.PostingLocation;
 import org.woork.backend.posting.records.PostingResponse;
 import org.woork.backend.posting.requests.PostingLocationRequest;
@@ -58,6 +62,7 @@ public class PostingService {
     private final NotificationService notificationService;
     private final AuthenticationService authenticationService;
     private final WorkerService workerService;
+    private final PendingJobService pendingJobService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -73,8 +78,8 @@ public class PostingService {
             PostingApplicationRepository postingApplicationRepository,
             NotificationService notificationService,
             AuthenticationService authenticationService,
-            WorkerService workerService
-    ) {
+            WorkerService workerService,
+            PendingJobService pendingJobService) {
         this.postingRepository = postingRepository;
         this.addressService = addressService;
         this.addressRepository = addressRepository;
@@ -85,6 +90,7 @@ public class PostingService {
         this.notificationService = notificationService;
         this.authenticationService = authenticationService;
         this.workerService = workerService;
+        this.pendingJobService = pendingJobService;
     }
 
     private CreatePostingRequest decodeJson(String body) {
@@ -217,7 +223,6 @@ public class PostingService {
         try {
             id = urlService.decodeIdFromUrl(hashId).get(0);
         } catch(Exception e) {
-            System.out.println(e.getClass());
             throw new PostingDoesNotExistException();
         }
 
@@ -346,7 +351,15 @@ public class PostingService {
         ).toList();
     }
 
-    public int acceptJobApplicantRequest(User creator, Long applicantId, Long postingId) {
+    public AcceptJobApplicationResponse acceptJobApplicantRequest(User creator, Long applicantId, String postingHashId) {
+        Long postingId;
+
+        try {
+            postingId = urlService.decodeIdFromUrl(postingHashId).get(0);
+        } catch(IndexOutOfBoundsException e) {
+            throw new UnableToParseIdException();
+        }
+
         Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
         if(!posting.belongsToUser(creator)) {
             throw new UnableToAcceptApplicantException("Forbidden action.");
@@ -361,7 +374,14 @@ public class PostingService {
                 () -> new UnableToApplyToJobException("Posting application does not exist.")
         );
         application.acceptApplication();
-        return 0;
+
+        PendingJob createdJob = pendingJobService.createJobSession(creator, applicant, posting);
+        Long establishedJobSessionsCount = pendingJobService.getPendingJobCount(creator);
+
+        return new AcceptJobApplicationResponse(
+                new HostPendingJobResource(createdJob, postingHashId),
+                establishedJobSessionsCount
+        );
     }
 
     public Set<AddressResource> getUserCreatedAddresses(User user) {

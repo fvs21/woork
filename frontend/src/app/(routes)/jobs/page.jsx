@@ -1,5 +1,5 @@
-import PendingJobs from "@/features/postingsdashboard/PendingJobs";
-import PostingsDashboardLayout from "@/features/postingsdashboard/PostingsDashboardLayout";
+import PendingJobs from "@/features/postingsdashboard/components/PendingJobs/PendingJobs";
+import PostingsDashboardLayout from "@/features/postingsdashboard/components/PostingsDashboard/PostingsDashboardLayout";
 
 export const metadata = {
     title: "Woork - Panel de publicacione"

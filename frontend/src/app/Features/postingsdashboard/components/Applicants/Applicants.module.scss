@@ -1,0 +1,120 @@
+@use "@/styles/variables" as var;
+
+.jobApplicantsModal {
+    width: 500px;
+    height: 600px;
+}
+
+.jobApplicantsHeader {
+    padding: 12px 10px;
+    font-size: 22px;
+    font-weight: bold;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.closeModalBtn {
+    padding: 6px;
+    border: none;
+    line-height: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.closeModalBtn:hover {
+    background-color: var(--button-hover);
+}
+
+.applicantsList {
+    height: 85%;
+    border-bottom: 1px solid var(--border-color);
+    overflow: auto;
+}
+
+.noApplicants {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.applicantContainer {
+    display: flex;
+    align-items: center;
+    height: 70px;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 20px;
+}
+
+.applicantContainer:last-child {
+    border-bottom: none;
+}
+
+.applicantPfpContainer {
+    width: 70px;
+    height: 45px;
+}
+
+.applicantPfp {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.applicantInformation {
+    width: 220px;
+}
+
+.applicantName {
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.applicantName:hover {
+    text-decoration: underline;
+}
+
+.applicantRating {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.buttonsContainer {
+    display: flex;
+    gap: 10px;
+}
+
+.applicantBtn {
+    padding: 6px;
+    border: none;
+    width: 80px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.acceptBtn {
+    background-color: var.$primary-color;
+    color: white;
+}
+
+.acceptBtn:hover {
+    background-color: var.$secondary-color;
+}
+
+.rejectBtn {
+    background-color: var(--background-color);
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+}
+
+.rejectBtn:hover {
+    background-color: var(--button-hover);
+}

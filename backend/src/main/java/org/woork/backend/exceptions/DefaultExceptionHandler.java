@@ -32,7 +32,8 @@ public class DefaultExceptionHandler {
             ResetTokenDoesNotExistException.class,
             ImageNotFoundException.class,
             NotificationDoesNotExistException.class,
-            PostingDoesNotExistException.class
+            PostingDoesNotExistException.class,
+            UnableToParseIdException.class
     })
     public ResponseEntity<DefaultExceptionResponse> handleNotFoundRequest(DefaultException e) {
         return new ResponseEntity<>(

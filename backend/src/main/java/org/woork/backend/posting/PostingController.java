@@ -9,7 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.address.AddressResource;
 import org.woork.backend.address.AddressService;
 import org.woork.backend.authentication.AuthenticationService;
+import org.woork.backend.posting.records.AcceptJobApplicationResponse;
 import org.woork.backend.posting.records.PostingResponse;
+import org.woork.backend.posting.requests.AcceptJobApplicationRequest;
 import org.woork.backend.posting.resources.PostingResource;
 import org.woork.backend.postingapplication.resources.ApplicantResource;
 import org.woork.backend.user.User;
@@ -94,5 +96,12 @@ public class PostingController {
         User user = authenticationService.getCurrentUser();
 
         return postingService.deletePosting(id, user);
+    }
+
+    @PostMapping("/application/accept")
+    public AcceptJobApplicationResponse acceptApplication(@RequestBody AcceptJobApplicationRequest request) {
+        User user = authenticationService.getCurrentUser();
+
+        return postingService.acceptJobApplicantRequest(user, request.applicantId(), request.postingId());
     }
 }

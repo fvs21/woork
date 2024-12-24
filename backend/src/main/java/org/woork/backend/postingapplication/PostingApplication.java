@@ -31,7 +31,7 @@ public class PostingApplication {
     private Posting posting;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "worker_id")
     private Worker worker;
 
     private String status;

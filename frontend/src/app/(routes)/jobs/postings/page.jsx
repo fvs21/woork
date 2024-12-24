@@ -1,5 +1,5 @@
-import CreatedPostingsListing from "@/features/postingsdashboard/CreatedPostingsListing";
-import PostingsDashboardLayout from "@/features/postingsdashboard/PostingsDashboardLayout";
+import CreatedPostingsListing from "@/features/postingsdashboard/components/CreatedPostings/CreatedPostingsListing";
+import PostingsDashboardLayout from "@/features/postingsdashboard/components/PostingsDashboard/PostingsDashboardLayout";
 
 export const metadata = {
     title: "Woork - Tus anuncios"

@@ -21,7 +21,7 @@ import MutationButton from '@/components/MutationButton';
 export default function Page() {
     const [user] = useUser();
     
-    const [option, setOption] = useState(2);
+    const [option, setOption] = useState(-1);
     const [panel, setPanel] = useState(0); //0 is options menu, and 1 is panel
     const { width } = useWindowDimensions();
 
@@ -34,7 +34,7 @@ export default function Page() {
     const svgClr = svgColor();
 
     const router = useRouter();
-    const {logout, logoutDisabled} = useLogout();
+    const { logout, logoutDisabled } = useLogout();
 
     useEffect(() => {
         function determineContainerStyles() {
