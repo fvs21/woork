@@ -21,7 +21,7 @@ export default async function RootLayout({ children }) {
   const cookieStore = await cookies();
   const theme = cookieStore.get('theme');
 
-  const value = theme?.value || 'light';
+  const value: string = theme?.value || 'light';
   
 
   return (

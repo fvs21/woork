@@ -3,7 +3,7 @@ import styles from "./UserDropdown.module.scss";
 import UserSVG from "../SVGs/User";
 import LogoutSVG from "../SVGs/Logout";
 import MoonSVG from "../SVGs/Moon";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useTheme } from "@/hooks/theme";
 import { useUser } from "@/api/hooks/user";
 import MegaphoneSVG from "../SVGs/Megaphone";
@@ -17,13 +17,11 @@ export default function UserDropdown() {
     const [theme, switchTheme] = useTheme();
     const [dark, setDark] = useState(theme == 'dark' ? true : false);
 
-    const color = theme == 'dark' ? 'white' : 'black';
+    const color: string = theme == 'dark' ? 'white' : 'black';
 
-    const {logout, isLoading, logoutDisabled} = useLogout();
+    const {logout, logoutDisabled} = useLogout();
     
-    async function logoutUser(e) {
-        e.preventDefault();
-
+    async function logoutUser(): Promise<void> {
         try {
             await logout();
         } catch(error) {
@@ -63,7 +61,7 @@ export default function UserDropdown() {
                 <label 
                     className={styles.switch}
                     onClick={(e) => {
-                        e.preventDefault(e);
+                        e.preventDefault();
                     }}>
                     <input 
                         checked={dark} 
@@ -75,8 +73,8 @@ export default function UserDropdown() {
             <MutationButton
                 click={logoutUser}
                 classname={styles.dropdownItem}
-                onMouseDown={(e) => e.preventDefault()}
-                disabled={logoutDisabled}
+                onMouseDown={(e: React.ChangeEvent<HTMLInputElement>) => e.preventDefault()}
+                disable={logoutDisabled}
             >
                 <LogoutSVG width={"25px"} color={color}/>
                 Cerrar sesión

@@ -6,14 +6,13 @@ import styles from "./Layout.module.scss";
 import { useUser } from "@/api/hooks/user";
 import { useState } from "react";
 import UserDropdown from "../UserDropdown/UserDropdown";
-import Image from "next/image";
 
 export default function Layout({children}) {
     const [user] = useUser();
     
-    const canLogin = user == null;
+    const canLogin: boolean = user == null;
     
-    const [accountDropdown, setAccountDropdown] = useState(false);
+    const [accountDropdown, setAccountDropdown] = useState<boolean>(false);
 
     return (
         <main style={{height: "100%"}}>
@@ -54,7 +53,9 @@ export default function Layout({children}) {
                     }
                 </div>
             </div>
-            {children}
+            <div className={styles.content}>
+                {children}
+            </div>
         </main>
     )
 }

@@ -1,8 +1,15 @@
 import { svgColor } from "@/utils/extra/utils";
 import CloseSVG from "../SVGs/Close";
 import styles from "./FlashAlert.module.scss";
+import React from "react";
 
-export default function FlashAlert({children, type = 'success', deleteMsg}) {
+type FlashAlertProps = {
+    children: React.ReactNode;
+    type: 'success' | 'error';
+    deleteMsg: Function;
+};
+
+export default function FlashAlert({children, type = 'success', deleteMsg}: FlashAlertProps) {
     return (
         <div className={`${styles.bottomAlertContainer} ${type === 'error' ? styles.errorMsg : styles.successMsg}`}>
             <div className={styles.alertMessage}>

@@ -4,9 +4,10 @@ import { useState } from "react";
 import { setUpdateFlashes, deleteAll } from "../flashMessageCreator";
 import { useEffect } from "react";
 import FlashAlert from "@/components/FlashAlert/FlashAlert";
+import { FlashMessage } from "../types/flashMessagesTypes";
 
 export default function FlashRenderer() {
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState<Array<FlashMessage>>([]);
 
     useEffect(() => {
         setUpdateFlashes(setMessages);
@@ -15,10 +16,12 @@ export default function FlashRenderer() {
 
     return (
         messages.length > 0 &&
-            messages.map(function(msg, i) {
-                return <FlashAlert key={msg.id} type={msg.type} deleteMsg={msg.deleteFlash}>
-                    {msg.data}
-                </FlashAlert>
+            messages.map(function(msg: FlashMessage, i) {
+                return (
+                    <FlashAlert key={msg.id} type={msg.type} deleteMsg={msg.deleteFlash}>
+                        {msg.data}
+                    </FlashAlert>
+                )
             }) 
     );
 }
