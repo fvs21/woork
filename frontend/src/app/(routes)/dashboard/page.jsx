@@ -12,7 +12,7 @@ import { useUser } from '@/api/hooks/user';
 import { useTheme } from '@/hooks/theme';
 import LogotypeWhite from '@/components/Logotype/LogotypeWhite';
 import { svgColor } from '@/utils/extra/utils';
-import WorkPanel from '@/features/workpanel/WorkPanel';
+import WorkPanel from '@/features/workpanel/components/WorkPanel';
 import SecurityPanel from '@/features/security/SecurityPanel';
 import { useLogout } from '@/api/hooks/authentication';
 import { useRouter } from 'next/navigation';
@@ -34,7 +34,7 @@ export default function Page() {
     const svgClr = svgColor();
 
     const router = useRouter();
-    const {logout, isLoading, logoutDisabled} = useLogout();
+    const { logout, logoutDisabled } = useLogout();
 
     useEffect(() => {
         function determineContainerStyles() {

@@ -32,7 +32,8 @@ public class DefaultExceptionHandler {
             ResetTokenDoesNotExistException.class,
             ImageNotFoundException.class,
             NotificationDoesNotExistException.class,
-            PostingDoesNotExistException.class
+            PostingDoesNotExistException.class,
+            UnableToParseIdException.class
     })
     public ResponseEntity<DefaultExceptionResponse> handleNotFoundRequest(DefaultException e) {
         return new ResponseEntity<>(
@@ -133,7 +134,8 @@ public class DefaultExceptionHandler {
             UserPhoneNotVerifiedException.class,
             RefreshTokenExpiredException.class,
             AccessTokenExpiredException.class,
-            RefreshTokenNotPresentException.class
+            RefreshTokenNotPresentException.class,
+            UserIsNotRegisteredAsWorkerException.class
     })
     public ResponseEntity<DefaultExceptionResponse> handleUnauthorizedRequest(DefaultException e) {
         return new ResponseEntity<>(

@@ -21,7 +21,7 @@ export default function VerifyPanel() {
                     Verificate
                 </a>
             </div>
-            <Link className={styles['disclaimer-link']}>
+            <Link href={"#"} className={styles['disclaimer-link']}>
                 ¿Para qué necesitamos esto?
             </Link>
         </div>

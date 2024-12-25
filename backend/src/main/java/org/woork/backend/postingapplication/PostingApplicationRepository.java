@@ -9,5 +9,5 @@ import java.util.Set;
 @Repository
 public interface PostingApplicationRepository extends JpaRepository<PostingApplication, Long> {
     Optional<PostingApplication> findByPostingIdAndStatus(Long postingId, String status);
-    Optional<PostingApplication> findByPostingIdAndUserId(Long postingId, Long userId);
+    Optional<PostingApplication> findByPostingIdAndWorkerId(Long postingId, Long workerId);
 }

@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.woork.backend.user.User;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,7 +36,7 @@ public class Worker {
     @Column(name = "jobs_completed")
     private int jobsCompleted;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     private Set<CategoryTag> categories;
 
     public Worker(User user) {

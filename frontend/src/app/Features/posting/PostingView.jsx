@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const JobApplicantsList = lazy(() =>
-  import("@/features/postingsdashboard/JobApplicantsList")
+  import("@/features/postingsdashboard/components/Applicants/JobApplicantsList")
 );
 
 export default function PostingView({ id }) {

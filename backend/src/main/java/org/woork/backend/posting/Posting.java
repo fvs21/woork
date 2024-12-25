@@ -9,6 +9,7 @@ import org.woork.backend.image.Image;
 import org.woork.backend.address.Address;
 import org.woork.backend.postingapplication.PostingApplication;
 import org.woork.backend.user.User;
+import org.woork.backend.worker.Worker;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class Posting {
 
     @OneToOne
     @JoinColumn(name = "completed_by")
-    private User completedBy;
+    private Worker completedBy;
 
     public Posting() {
         images = new HashSet<>();

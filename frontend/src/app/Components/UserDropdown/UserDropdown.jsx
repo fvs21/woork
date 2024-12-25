@@ -8,8 +8,6 @@ import { useTheme } from "@/hooks/theme";
 import { useUser } from "@/api/hooks/user";
 import MegaphoneSVG from "../SVGs/Megaphone";
 import { useLogout } from "@/api/hooks/authentication";
-import { useRouter } from "next/navigation";
-import { flash } from "@/flash-message/flashMessageCreator";
 import Profile from "../SVGs/Profile";
 import MutationButton from "../MutationButton";
 
@@ -23,15 +21,13 @@ export default function UserDropdown() {
 
     const {logout, isLoading, logoutDisabled} = useLogout();
     
-    const router = useRouter();
-
     async function logoutUser(e) {
         e.preventDefault();
 
         try {
             await logout();
         } catch(error) {
-            flash("Un error ha ocurrido", 4000, "error");
+            console.log(error);
         }
     }
 

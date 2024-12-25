@@ -1,0 +1,95 @@
+@use "@/styles/variables" as var;
+
+.postingsDashboardContainer {
+    width: 100%;
+    min-height: 700px;
+}
+
+.spacer {
+    padding-left: 80px;
+    padding-right: 80px;
+    margin-left: auto !important;
+    margin-right: auto !important; 
+    max-width: 1240px;
+}
+
+.postingsDashboardHeader {
+    padding-top: 4.5rem;
+    font-size: 30px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+}
+
+.createPostingLink {
+    padding: 8px 40px;
+    border-radius: 6px;
+    border: 1px solid var(--text-color);
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.createPostingLink:hover {
+    background-color: var(--button-hover);
+}
+
+.optionSelector {
+    display: flex;
+    gap: 10px;
+    padding-top: var.$margin-s;
+    padding-bottom: var.$margin-xs;
+}
+
+@mixin option {
+    padding: 8px 10px;
+    border-radius: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    text-decoration: none; 
+    font-size: 14px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.option {
+    @include option;
+    outline: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: var(--button-hover);
+}
+
+.selectedOption {
+    @include option;
+    outline: 2px solid var(--text-color);
+}
+
+.pendingJobsContainer {
+    padding-top: 10px;
+    min-height: 600px;
+}
+
+@media only screen and (max-width: 730px) {
+    .postingsDashboardHeader {
+        flex-direction: column;
+        gap: 10px;
+        align-items: baseline;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .spacer {
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+    }
+
+    .spacer {
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+    }
+}

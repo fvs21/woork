@@ -24,6 +24,10 @@ import org.woork.backend.address.AddressService;
 import org.woork.backend.notification.NotificationService;
 import org.woork.backend.notification.NotificationType;
 import org.woork.backend.notification.records.NotificationData;
+import org.woork.backend.pendingjob.PendingJob;
+import org.woork.backend.pendingjob.PendingJobService;
+import org.woork.backend.pendingjob.resources.HostPendingJobResource;
+import org.woork.backend.posting.records.AcceptJobApplicationResponse;
 import org.woork.backend.posting.records.PostingLocation;
 import org.woork.backend.posting.records.PostingResponse;
 import org.woork.backend.posting.requests.PostingLocationRequest;
@@ -37,6 +41,9 @@ import org.woork.backend.url.UrlService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;
 import org.woork.backend.validators.ValidatorImpl;
+import org.woork.backend.worker.Worker;
+import org.woork.backend.worker.WorkerService;
+import org.woork.backend.worker.resources.WorkerResource;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,9 +59,10 @@ public class PostingService {
     private final UrlService urlService;
     private final ValidatorImpl validator;
     private final PostingApplicationRepository postingApplicationRepository;
-    private final UserService userService;
     private final NotificationService notificationService;
     private final AuthenticationService authenticationService;
+    private final WorkerService workerService;
+    private final PendingJobService pendingJobService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -67,7 +75,11 @@ public class PostingService {
             ImageService imageService,
             UrlService urlService,
             ValidatorImpl validator,
-            PostingApplicationRepository postingApplicationRepository, UserService userService, NotificationService notificationService, AuthenticationService authenticationService) {
+            PostingApplicationRepository postingApplicationRepository,
+            NotificationService notificationService,
+            AuthenticationService authenticationService,
+            WorkerService workerService,
+            PendingJobService pendingJobService) {
         this.postingRepository = postingRepository;
         this.addressService = addressService;
         this.addressRepository = addressRepository;
@@ -75,9 +87,10 @@ public class PostingService {
         this.urlService = urlService;
         this.validator = validator;
         this.postingApplicationRepository = postingApplicationRepository;
-        this.userService = userService;
         this.notificationService = notificationService;
         this.authenticationService = authenticationService;
+        this.workerService = workerService;
+        this.pendingJobService = pendingJobService;
     }
 
     private CreatePostingRequest decodeJson(String body) {
@@ -181,12 +194,15 @@ public class PostingService {
 
         if(authenticationService.isUserAuthenticated()) {
             User user = authenticationService.getCurrentUser();
-            String status = getUsersPostingApplicationStatus(user.getId(), postingId);
+            if(user.isWorker()) {
+                Worker worker = workerService.getWorker(user);
+                String status = getUsersPostingApplicationStatus(worker.getId(), postingId);
 
-            return new PostingResponse(
-                    getPosting(postingId),
-                    status
-            );
+                return new PostingResponse(
+                        getPosting(postingId),
+                        status
+                );
+            }
         }
 
         return new PostingResponse(
@@ -207,7 +223,6 @@ public class PostingService {
         try {
             id = urlService.decodeIdFromUrl(hashId).get(0);
         } catch(Exception e) {
-            System.out.println(e.getClass());
             throw new PostingDoesNotExistException();
         }
 
@@ -250,17 +265,17 @@ public class PostingService {
         if(userId == null)
             return "";
 
-        PostingApplication application = postingApplicationRepository.findByPostingIdAndUserId(postingId, userId).orElse(null);
+        PostingApplication application = postingApplicationRepository.findByPostingIdAndWorkerId(postingId, userId).orElse(null);
         if(application == null)
             return null;
 
         return application.getStatus();
     }
 
-    public PostingApplication createJobRequest(User user, Posting posting) {
+    public PostingApplication createJobRequest(Worker worker, Posting posting) {
         PostingApplication postingApplication = new PostingApplication(
                 posting,
-                user
+                worker
         );
         return postingApplicationRepository.save(postingApplication);
     }
@@ -272,7 +287,10 @@ public class PostingService {
             throw new UnableToApplyToJobException("Job is no longer available.");
         }
 
-        PostingApplication application = postingApplicationRepository.findByPostingIdAndUserId(postingId, user.getId()).orElse(null);
+        //Get worker entity. Is user has not registered as a worker, the exception is handled in the getWorker method.
+        Worker worker = workerService.getWorker(user);
+
+        PostingApplication application = postingApplicationRepository.findByPostingIdAndWorkerId(postingId, worker.getId()).orElse(null);
         Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
 
         if(application != null) {
@@ -286,7 +304,7 @@ public class PostingService {
                 return "Solicitud cancelada";
             }
         } else {
-            PostingApplication request = createJobRequest(user, posting);
+            PostingApplication request = createJobRequest(worker, posting);
             notificationService.createAndSendNotification(
                     user,
                     new NotificationData(
@@ -327,13 +345,21 @@ public class PostingService {
         List<PostingApplication> applications = posting.getPostingApplications();
         return applications.stream().map(
                 application -> {
-                    User applicant = application.getUser();
+                    Worker applicant = application.getWorker();
                     return new ApplicantResource(applicant);
                 }
         ).toList();
     }
 
-    public int acceptJobApplicantRequest(User creator, String applicantUsername, Long postingId) {
+    public AcceptJobApplicationResponse acceptJobApplicantRequest(User creator, Long applicantId, String postingHashId) {
+        Long postingId;
+
+        try {
+            postingId = urlService.decodeIdFromUrl(postingHashId).get(0);
+        } catch(IndexOutOfBoundsException e) {
+            throw new UnableToParseIdException();
+        }
+
         Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
         if(!posting.belongsToUser(creator)) {
             throw new UnableToAcceptApplicantException("Forbidden action.");
@@ -343,13 +369,19 @@ public class PostingService {
             throw new UnableToApplyToJobException("Job is no longer available.");
         }
 
-        User applicant = userService.getUserByUsername(applicantUsername);
-        PostingApplication application = postingApplicationRepository.findByPostingIdAndUserId(postingId, applicant.getId()).orElseThrow(
+        Worker applicant = workerService.getWorkerById(applicantId);
+        PostingApplication application = postingApplicationRepository.findByPostingIdAndWorkerId(postingId, applicant.getId()).orElseThrow(
                 () -> new UnableToApplyToJobException("Posting application does not exist.")
         );
         application.acceptApplication();
 
-        return 0;
+        PendingJob createdJob = pendingJobService.createJobSession(creator, applicant, posting);
+        Long establishedJobSessionsCount = pendingJobService.getPendingJobCount(creator);
+
+        return new AcceptJobApplicationResponse(
+                new HostPendingJobResource(createdJob, postingHashId),
+                establishedJobSessionsCount
+        );
     }
 
     public Set<AddressResource> getUserCreatedAddresses(User user) {

@@ -5,10 +5,17 @@ import FlashRenderer from "@/flash-message/components/FlashRenderer";
 import JotaiProvider from "@/jotai/JotaiProvider";
 import { cookies } from "next/headers";
 import ThemeProvider from "@/context/theme/ThemeProvider";
+import {Montserrat} from "next/font/google";
 
 export const metadata = {
   title: "Woork"
 }
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-montserrat'
+})
 
 export default async function RootLayout({ children }) {
   const cookieStore = await cookies();
@@ -18,7 +25,7 @@ export default async function RootLayout({ children }) {
   
 
   return (
-    <html className={value}>
+    <html className={`${value} ${montserrat.className}`}>
       <head>
         <link rel="icon" type="image/svg+xml" href="/woork-logo.png" />
       </head>

@@ -1,5 +1,6 @@
 import { getUser, refreshToken } from "@/api/server/auth";
 import AuthClient from "./AuthClient";
+import { log } from "console";
 
 export const dynamic = 'force-dynamic'
 
