@@ -69,6 +69,19 @@
     outline: 2px solid var(--text-color);
 }
 
+.pendingJobsContainer {
+    padding-top: 10px;
+    min-height: 600px;
+}
+
+@media only screen and (max-width: 730px) {
+    .postingsDashboardHeader {
+        flex-direction: column;
+        gap: 10px;
+        align-items: baseline;
+    }
+}
+
 @media only screen and (max-width: 800px) {
     .spacer {
         padding-left: 40px !important;

@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("api/pending_jobs")
 public class PendingJobController {
     private final AuthenticationService authenticationService;
-    private PendingJobService pendingJobService;
+    private final PendingJobService pendingJobService;
 
     @Autowired
     public PendingJobController(PendingJobService pendingJobService, AuthenticationService authenticationService) {
@@ -26,6 +26,6 @@ public class PendingJobController {
     public List<HostPendingJobResource> getUserPendingJobs() {
         User user = authenticationService.getCurrentUser();
 
-
+        return pendingJobService.getUserPendingJobs(user);
     }
 }

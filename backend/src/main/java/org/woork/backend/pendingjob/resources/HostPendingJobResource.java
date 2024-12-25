@@ -3,7 +3,6 @@ package org.woork.backend.pendingjob.resources;
 import lombok.Getter;
 import lombok.Setter;
 import org.woork.backend.pendingjob.PendingJob;
-import org.woork.backend.posting.resources.PostingResource;
 import org.woork.backend.worker.resources.WorkerResource;
 
 import java.time.LocalDateTime;

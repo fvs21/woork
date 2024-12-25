@@ -1,10 +1,5 @@
 @use "@/styles/variables" as var;
 
-.pendingJobsContainer {
-    padding-top: 10px;
-    min-height: 600px;
-}
-
 .pendingJobsTitle {
     font-size: 22px;
     padding-bottom: var.$margin-xl;
@@ -101,6 +96,13 @@
     background-color: var.$secondary-color;
 }
 
+
+@media only screen and (max-width: 1050px) {
+    .pendingJobsListing {
+        grid-template-columns: repeat(3, minmax(0, 1fr)); 
+    }
+}
+
 @media only screen and (max-width: 730px){
     .title {
         font-size: 14px;
@@ -120,16 +122,4 @@
     .pendingJobsListing {
         grid-template-columns: repeat(2, minmax(0, 1fr)); 
     } 
-
-    .postingsDashboardHeader {
-        flex-direction: column;
-        gap: 10px;
-        align-items: baseline;
-    }
-}
-
-@media only screen and (max-width: 1050px) {
-    .pendingJobsListing {
-        grid-template-columns: repeat(3, minmax(0, 1fr)); 
-    }
 }

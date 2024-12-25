@@ -5,6 +5,7 @@ import styles from "./CreatedPostings.module.scss";
 import { useCreatedPostings, useDeletePosting } from "@/api/hooks/postings";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { useQueryClient } from "react-query";
+import { Posting } from "@/types/postings";
 
 export default function CreatedPostingsListing() {
     const { data: postings, isLoading } = useCreatedPostings();
@@ -20,10 +21,10 @@ export default function CreatedPostingsListing() {
         </div>
     }
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id: string) => {
         try {
             await deletePosting(id);
-            let postings = queryClient.getQueryData(['created-postings']);
+            let postings: Array<Posting> = queryClient.getQueryData<Array<Posting>>(['created-postings']);
             postings = postings.filter(posting => posting.url != id);
             queryClient.setQueryData(['created-postings'], postings);
         } catch(error) {

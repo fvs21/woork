@@ -115,6 +115,11 @@ public class SecurityConfiguration {
                                 HttpMethod.POST,
                                 "/api/worker/register"
                         ).authenticated()
+                        //PENDING JOBS
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/pending_jobs"
+                        ).authenticated()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

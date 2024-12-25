@@ -1,15 +1,20 @@
 "use client"
 
-import Layout from "@/components/Layout/Layout";
 import styles from "./PostingsDashboard.module.scss";
 import Link from "next/link";
 import Footer from "@/components/Footer/Footer";
 import dayjs from "dayjs";
 import { useUser } from "@/api/hooks/user";
+import React from "react";
 
-export default function PostingsDashboardLayout({option, children}) {
+type PostingsDashboardLayoutProps = {
+    option: number;
+    children: React.ReactNode
+}
+
+export default function PostingsDashboardLayout({option, children}: PostingsDashboardLayoutProps) {
     const [user] = useUser();
-    const time = dayjs().hour();
+    const time: number = dayjs().hour();
 
     return (
         <section>
@@ -22,10 +27,10 @@ export default function PostingsDashboardLayout({option, children}) {
                     <hr style={{marginTop: "1.25rem"}} className="hr-line"/>
                 </div>
                 <div className={`${styles.optionSelector} ${styles.spacer}`}>
-                    <Link href="/jobs" className={option == 0 ? styles.selectedOption : styles.option} disabled={option == 0}>
+                    <Link href="/jobs" className={option == 0 ? styles.selectedOption : styles.option} aria-disabled={option == 0}>
                         Trabajos pendientes
                     </Link>
-                    <Link href="/jobs/postings" className={option == 1 ? styles.selectedOption : styles.option} disabled={option == 1}>
+                    <Link href="/jobs/postings" className={option == 1 ? styles.selectedOption : styles.option} aria-disabled={option == 1}>
                         Anuncios creados
                     </Link>
                 </div>

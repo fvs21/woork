@@ -6,9 +6,13 @@ import Applicant from "./Applicant";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
 import { useFetchPostingApplicants } from "@/api/hooks/postings";
 import { useAcceptApplicant } from "@/api/hooks/jobapplications";
-import { AcceptApplicantRequest } from "../../types";
 
-export default function JobApplicantsList({closeModal, postingUrl}) {
+type JobApplicantsListProps = {
+    closeModal: () => void;
+    postingUrl: string;
+}
+
+export default function JobApplicantsList({closeModal, postingUrl}: JobApplicantsListProps) {
     const svgClr = svgColor();
 
     const { data, isLoading } = useFetchPostingApplicants(postingUrl);
@@ -23,7 +27,6 @@ export default function JobApplicantsList({closeModal, postingUrl}) {
             });
         } catch(error) {
             console.log(error);
-            
         }
     }
 

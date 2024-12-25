@@ -15,6 +15,7 @@ public class WorkerResource {
     private int jobs_completed;
     private Set<CategoryTag> categories;
     private String username;
+    private String pfpUrl;
 
     public WorkerResource(Worker worker) {
         this.name = worker.getUser().getFullName();
@@ -22,5 +23,6 @@ public class WorkerResource {
         this.rating = String.valueOf(worker.getRating());
         this.categories = worker.getCategories();
         this.username = worker.getUser().getUsername();
+        this.pfpUrl = "http://localhost:8000" + worker.getUser().getProfilePictureUrl();
     }
 }

@@ -2,7 +2,7 @@ import { Worker } from "@/types/global"
 
 export type AcceptJobApplicationResponse = {
     jobSession: HostPendingJob;
-    jobSessionCount: number
+    jobSessionCount: number;
 }
 
 export type HostPendingJob = {

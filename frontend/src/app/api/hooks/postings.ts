@@ -183,7 +183,7 @@ export const useCreatedPostings = () => {
 
 export const useDeletePosting = () => {
     const { mutateAsync: deletePosting } = useMutation({
-        mutationFn: async (id: number) => {
+        mutationFn: async (id: string) => {
             return await api.delete(`posting/${id}`);
         }
     });

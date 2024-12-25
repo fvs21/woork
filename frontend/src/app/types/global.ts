@@ -30,7 +30,8 @@ export type Address = {
 
 export type Worker = {
     id: number;
-    fullName: string;
+    name: string;
     rating: string;
     categories: Array<string>;
+    pfpUrl: string;
 }
