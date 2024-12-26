@@ -1,0 +1,32 @@
+@use "@/styles/variables" as var;
+
+.messageContainer {
+    width: 100%;
+    display: flex;
+    margin-bottom: var.$margin-xxs;
+}
+
+.ownMessageContainer {
+    justify-content: right;
+}
+
+.otherMessageContainer {
+    justify-content: left;
+}
+
+.message {
+    max-width: 60% !important;
+    font-size: 14px;
+    padding: 5px;
+    border-radius: 6px;
+}
+
+.ownMessage {
+    border: 1px solid var.$primary-color;
+    background-color: var.$primary-color;
+}
+
+.otherMessage {
+    border: 1px solid var(--input-color);
+    background-color: var(--input-color);
+}

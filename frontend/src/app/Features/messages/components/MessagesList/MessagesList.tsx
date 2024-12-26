@@ -1,4 +1,3 @@
-import test from "node:test";
 import { Message, MessagesListRecipient, Participant } from "../../types";
 import Recipient from "../Recipient/Recipient";
 import styles from "./MessagesList.module.scss";
@@ -22,7 +21,7 @@ export default function MessagesList() {
         {
             chatUser: testParticipant,
             lastMessage: testMessage,
-            messagesUnread: 1
+            messagesUnread: 0
         }
     ];
 
