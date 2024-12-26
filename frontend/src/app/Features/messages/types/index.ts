@@ -2,6 +2,7 @@ export type MessagesListRecipient = {
     chatUser: Participant;
     lastMessage: Message;
     messagesUnread: number;
+    chatId: number;
 }
 
 export type Message = {
@@ -23,4 +24,9 @@ export type Chat = {
     createdAt: Date;
     messages: Array<Message>;
     id: number;
+}
+
+export type SelectedChat = {
+    chatId: number;
+    recipient: Participant;
 }

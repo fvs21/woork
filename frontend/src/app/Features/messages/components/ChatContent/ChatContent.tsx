@@ -1,15 +1,14 @@
 import Message from "../Message/Message";
 import styles from "./ChatContent.module.scss";
 
-export default function ChatContent() {
+export default function ChatContent({messages}) {
     return ( 
         <div className={styles.chatContent}>
-            <Message content={"Hola"} ownMessage={true} />
-            <Message content={"Hola hermano"} ownMessage={false} />
-            <Message content={"Que día tienes disponíble"} ownMessage={true} />
-            <Message content={"Pasado mañana"} ownMessage={false} />
-            <Message content={"Okey"} ownMessage={true} />
-            <Message content={"Perfecto hermano. nfidabnfhijalnf djkslnfhdsjkalfg dsbahfjdsanfjdsbafhjdslaf bdhsaj fbdhsu afbdhsufobdsh afbdshajfdbshfdsfdsafdsafds fdbshafjkdbsah fdbshafudibsahfjds "} ownMessage={true} />
+            {messages.map(function(msg, i) {
+               return (
+                <Message key={i} content={msg.content} ownMessage={msg.ownMessage} />
+               ) 
+            })}
         </div>
     )
 }

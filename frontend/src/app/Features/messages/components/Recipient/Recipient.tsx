@@ -1,9 +1,23 @@
-import { MessagesListRecipient } from "../../types";
+import { MessagesListRecipient, SelectedChat } from "../../types";
 import styles from "./Recipient.module.scss";
 
-export default function Recipient({chatUser, lastMessage, messagesUnread}: MessagesListRecipient) {
+type RecipientProps = MessagesListRecipient & {
+    selected: boolean;
+    selectChat: (chat: SelectedChat) => void;
+}
+
+export default function Recipient(
+    {chatUser, lastMessage, messagesUnread, chatId, selected, selectChat}: RecipientProps
+) {
+    const setSelectedChat = () => {
+        selectChat({
+            chatId,
+            recipient: chatUser
+        });
+    }
+
     return (
-        <button className={styles.recipient}>
+        <button className={`${styles.recipient} ${selected && styles.selected}`} onClick={setSelectedChat}>
             <div className={styles.pfpContainer}>
                 <img src={chatUser.pfpUrl} className={styles.recipientPfp}/>
             </div>
