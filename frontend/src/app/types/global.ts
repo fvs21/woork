@@ -35,3 +35,8 @@ export type Worker = {
     categories: Array<string>;
     pfpUrl: string;
 }
+
+export type SVGProps = {
+    width: string;
+    color?: string;
+};

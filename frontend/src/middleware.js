@@ -13,7 +13,8 @@ const authenticatedRoutes = [
     '/verify-phone',
     '/profile',
     '/profile/edit',
-    '/posting/create'
+    '/posting/create',
+    '/messages'
 ];
 
 const dynamicAuthRoutes = [

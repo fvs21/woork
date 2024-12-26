@@ -2,7 +2,7 @@
 
 import { useUser } from "@/api/hooks/user";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
-import { lazy, Suspense, useState } from "react";
+import { lazy, MouseEvent, Suspense, useState } from "react";
 import styles from "./Edit.module.scss";
 import { useEditProfile } from "@/api/hooks/profile";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,13 @@ import { flash } from "@/flash-message/flashMessageCreator";
 
 const AboutModal = lazy(() => import("./AboutModal"));
 
-export default function EditProfile({editInformation}) {
+type EditProfileProps = {
+    editInformation: {
+        about: string;
+    };
+}
+
+export default function EditProfile({editInformation}: EditProfileProps) {
     const [user] = useUser();
 
     const [about, setAbout] = useState(editInformation.about);
@@ -21,7 +27,7 @@ export default function EditProfile({editInformation}) {
     const { edit } = useEditProfile();
     const router = useRouter();
 
-    async function submitEdit(e) {
+    async function submitEdit(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
         if(about == editInformation.about) {

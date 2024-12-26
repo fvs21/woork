@@ -3,7 +3,13 @@ import styles from "./Profile.module.scss";
 import CloseSVG from "@/components/SVGs/Close";
 import { svgColor } from "@/utils/extra/utils";
 
-export default function UserPictureViewer({name, url, closeModal}) {
+type UserPictureViewerProps = {
+    name: string;
+    url: string;
+    closeModal: () => void;
+}
+
+export default function UserPictureViewer({name, url, closeModal}: UserPictureViewerProps) {
     return (
         <Modal className={styles.userPictureViewerModal} handleClose={closeModal}>
             <header className={styles.userPictureViewerHeader}>

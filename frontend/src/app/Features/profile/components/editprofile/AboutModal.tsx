@@ -14,7 +14,7 @@ export default function AboutModal({about, setAbout, closeModal}) {
     const [editedAbout, setEditedAbout] = useState(about || "");
     const [characterCount, setCharacterCount] = useState(400 - (about?.length | 0));
 
-    function onChangeAbout(text) {
+    function onChangeAbout(text: string) {
         setEditedAbout(text);
         setCharacterCount(400 - text.length);
     }

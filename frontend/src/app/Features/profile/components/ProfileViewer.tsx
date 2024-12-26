@@ -10,6 +10,11 @@ import Identity from "@/components/SVGs/Identity";
 import Footer from "@/components/Footer/Footer";
 import UserPictureViewer from "./UserPictureViewer";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
+import StarSVG from "@/components/SVGs/Star";
+import Electrical from "@/components/SVGs/JobCategories/Electrical";
+import Pet from "@/components/SVGs/JobCategories/Pet";
+import Plumbery from "@/components/SVGs/JobCategories/Plumbery";
+import Plant from "@/components/SVGs/JobCategories/Plant";
 
 export default function ProfileViewer({profile, isUsersAccount}) {
     const time = (profile.timeInPlatform.time != 0 ? profile.timeInPlatform.time : 1 );

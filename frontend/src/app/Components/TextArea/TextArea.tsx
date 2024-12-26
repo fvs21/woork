@@ -1,8 +1,20 @@
 import InputLabel from "@/components/ValidatedInput/InputLabel";
 import styles from "./TextArea.module.scss";
-import { useState } from "react";
+import { ChangeEvent } from "react";
 
-export default function TextArea({name, label, value, setValue, required, maxLength, placeholder, className, ...props}) {
+type TextAreaProps = {
+    name?: string;
+    label?: string;
+    value: string;
+    setValue: (value: string) => void;
+    required?: boolean;
+    maxLength: number;
+    placeholer?: string;
+    className: string;
+    [x:string]: any;
+}
+
+export default function TextArea({name, label, value, setValue, required = true, maxLength, placeholder, className, ...props}: TextAreaProps) {
     const updateValue = (event) => {
         setValue(event.target.value);
     } 

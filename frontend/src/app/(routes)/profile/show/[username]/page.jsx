@@ -1,7 +1,7 @@
 import { refreshToken } from "@/api/server/auth";
 import { searchProfile } from "@/api/server/profile";
 import Layout from "@/components/Layout/Layout";
-import ProfileViewer from "@/features/profile/ProfileViewer";
+import ProfileViewer from "@/features/profile/components/ProfileViewer";
 import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
