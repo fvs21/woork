@@ -36,7 +36,7 @@ public class UserResource {
         this.gender = user.getGender();
         this.phoneVerified = user.hasPhoneVerified();
         this.emailVerified = user.hasEmailVerified();
-        this.pfp_url = "http://localhost:8000" + user.getProfilePictureUrl();
+        this.pfp_url = user.getProfilePictureUrl();
         this.address = user.getAddress() != null ? new AddressResource(user.getAddress()) : null;
         this.isWorker = user.isWorker();
     }

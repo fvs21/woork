@@ -307,9 +307,9 @@ public class User implements UserDetails {
 
     public String getProfilePictureUrl() {
         if(profilePicture == null) {
-            return "/api/images/default-pfp";
+            return "http://localhost:8000/api/images/default-pfp";
         }
-        return profilePicture.getImageUrl();
+        return "http://localhost:8000" + profilePicture.getImageUrl();
     }
 
     public void setPassword(String password) {

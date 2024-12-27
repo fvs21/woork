@@ -10,7 +10,7 @@ export type Message = {
     content: string;
     readAt: Date | null;
     sentAt: Date;
-    type: 'text' | 'image' | 'video';
+    type: 'text' | 'image';
 }
 
 export type Participant = {
