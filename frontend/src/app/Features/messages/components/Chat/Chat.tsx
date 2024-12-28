@@ -5,26 +5,20 @@ import ChatContent from "../ChatContent/ChatContent";
 import MessageInput from "../MessageInput/MessageInput";
 import TopChatBar from "../TopChatBar/TopChatBar";
 import styles from "./Chat.module.scss";
-import { useSelectedChat, useStompClient } from "../../store";
-import { MessagePayload } from "../../types";
+import { chatMutations, useSelectedChat, useStompClient } from "../../store";
+import { Message, MessagePayload } from "../../types";
 
 export default function Chat() {
-    const [selectedChat, setSelectedChat] = useSelectedChat();
+    const [selectedChat] = useSelectedChat();
     const [stompClient] = useStompClient();
-
-    const [messages, setMessages] = useState([]);
+    const { addMessage: appendMessage } = chatMutations();
 
     const addMessage = (message: string) => {
-        setMessages([{
-            content: message,
-            ownMessage: true
-        }, ...messages]);
-
-        stompClient.send("/app/chat.sendMessage/2", {}, JSON.stringify({
-            "receiver": 'mario-adame',
+        stompClient.send("/app/chat.sendMessage/" + selectedChat.chatId, {}, JSON.stringify({
+            "receiver": selectedChat.recipient.username,
             "content": message,
             'type': 'TEXT'
-        } as MessagePayload))
+        } as MessagePayload));
     }
 
     if(selectedChat == undefined) {
@@ -37,8 +31,8 @@ export default function Chat() {
 
     return (
         <div className={styles.chatContainer}>
-            <TopChatBar name="Coxy" pfpUrl="http://localhost:8000/api/images/default-pfp"/>
-            <ChatContent messages={messages}/>
+            <TopChatBar name={selectedChat.recipient.name} pfpUrl={selectedChat.recipient.pfpUrl}/>
+            <ChatContent chatId={selectedChat.chatId}/>
             <MessageInput addMessage={addMessage}/>
         </div>
     )

@@ -1,6 +1,7 @@
 import { atom, useAtom } from "jotai";
-import { SelectedChat } from "../types";
+import { Chat, Message, SelectedChat } from "../types";
 import { Client } from "stompjs";
+import { useQueryClient } from "react-query";
 
 const selectedChatAtom = atom<SelectedChat>();
 
@@ -12,4 +13,19 @@ export const useSelectedChat = () => {
 
 export const useStompClient = () => {
     return useAtom(stompClient);
+}
+
+export const chatMutations = () => {
+    const queryClient = useQueryClient();
+
+    const addMessage = (message: Message) => {
+        queryClient.setQueryData(['chat', message.chatId], 
+            (prevData: Chat) => ({
+                ...prevData,
+                messages: [message, ...prevData.messages]
+            })
+        );
+    }
+
+    return { addMessage };
 }

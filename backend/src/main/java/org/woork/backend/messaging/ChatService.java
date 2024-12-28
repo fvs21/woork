@@ -1,5 +1,7 @@
 package org.woork.backend.messaging;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.woork.backend.messaging.models.Message;
 import org.woork.backend.messaging.repositories.ChatRepository;
 import org.woork.backend.messaging.repositories.MessageRepository;
 import org.woork.backend.messaging.requests.MessagePayload;
+import org.woork.backend.messaging.resources.ChatResource;
 import org.woork.backend.messaging.resources.MessageResource;
 import org.woork.backend.messaging.resources.MessagesListRecipientResource;
 import org.woork.backend.user.User;
@@ -21,6 +24,7 @@ import java.util.Set;
 
 @Service
 public class ChatService {
+    private static final Log log = LogFactory.getLog(ChatService.class);
     private final SimpMessagingTemplate template;
     private final AuthenticationService authenticationService;
     private final UserService userService;
@@ -76,6 +80,11 @@ public class ChatService {
                 "/queue/messages",
                 new MessageResource(message)
         );
+        template.convertAndSendToUser(
+                sender.getUsername(),
+                "/queue/messages",
+                new MessageResource(message)
+        );
     }
 
     public List<MessagesListRecipientResource> getUserChats(User user) {
@@ -90,5 +99,16 @@ public class ChatService {
                     return new MessagesListRecipientResource(otherUser, lastMessage);
                 }
         ).toList();
+    }
+
+    public ChatResource loadChat(User user, Long id) {
+        Chat chat = chatRepository.findById(id).orElseThrow(ChatDoesNotExistException::new);
+
+        if(chat.getParticipants().stream().noneMatch(p -> p.getId().equals(user.getId()))) {
+            throw new ChatDoesNotExistException();
+        }
+
+        List<Message> messages = messageRepository.findAllByChatOrderBySentAtDesc(chat).orElse(new ArrayList<>());
+        return new ChatResource(chat, messages);
     }
 }

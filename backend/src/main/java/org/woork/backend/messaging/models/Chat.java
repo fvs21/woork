@@ -32,7 +32,7 @@ public class Chat {
 
     private LocalDateTime createdAt;
 
-    @OneToMany
+    @OneToMany(mappedBy = "chat")
     private List<Message> messages;
 
     public Chat() {}

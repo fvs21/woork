@@ -8,13 +8,13 @@ import org.woork.backend.user.User;
 @Getter
 @Setter
 public class MessagesListRecipientResource {
-    private ParticipantResource participant;
+    private ParticipantResource chatUser;
     private MessageResource lastMessage;
     private int messagesUnread;
     private Long chatId;
 
-    public MessagesListRecipientResource(User participant, Message message) {
-        this.participant = new ParticipantResource(participant);
+    public MessagesListRecipientResource(User chatUser, Message message) {
+        this.chatUser = new ParticipantResource(chatUser);
         this.lastMessage = new MessageResource(message);
         this.messagesUnread = 0;
         this.chatId = message.getChat().getId();

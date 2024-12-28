@@ -2,9 +2,11 @@ package org.woork.backend.messaging;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.woork.backend.authentication.AuthenticationService;
+import org.woork.backend.messaging.resources.ChatResource;
 import org.woork.backend.messaging.resources.MessagesListRecipientResource;
 import org.woork.backend.user.User;
 
@@ -27,5 +29,12 @@ public class UsersChatController {
         User user = authenticationService.getCurrentUser();
 
         return chatService.getUserChats(user);
+    }
+
+    @GetMapping("/{id}")
+    public ChatResource loadChat(@PathVariable Long id) {
+        User user = authenticationService.getCurrentUser();
+
+        return chatService.loadChat(user, id);
     }
 }

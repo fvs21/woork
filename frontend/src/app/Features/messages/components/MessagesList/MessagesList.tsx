@@ -1,3 +1,4 @@
+import { useCurrentChats } from "../../api";
 import { useSelectedChat } from "../../store";
 import { Message, MessagesListRecipient, Participant, SelectedChat } from "../../types";
 import Recipient from "../Recipient/Recipient";
@@ -6,35 +7,17 @@ import styles from "./MessagesList.module.scss";
 export default function MessagesList() {
     const [selectedChat, setSelectedChat] = useSelectedChat();
 
-    const testParticipant: Participant = {
-        name: "Coxy",
-        pfpUrl: "http://localhost:8000/api/images/default-pfp",
-        username: "cox"
-    };
-    
-    const testMessage: Message = {
-        sender: testParticipant,
-        content: "Okey",
-        readAt: null,
-        sentAt: new Date(),
-        type: "text",
-        chatId: 1
-    };
-
-    const messages: Array<MessagesListRecipient> = [
-        {
-            chatUser: testParticipant,
-            lastMessage: testMessage,
-            messagesUnread: 0,
-            chatId: 1
-        }
-    ];
+    const { data, isLoading } = useCurrentChats();
 
     const selectChat = (chat: SelectedChat) => {
         setSelectedChat(chat);
     }
 
-    if(messages.length == 0) {
+    if(isLoading) {
+        return (<></>)
+    }
+
+    if(data.length == 0) {
         return (
             <div className={`${styles.messagesList} ${styles.emptyMessages}`}>
                 No tienes ningún mensaje
@@ -44,7 +27,7 @@ export default function MessagesList() {
 
     return (
         <div className={styles.messagesList}>
-            {messages.map(function(msg, i) {
+            {data.map(function(msg, i) {
                 return (
                     <Recipient 
                         key={i} 

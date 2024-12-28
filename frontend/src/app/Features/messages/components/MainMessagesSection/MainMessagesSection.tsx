@@ -1,19 +1,21 @@
 "use client"
 
-import { Client, over } from "stompjs";
+import { Client, Message, over } from "stompjs";
 import styles from "./MainMessagesSection.module.scss";
 import { useUser } from "@/api/hooks/user";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
 import { useStompClient } from "../../store";
 import { useAuth } from "@/api/hooks/authentication";
+import { useQueryClient } from "react-query";
+import { Chat, Message as ChatMessage } from "../../types";
 
 function useMessaging(): {connected: boolean; connect: () => Client; stompClient: Client} {
     let stompClient: Client | null = null;
-    const [user] = useUser();
     const [token] = useAuth();
-    
     const [connected, setConected] = useState<boolean>(false);
+
+    const queryClient = useQueryClient();
 
     function connect(): Client {
         const socket = new SockJS("http://localhost:8000/ws");
@@ -36,8 +38,16 @@ function useMessaging(): {connected: boolean; connect: () => Client; stompClient
         setConected(false);
     }
 
-    function onMessageReceived(payload: any) {
-        console.log(payload);
+    function onMessageReceived(payload: Message) {
+        const message: ChatMessage = JSON.parse(payload.body);
+        console.log(queryClient.getQueryData(['chat', message.chatId]));
+        
+        queryClient.setQueryData(['chat', message.chatId], 
+            (prevData: Chat) => ({
+                ...prevData,
+                messages: [message, ...prevData.messages]
+            })
+        )
     }
 
     return { connected, connect, stompClient };

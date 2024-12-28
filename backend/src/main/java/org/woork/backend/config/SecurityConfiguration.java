@@ -122,6 +122,11 @@ public class SecurityConfiguration {
                                 HttpMethod.GET,
                                 "/api/pending_jobs"
                         ).authenticated()
+                        //CHATS
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/chats/**"
+                        ).authenticated()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

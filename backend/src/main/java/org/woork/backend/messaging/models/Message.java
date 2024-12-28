@@ -23,6 +23,7 @@ public class Message {
             strategy = GenerationType.SEQUENCE,
             generator = "message_sequence"
     )
+    @JsonIgnore
     private Long id;
 
     @ManyToOne
