@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.woork.backend.explore.responses.ExploreResponse;
 import org.woork.backend.posting.Categories;
 
-import java.security.Principal;
 import java.util.*;
 
 @RestController

@@ -23,7 +23,7 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.woork.backend.exceptions.InvalidTokenException;
+import org.woork.backend.exceptions.exceptions.InvalidTokenException;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
 
@@ -77,6 +77,6 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:3000").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:3000", "http://192.168.68.104:3000").withSockJS();
     }
 }

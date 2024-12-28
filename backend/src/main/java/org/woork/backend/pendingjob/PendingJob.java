@@ -3,10 +3,9 @@ package org.woork.backend.pendingjob;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.parameters.P;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.user.User;
-import org.woork.backend.worker.Worker;
+import org.woork.backend.worker.models.Worker;
 
 import java.time.LocalDateTime;
 

@@ -13,7 +13,7 @@ import org.woork.backend.authentication.requests.RegistrationRequest;
 import org.woork.backend.authentication.requests.ResetPasswordRequest;
 import org.woork.backend.authentication.responses.AuthenticationResponse;
 import org.woork.backend.authentication.responses.ResetTokenExistsResponse;
-import org.woork.backend.exceptions.*;
+import org.woork.backend.exceptions.exceptions.*;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.resources.UserResource;

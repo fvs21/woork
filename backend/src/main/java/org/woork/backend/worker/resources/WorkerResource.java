@@ -2,8 +2,8 @@ package org.woork.backend.worker.resources;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.woork.backend.worker.CategoryTag;
-import org.woork.backend.worker.Worker;
+import org.woork.backend.worker.models.CategoryTag;
+import org.woork.backend.worker.models.Worker;
 
 import java.util.Set;
 

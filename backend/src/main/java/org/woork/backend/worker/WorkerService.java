@@ -2,10 +2,12 @@ package org.woork.backend.worker;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.woork.backend.exceptions.UserIsNotRegisteredAsWorkerException;
+import org.woork.backend.exceptions.exceptions.UserIsNotRegisteredAsWorkerException;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserRepository;
 import org.woork.backend.user.resources.UserResource;
+import org.woork.backend.worker.models.Worker;
+import org.woork.backend.worker.repositories.WorkerRepository;
 import org.woork.backend.worker.resources.WorkerResource;
 import org.woork.backend.worker.responses.RegisterWorkerResponse;
 

@@ -6,8 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.woork.backend.exceptions.ResetTokenDoesNotExistException;
-import org.woork.backend.exceptions.UserDoesNotExistException;
+import org.woork.backend.exceptions.exceptions.ResetTokenDoesNotExistException;
+import org.woork.backend.exceptions.exceptions.UserDoesNotExistException;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserRepository;
 

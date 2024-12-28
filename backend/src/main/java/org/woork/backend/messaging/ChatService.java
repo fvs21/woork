@@ -3,10 +3,14 @@ package org.woork.backend.messaging;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.woork.backend.authentication.AuthenticationService;
-import org.woork.backend.exceptions.ChatDoesNotExistException;
+import org.woork.backend.exceptions.exceptions.ChatDoesNotExistException;
+import org.woork.backend.exceptions.exceptions.UnableToCreateChatException;
 import org.woork.backend.messaging.models.Chat;
 import org.woork.backend.messaging.models.Message;
 import org.woork.backend.messaging.repositories.ChatRepository;
@@ -15,12 +19,12 @@ import org.woork.backend.messaging.requests.MessagePayload;
 import org.woork.backend.messaging.resources.ChatResource;
 import org.woork.backend.messaging.resources.MessageResource;
 import org.woork.backend.messaging.resources.MessagesListRecipientResource;
+import org.woork.backend.pendingjob.PendingJobService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ChatService {
@@ -30,14 +34,16 @@ public class ChatService {
     private final UserService userService;
     private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
+    private final PendingJobService pendingJobService;
 
     @Autowired
-    public ChatService(SimpMessagingTemplate template, AuthenticationService authenticationService, UserService userService, ChatRepository chatRepository, MessageRepository messageRepository) {
+    public ChatService(SimpMessagingTemplate template, AuthenticationService authenticationService, UserService userService, ChatRepository chatRepository, MessageRepository messageRepository, PendingJobService pendingJobService) {
         this.template = template;
         this.authenticationService = authenticationService;
         this.userService = userService;
         this.chatRepository = chatRepository;
         this.messageRepository = messageRepository;
+        this.pendingJobService = pendingJobService;
     }
 
     public void createChatAndSendMessage(MessagePayload payload) {
@@ -45,6 +51,16 @@ public class ChatService {
 
         String receiverUsername = payload.getReceiver();
         User receiver = userService.getUserByUsername(receiverUsername);
+
+        //check if chat already exists
+        chatRepository.findByParticipantsIn(List.of(sender, receiver)).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.CONFLICT,
+                "Chat already created"
+        ));
+
+        if(!pendingJobService.pendingJobRelationExists(sender, receiver)) {
+            throw new UnableToCreateChatException();
+        }
 
         Chat chat = new Chat(List.of(sender, receiver));
         chatRepository.save(chat);

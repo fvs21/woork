@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.address.requests.UpdateAddressRequest;
-import org.woork.backend.exceptions.*;
+import org.woork.backend.exceptions.exceptions.*;
 import org.woork.backend.image.Image;
 import org.woork.backend.image.ImageService;
 import org.woork.backend.address.Address;

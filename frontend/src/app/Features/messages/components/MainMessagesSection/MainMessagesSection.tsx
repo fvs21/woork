@@ -24,6 +24,7 @@ function useMessaging(): {connected: boolean; connect: () => Client; stompClient
         stompClient.connect({
             Authorization: 'Bearer ' + token
         }, onConnected, onError);
+        
         return stompClient;
     }
 
@@ -40,7 +41,6 @@ function useMessaging(): {connected: boolean; connect: () => Client; stompClient
 
     function onMessageReceived(payload: Message) {
         const message: ChatMessage = JSON.parse(payload.body);
-        console.log(queryClient.getQueryData(['chat', message.chatId]));
         
         queryClient.setQueryData(['chat', message.chatId], 
             (prevData: Chat) => ({

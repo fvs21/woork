@@ -10,6 +10,7 @@ import MegaphoneSVG from "../SVGs/Megaphone";
 import { useLogout } from "@/api/hooks/authentication";
 import Profile from "../SVGs/Profile";
 import MutationButton from "../MutationButton";
+import Messages from "../SVGs/Messages";
 
 export default function UserDropdown() {
     const [user] = useUser();
@@ -44,6 +45,10 @@ export default function UserDropdown() {
                     <Link className={styles.dropdownItem + " " + styles.link} href="/profile" onMouseDown={(e) => e.preventDefault()}>
                         <Profile width={"25px"} color={color} />
                         Perfil
+                    </Link>
+                    <Link className={styles.dropdownItem + " " + styles.link} href="/messages" onMouseDown={(e) => e.preventDefault()}>
+                        <Messages width={"25px"} color={color} />
+                        Mensajes
                     </Link>
                 </>
             }

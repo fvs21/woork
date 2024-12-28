@@ -2,7 +2,7 @@ package org.woork.backend.notification.resources;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.woork.backend.notification.Notification;
+import org.woork.backend.notification.models.Notification;
 
 import java.time.LocalDate;
 
