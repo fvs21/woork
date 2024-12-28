@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.woork.backend.address.Address;
@@ -21,6 +22,7 @@ import org.woork.backend.url.UrlService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 

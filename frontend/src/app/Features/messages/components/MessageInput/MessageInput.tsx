@@ -11,7 +11,7 @@ export default function MessageInput({addMessage}) {
         if(message.trim().length == 0)
             return;
 
-        addMessage(message);
+        addMessage(message.trim());
         setMessage("");
         inputRef.current.style.height = "";
     }

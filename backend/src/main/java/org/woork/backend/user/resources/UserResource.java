@@ -22,6 +22,7 @@ public class UserResource {
     private boolean emailVerified;
     private String pfp_url;
     private AddressResource address;
+    private String username;
 
     @JsonProperty(value = "is_worker")
     private boolean isWorker;
@@ -39,5 +40,6 @@ public class UserResource {
         this.pfp_url = user.getProfilePictureUrl();
         this.address = user.getAddress() != null ? new AddressResource(user.getAddress()) : null;
         this.isWorker = user.isWorker();
+        this.username = user.getUsername();
     }
 }

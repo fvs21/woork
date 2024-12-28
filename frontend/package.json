@@ -9,7 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@stomp/stompjs": "^7.0.0",
+    "@types/sockjs-client": "^1.5.4",
+    "@types/stompjs": "^2.3.9",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "leaflet": "^1.9.4",
@@ -18,8 +19,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-query": "^3.39.3",
-    "sockjs": "^0.3.24",
-    "ws": "^8.18.0"
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

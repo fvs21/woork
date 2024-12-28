@@ -7,9 +7,9 @@ export default function MessagesList() {
     const [selectedChat, setSelectedChat] = useSelectedChat();
 
     const testParticipant: Participant = {
-        name: "Mario",
+        name: "Coxy",
         pfpUrl: "http://localhost:8000/api/images/default-pfp",
-        id: 1
+        username: "cox"
     };
     
     const testMessage: Message = {
@@ -17,7 +17,8 @@ export default function MessagesList() {
         content: "Okey",
         readAt: null,
         sentAt: new Date(),
-        type: "text"
+        type: "text",
+        chatId: 1
     };
 
     const messages: Array<MessagesListRecipient> = [

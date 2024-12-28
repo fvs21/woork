@@ -14,6 +14,10 @@ const nextConfig = {
                 pathname: "/api/images/**"
             }
         ]
+    },
+    webpack: config => {
+        config.resolve.fallback = {...config.resolve.fallback, net: false};
+        return config;
     }
 };
 

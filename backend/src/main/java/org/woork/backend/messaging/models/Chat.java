@@ -1,6 +1,8 @@
 package org.woork.backend.messaging.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.woork.backend.user.User;
 
 import java.time.LocalDateTime;
@@ -9,6 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 public class Chat {
     @Id
     @SequenceGenerator(
@@ -22,9 +26,9 @@ public class Chat {
     )
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn(name = "participant_id")
-    private Set<User> participants;
+    private List<User> participants;
 
     private LocalDateTime createdAt;
 
@@ -33,7 +37,7 @@ public class Chat {
 
     public Chat() {}
 
-    public Chat(Set<User> participants) {
+    public Chat(List<User> participants) {
         this.participants = participants;
         this.createdAt = LocalDateTime.now();
         this.messages = new ArrayList<>();

@@ -11,12 +11,13 @@ export type Message = {
     readAt: Date | null;
     sentAt: Date;
     type: 'text' | 'image';
+    chatId: number;
 }
 
 export type Participant = {
     name: string;
     pfpUrl: string;
-    id: number; // or username
+    username: string;
 }
 
 export type Chat = {
@@ -27,6 +28,13 @@ export type Chat = {
 }
 
 export type SelectedChat = {
-    chatId: number;
+    chatId?: number;
     recipient: Participant;
+    create: boolean;
+}
+
+export type MessagePayload = {
+    receiver: string;
+    content: string;
+    type: 'TEXT' | 'IMAGE';
 }

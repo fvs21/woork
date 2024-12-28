@@ -33,7 +33,8 @@ public class DefaultExceptionHandler {
             ImageNotFoundException.class,
             NotificationDoesNotExistException.class,
             PostingDoesNotExistException.class,
-            UnableToParseIdException.class
+            UnableToParseIdException.class,
+            ChatDoesNotExistException.class,
     })
     public ResponseEntity<DefaultExceptionResponse> handleNotFoundRequest(DefaultException e) {
         return new ResponseEntity<>(

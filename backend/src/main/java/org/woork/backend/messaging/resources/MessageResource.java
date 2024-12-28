@@ -14,12 +14,14 @@ public class MessageResource {
     private LocalDateTime sentAt;
     private LocalDateTime readAt;
     private String type;
+    private Long chatId;
 
     public MessageResource(Message message) {
-        this.sender = new ParticipantResource(message.getUser());
+        this.sender = new ParticipantResource(message.getSender());
         this.content = message.getContent();
         this.sentAt = message.getSentAt();
         this.readAt = message.getReadAt();
         this.type = message.getType().toString().toLowerCase();
+        this.chatId = message.getChat().getId();
     }
 }
