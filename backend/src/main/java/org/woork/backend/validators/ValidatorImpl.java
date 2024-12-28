@@ -2,7 +2,7 @@ package org.woork.backend.validators;
 
 import jakarta.validation.*;
 import org.springframework.stereotype.Component;
-import org.woork.backend.exceptions.ValidationException;
+import org.woork.backend.exceptions.exceptions.ValidationException;
 
 import java.util.List;
 import java.util.Set;

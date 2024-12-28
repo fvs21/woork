@@ -3,7 +3,7 @@ package org.woork.backend.notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.woork.backend.exceptions.NotificationDoesNotExistException;
+import org.woork.backend.exceptions.exceptions.NotificationDoesNotExistException;
 import org.woork.backend.notification.models.Notification;
 import org.woork.backend.notification.models.NotificationObject;
 import org.woork.backend.notification.records.NotificationData;

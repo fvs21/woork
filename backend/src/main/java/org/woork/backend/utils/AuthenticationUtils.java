@@ -1,7 +1,7 @@
 package org.woork.backend.utils;
 
 import org.apache.commons.validator.routines.EmailValidator;
-import org.woork.backend.exceptions.RegistrationException;
+import org.woork.backend.exceptions.exceptions.RegistrationException;
 
 import java.security.SecureRandom;
 import java.time.DateTimeException;

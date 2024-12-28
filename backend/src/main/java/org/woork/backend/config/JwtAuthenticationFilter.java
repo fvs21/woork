@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.woork.backend.exceptions.UserDoesNotExistException;
+import org.woork.backend.exceptions.exceptions.UserDoesNotExistException;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;

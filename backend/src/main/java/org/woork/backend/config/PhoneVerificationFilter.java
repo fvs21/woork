@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.woork.backend.authentication.AuthenticationService;
-import org.woork.backend.exceptions.UserPhoneNotVerifiedException;
+import org.woork.backend.exceptions.exceptions.UserPhoneNotVerifiedException;
 import org.woork.backend.user.User;
 
 import java.io.IOException;
