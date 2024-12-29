@@ -50,7 +50,6 @@ public class PostingController {
         return postingService.createPosting(author, posting, images);
     }
 
-
     @GetMapping("/{id}")
     public PostingResponse getPosting(@PathVariable("id") String id) {
         return postingService.getPostingByHashId(id);

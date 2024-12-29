@@ -1,17 +1,15 @@
 "use client"
 
-import { useState } from "react";
 import ChatContent from "../ChatContent/ChatContent";
 import MessageInput from "../MessageInput/MessageInput";
 import TopChatBar from "../TopChatBar/TopChatBar";
 import styles from "./Chat.module.scss";
-import { chatMutations, useSelectedChat, useStompClient } from "../../store";
-import { Message, MessagePayload } from "../../types";
+import { useSelectedChat, useStompClient } from "../../store";
+import { MessagePayload } from "../../types";
 
 export default function Chat() {
     const [selectedChat] = useSelectedChat();
     const [stompClient] = useStompClient();
-    const { addMessage: appendMessage } = chatMutations();
 
     const addMessage = (message: string) => {
         stompClient.send("/app/chat.sendMessage/" + selectedChat.chatId, {}, JSON.stringify({

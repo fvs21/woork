@@ -190,26 +190,36 @@ public class PostingService {
     public PostingResponse getPostingByHashId(String hashId) {
         Long postingId = urlService.decodeIdFromUrl(hashId).get(0);
 
+        Posting posting = postingRepository.findById(postingId).orElseThrow(PostingDoesNotExistException::new);
+        boolean postingAvailable = postingAvailable(posting);
+
         if(authenticationService.isUserAuthenticated()) {
             User user = authenticationService.getCurrentUser();
+
+            if(!postingAvailable && !posting.belongsToUser(user))
+                throw new PostingDoesNotExistException();
+
             if(user.isWorker()) {
                 Worker worker = workerService.getWorker(user);
                 String status = getUsersPostingApplicationStatus(worker.getId(), postingId);
 
                 return new PostingResponse(
-                        getPosting(postingId),
+                        getPostingResource(postingId),
                         status
                 );
             }
+        } else {
+            if(!postingAvailable)
+                throw new PostingDoesNotExistException();
         }
 
         return new PostingResponse(
-                getPosting(postingId),
+                getPostingResource(postingId),
                 ""
         );
     }
 
-    public PostingResource getPosting(Long id) {
+    public PostingResource getPostingResource(Long id) {
         Posting posting = postingRepository.findPostingById(id).orElseThrow(PostingDoesNotExistException::new);
         String url = urlService.encodeIdToUrl(posting.getId());
 
@@ -255,8 +265,7 @@ public class PostingService {
     }
 
     public boolean isJobAvailable(Long postingId) {
-        PostingApplication postingApplication = postingApplicationRepository.findByPostingIdAndStatus(postingId, Status.ACCEPTED.toString()).orElse(null);
-        return postingApplication == null;
+        return postingApplicationRepository.existsByPostingIdAndStatus(postingId, Status.ACCEPTED.toString());
     }
 
     public String getUsersPostingApplicationStatus(Long userId, Long postingId) {
@@ -315,17 +324,39 @@ public class PostingService {
         }
     }
 
+    //method to check if a job is available for workers to see
+    private boolean postingAvailable(Posting posting) {
+        return !pendingJobService.pendingJobExistForPosting(posting);
+    }
+
+    //filter all postings by coordinates and a radius, specified by the user
+    //Also filtering the unavailable jobs
     public List<PostingResource> filterPostingsByLocationAndCategory(LocationQuery coordinates, String category) {
         List<Address> filteredAddresses = addressService.filterLocationsByCoords(coordinates);
 
         List<Posting> filteredPostings = new ArrayList<>();
 
         filteredAddresses.forEach(address -> {
-            List<Posting> filtered = postingRepository.findPostingsByAddressAndCategory(address, category).orElse(new ArrayList<>());
+            List<Posting> filtered = postingRepository.findPostingsByAddressAndCategory(address, category).orElse(new ArrayList<>())
+                    .stream().filter(this::postingAvailable).toList();
+
             filteredPostings.addAll(filtered);
         });
 
         return filteredPostings.stream().map(filtered -> new PostingResource(filtered, urlService.encodeIdToUrl(filtered.getId()))).collect(Collectors.toList());
+    }
+
+    //filter all postings by category.
+    //Also filtering the unavailable jobs
+    public List<PostingResource> filterPostingsByCategory(String category) {
+        List<Posting> postings = postingRepository
+                .findAllByCategory(category)
+                .orElse(new ArrayList<>());
+
+        return postings.stream().filter(this::postingAvailable).map(posting -> {
+            String url = urlService.encodeIdToUrl(posting.getId());
+            return new PostingResource(posting, url);
+        }).toList();
     }
 
     public List<ApplicantResource> getJobPostingApplicants(User user, String hashId) {

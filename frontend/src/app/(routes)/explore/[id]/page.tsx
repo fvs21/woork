@@ -18,7 +18,7 @@ export default async function Page({params, searchParams}) {
     if(!categories.some(cat => cat[1] == category_tag))
         notFound();
 
-    const id = params.id;
+    const id: string = params.id;
 
     return (
         <main className={styles.container}>

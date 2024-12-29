@@ -1,14 +1,14 @@
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-const guestRoutes = [
+const guestRoutes: Array<string> = [
     '/',
     '/login',
     '/register',
     '/forgot-password'
 ];
 
-const authenticatedRoutes = [
+const authenticatedRoutes: Array<string> = [
     '/dashboard',
     '/verify-phone',
     '/profile',
@@ -17,12 +17,12 @@ const authenticatedRoutes = [
     '/messages'
 ];
 
-const dynamicAuthRoutes = [
+const dynamicAuthRoutes: Array<string> = [
     '/profile/show/'
 ]
 
-export async function middleware(request) {
-    const path = request.nextUrl.pathname;
+export async function middleware(request: NextRequest) {
+    const path: string = request.nextUrl.pathname;
 
     const cookie = (await cookies()).get('user_r')?.value;
     const isAuthenticated = cookie != null;
@@ -42,7 +42,6 @@ export async function middleware(request) {
         const day = new Date().getDate();
 
         const expiration = new Date(year+1, month, day);
-        
 
         cookieStore.set(
             'theme', 'light', {

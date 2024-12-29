@@ -1,6 +1,6 @@
 import { useCurrentChats } from "../../api";
 import { useSelectedChat } from "../../store";
-import { Message, MessagesListRecipient, Participant, SelectedChat } from "../../types";
+import { SelectedChat } from "../../types";
 import Recipient from "../Recipient/Recipient";
 import styles from "./MessagesList.module.scss";
 

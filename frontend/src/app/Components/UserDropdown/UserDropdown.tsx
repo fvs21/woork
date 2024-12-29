@@ -11,6 +11,7 @@ import { useLogout } from "@/api/hooks/authentication";
 import Profile from "../SVGs/Profile";
 import MutationButton from "../MutationButton";
 import Messages from "../SVGs/Messages";
+import { svgColor } from "@/utils/extra/utils";
 
 export default function UserDropdown() {
     const [user] = useUser();
@@ -18,9 +19,9 @@ export default function UserDropdown() {
     const [theme, switchTheme] = useTheme();
     const [dark, setDark] = useState(theme == 'dark' ? true : false);
 
-    const color: string = theme == 'dark' ? 'white' : 'black';
+    const color: string = svgColor();
 
-    const {logout, logoutDisabled} = useLogout();
+    const { logout, logoutDisabled } = useLogout();
     
     async function logoutUser(): Promise<void> {
         try {

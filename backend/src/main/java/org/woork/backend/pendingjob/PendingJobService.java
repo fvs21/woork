@@ -74,4 +74,8 @@ public class PendingJobService {
             return job.getCompleted_at() != null;
         }
     }
+
+    public boolean pendingJobExistForPosting(Posting posting) {
+        return pendingJobRepository.existsByPosting(posting);
+    }
 }

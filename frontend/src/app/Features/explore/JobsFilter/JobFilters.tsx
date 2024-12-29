@@ -17,7 +17,11 @@ import { useSearchParams } from "next/navigation";
 
 const LocationFilter = lazy(() => import("./LocationFilter"));
 
-export default function JobFilters({location}) {
+type JobFiltersProps = {
+    location?: string
+}
+
+export default function JobFilters({location}: JobFiltersProps) {
     const [locationFilter, setLocationFilter] = useState(false);
     const categoriesRef = useRef(null);
     const [scrollLeft, setScrollLeft] = useState(0);
@@ -30,7 +34,7 @@ export default function JobFilters({location}) {
     const searchParams = useSearchParams();
     const category = searchParams.get('category_tag') || Categories.Jardinería;
 
-    function clickCategory(category) {
+    function clickCategory(category: string) {
         if(location)
             window.history.replaceState(null, '', `/explore/${location}?category_tag=${category}`);
         else

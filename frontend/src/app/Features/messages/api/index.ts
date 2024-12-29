@@ -1,6 +1,6 @@
 import { api } from "@/api/axios"
-import { useQuery, useQueryClient } from "react-query"
-import { Chat, Message, MessagesListRecipient } from "../types";
+import { useQuery } from "react-query"
+import { Chat, MessagesListRecipient } from "../types";
 
 export const useCurrentChats = () => {
     const { data, isLoading } = useQuery({
@@ -8,7 +8,8 @@ export const useCurrentChats = () => {
             const request = await api.get("/chats");
             return request.data;
         },
-        queryKey: ['chats']
+        queryKey: ['chats'],
+        refetchOnWindowFocus: false
     });
 
     return { data, isLoading };
@@ -20,7 +21,8 @@ export const useLoadChat = (id: number) => {
             const request = await api.get("/chats/" + id);
             return request.data;
         },
-        queryKey: ['chat', id]
+        queryKey: ['chat', id],
+        refetchOnWindowFocus: false
     });
 
     return { data, isLoading };

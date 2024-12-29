@@ -6,6 +6,7 @@ import JotaiProvider from "@/jotai/JotaiProvider";
 import { cookies } from "next/headers";
 import ThemeProvider from "@/context/theme/ThemeProvider";
 import {Montserrat} from "next/font/google";
+import WebSocketsProvider from "@/context/WebSocketsProvider";
 
 export const metadata = {
   title: "Woork"
@@ -33,11 +34,13 @@ export default async function RootLayout({ children }) {
         <ThemeProvider initialTheme={value}>
           <QueryProvider>
             <AuthProvider>
-                <JotaiProvider>
+              <JotaiProvider>
+                <WebSocketsProvider>
                   {children}
                   <FlashRenderer />
-                </JotaiProvider>
-              </AuthProvider>
+                </WebSocketsProvider>
+              </JotaiProvider>
+            </AuthProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>
