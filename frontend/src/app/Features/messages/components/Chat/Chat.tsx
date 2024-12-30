@@ -19,6 +19,7 @@ export default function Chat() {
         } as MessagePayload));
     }
 
+
     if(selectedChat == undefined) {
         return (
             <div className={`${styles.chatContainer} ${styles.chatNotSelected}`}>

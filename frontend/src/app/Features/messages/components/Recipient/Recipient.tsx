@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { MessagesListRecipient, SelectedChat } from "../../types";
 import styles from "./Recipient.module.scss";
 
@@ -12,7 +13,8 @@ export default function Recipient(
     const setSelectedChat = () => {
         selectChat({
             chatId,
-            recipient: chatUser
+            recipient: chatUser,
+            create: false
         });
     }
 
@@ -27,12 +29,12 @@ export default function Recipient(
                         {chatUser.name}
                     </div>
                     <span className={styles.lastMessageTime}>
-                        10:47
+                        {dayjs(lastMessage.sentAt).format("HH:mm")}
                     </span>
                 </div>
                 <div className={styles.lastMessageAndMessageCount}>
-                    <div className={`${styles.lastMessage} ${styles.lastMessageUnread}`}>   
-                        {lastMessage.content}
+                    <div className={`${styles.lastMessage} ${messagesUnread > 0 && styles.lastMessageUnread}`}>   
+                        {lastMessage.sender.username != chatUser.username && <b>Enviado: </b>} {lastMessage.content}
                     </div>
                     {messagesUnread > 0 &&
                         <span className={styles.unreadCount}>

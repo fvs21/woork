@@ -2,10 +2,9 @@
 
 import { useAuth } from "@/api/hooks/authentication";
 import { useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
 import SockJS from "sockjs-client";
 import { Client, Message, over } from "stompjs";
-import { Chat, Message as ChatMessage } from "@/features/messages/types";
+import { Message as ChatMessage, MessageEvent } from "@/features/messages/types";
 import { useUser } from "@/api/hooks/user";
 import { chatMutations, useStompClient } from "@/features/messages/store";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
@@ -15,7 +14,7 @@ function useWebSockets(): { connected: boolean; connect: () => Client; } {
     const [token] = useAuth();
     const [connected, setConected] = useState<boolean>(false);
 
-    const { addMessage } = chatMutations();
+    const { addMessage, readChat } = chatMutations();
 
     function connect(): Client {
         const socket = new SockJS("http://localhost:8000/ws");
@@ -41,9 +40,15 @@ function useWebSockets(): { connected: boolean; connect: () => Client; } {
     }
 
     function onMessageReceived(payload: Message) {
-        const message: ChatMessage = JSON.parse(payload.body);
+        const message: MessageEvent = JSON.parse(payload.body);
         
-        addMessage(message);
+        switch(message.eventType) {
+            case 'new_chat':
+            case 'new_message':
+                addMessage(message.eventPayload as ChatMessage);
+            case 'chat_read':
+                readChat(message.eventPayload as number);
+        }
     }
 
     return { connected, connect };

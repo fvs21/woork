@@ -16,8 +16,8 @@
     font-size: 14px;
     overflow: hidden;
     resize: none;
-    height: 40px;
-    min-height: 40px;
+    height: 44px;
+    min-height: 44px;
 }
 
 .sendMessageButton {
@@ -27,6 +27,7 @@
     color: white;
     background-color: var.$primary-color;
     cursor: pointer;
+    height: 44px;
 }
 
 .messageForm {

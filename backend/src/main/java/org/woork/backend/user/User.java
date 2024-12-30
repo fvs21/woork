@@ -334,4 +334,9 @@ public class User implements UserDetails {
         return identityVerifiedAt != null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return this.getId().equals(((User) o).getId());
+    }
+
 }

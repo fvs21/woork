@@ -3,7 +3,16 @@ import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
 import { isEmail } from "@/utils/authentication/LoginUtils";
 import { useState } from "react";
 
-export default function InputEmailOrPhone({className, credential, changeCredential, countryCode, changeCountryCode, label}) {
+type InputEmailOrPhoneProps = {
+    className: string;
+    credential: string;
+    changeCredential: (value: string) => void;
+    countryCode: string;
+    changeCountryCode: (value: string) => void;
+    label?: string;
+}
+
+export default function InputEmailOrPhone({className, credential, changeCredential, countryCode, changeCountryCode, label}: InputEmailOrPhoneProps) {
     const [active, setActive] = useState(false);
 
     if(isEmail(credential)) {

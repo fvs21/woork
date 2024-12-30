@@ -11,7 +11,7 @@ export const metadata = {
 export default async function Page({searchParams}) {
     const search = await searchParams;
     
-    const error = search.failed == 'true' ? "La contraseña que colocaste no es correcta." : ""; 
+    const error: string = search.failed == 'true' ? "La contraseña que colocaste no es correcta." : ""; 
 
     return (
         <div className="global-container">

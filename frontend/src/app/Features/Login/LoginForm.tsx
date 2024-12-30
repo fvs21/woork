@@ -12,7 +12,11 @@ import { useLogin } from "@/api/hooks/authentication";
 import { useRouter } from "next/navigation";
 import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
 
-export default function LoginForm({error}) {
+type LoginFormProps = {
+    error?: string;
+}
+
+export default function LoginForm({error}: LoginFormProps) {
     const [credential, setCredential] = useState("");
     const [countryCode, setCountryCode] = useState("52");
     const [password, setPassword] = useState("");
@@ -39,7 +43,7 @@ export default function LoginForm({error}) {
             if(!user.phoneVerified)
                 router.push("/verify-phone");
             else
-                router.push("/dashboard");
+                router.push("/explore");
 
         } catch(error) {
             setErrorMsg(error.response.data.message);
@@ -73,7 +77,7 @@ export default function LoginForm({error}) {
                             setValue={setPassword} 
                             autofocus={false} 
                             autoComplete="on"
-                            />
+                        />
                             {errorMsg && <span className="error-msg">{errorMsg}</span>}
                     </div>
                     <div className={styles['submit-btn-container']}>

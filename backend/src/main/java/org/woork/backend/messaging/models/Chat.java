@@ -26,7 +26,7 @@ public class Chat {
     )
     private Long id;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER) //As I use it in every method
     @JoinColumn(name = "participant_id")
     private List<User> participants;
 

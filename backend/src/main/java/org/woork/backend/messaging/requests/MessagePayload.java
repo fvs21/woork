@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.woork.backend.messaging.enums.MessageType;
+import org.woork.backend.messaging.models.MessageType;
 
 @Getter
 @Setter

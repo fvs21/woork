@@ -1,6 +1,13 @@
-import styles from './Form.module.scss'
+import React from 'react';
+import styles from './Form.module.scss';
 
-export default function Form({overflow, children, className}) {
+type FormProps = {
+    overflow?: string;
+    className: string;
+    children: React.ReactNode;
+}
+
+export default function Form({overflow, children, className}: FormProps) {
     return (
         <div className={styles['form-overlay']}>
             <div 

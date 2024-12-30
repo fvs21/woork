@@ -1,4 +1,4 @@
-package org.woork.backend.messaging;
+package org.woork.backend.messaging.controllers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
+import org.woork.backend.messaging.ChatService;
 import org.woork.backend.messaging.requests.MessagePayload;
 
 @Controller
@@ -27,6 +28,11 @@ public class ChatController {
     @MessageMapping("/chat.sendMessage/{chatId}")
     public void sendMessage(@DestinationVariable String chatId, @Payload MessagePayload messagePayload) {
         chatService.sendMessage(Long.parseLong(chatId), messagePayload);
+    }
+
+    @MessageMapping("/chat.read/{chatId}")
+    public void readChat(@DestinationVariable String chatId) {
+        chatService.readChat(Long.parseLong(chatId));
     }
 }
 

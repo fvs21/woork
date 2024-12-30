@@ -5,8 +5,22 @@ import { useEffect, useState } from "react";
 import { determineInputColor } from "@/utils/authentication/DetermineStylesUtils";
 import ErrorCircleSVG from "../SVGs/ErrorCircle";
 
+type ValidatedInputProps = {
+    name: string;
+    className: string;
+    value: string;
+    setValue: (value: string) => void;
+    valid: boolean;
+    type: string;
+    label?: string;
+    placeholder: string;
+    autofocus?: boolean;
+    errorMsg?: string;
+    [x:string]: any;
+};
+
 export default function ValidatedInput(
-    {name, className, value, setValue, valid, type, label, placeholder, autofocus, errorMsg, ...props}
+    {name, className, value, setValue, valid, type, label, placeholder, autofocus, errorMsg, ...props}: ValidatedInputProps
 ) {
     const [active, setActive] = useState(false);
     const [color, setColor] = useState("");

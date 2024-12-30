@@ -13,10 +13,10 @@ public class MessagesListRecipientResource {
     private int messagesUnread;
     private Long chatId;
 
-    public MessagesListRecipientResource(User chatUser, Message message) {
+    public MessagesListRecipientResource(User chatUser, Message message, int messagesUnread) {
         this.chatUser = new ParticipantResource(chatUser);
         this.lastMessage = new MessageResource(message);
-        this.messagesUnread = 0;
+        this.messagesUnread = messagesUnread;
         this.chatId = message.getChat().getId();
     }
 }

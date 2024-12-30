@@ -1,4 +1,4 @@
-package org.woork.backend.messaging.enums;
+package org.woork.backend.messaging.models;
 
 public enum MessageType {
     TEXT,
