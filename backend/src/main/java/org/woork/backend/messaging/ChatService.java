@@ -85,7 +85,7 @@ public class ChatService {
         template.convertAndSendToUser(
                 receiverUsername,
                 "/queue/messages",
-                new NewChatEvent(
+                new NewMessageEvent(
                         new MessageResource(message)
                 )
         );
@@ -94,7 +94,8 @@ public class ChatService {
                 sender.getUsername(),
                 "/queue/messages",
                 new NewChatEvent(
-                        new MessageResource(message)
+                        receiver,
+                        message
                 )
         );
     }

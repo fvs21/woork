@@ -1,19 +1,21 @@
+import Link from "next/link";
 import styles from "./TopChatBar.module.scss";
 
 type TopChatBarProps = {
     name: string;
     pfpUrl: string;
+    username: string;
 }
 
-export default function TopChatBar({name, pfpUrl}: TopChatBarProps) {
+export default function TopChatBar({name, pfpUrl, username}: TopChatBarProps) {
     return (
         <div className={styles.topChatBar}>
             <div className={styles.pfpContainer}>
                 <img src={pfpUrl} className={styles.pfp} />
             </div>
-            <div className={styles.nameContainer}>
+            <Link className={styles.nameContainer} href={"/profile/show/" + username}>
                 {name}
-            </div>
+            </Link>
         </div>
     )
 }

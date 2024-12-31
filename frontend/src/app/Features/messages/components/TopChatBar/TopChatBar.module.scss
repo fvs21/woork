@@ -20,4 +20,10 @@
 
 .nameContainer {
     font-weight: 500;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.nameContainer:hover {
+    text-decoration: underline;
 }

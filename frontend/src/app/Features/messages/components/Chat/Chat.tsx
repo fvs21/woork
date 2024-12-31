@@ -40,7 +40,7 @@ export default function Chat() {
 
     return (
         <div className={styles.chatContainer}>
-            <TopChatBar name={selectedChat.recipient.name} pfpUrl={selectedChat.recipient.pfpUrl}/>
+            <TopChatBar name={selectedChat.recipient.name} pfpUrl={selectedChat.recipient.pfpUrl} username={selectedChat.recipient.username}/>
             <ChatContent chatId={selectedChat.chatId}/>
             <MessageInput addMessage={addMessage}/>
         </div>

@@ -1,5 +1,5 @@
 import { atom, useAtom } from "jotai";
-import { Chat, Message, MessagesListRecipient, SelectedChat } from "../types";
+import { Chat, Message, MessagesListRecipient, Participant, SelectedChat } from "../types";
 import { Client } from "stompjs";
 import { useQueryClient } from "react-query";
 import { useUser } from "@/api/hooks/user";
@@ -19,6 +19,16 @@ export const useStompClient = () => {
 export const chatMutations = () => {
     const queryClient = useQueryClient();
     const [user] = useUser();
+
+    //function called when a user creates a new chat.
+    //the backend returns the new chat id to the sender (the user that sends the first message)
+    const newChat = (chat: MessagesListRecipient) => {
+        queryClient.setQueryData(['chats'], 
+            (prevData: Array<MessagesListRecipient>) => ([
+                chat, ...prevData
+            ])
+        );
+    }
 
     //function to add a message to the users chat ui
     const addMessage = (message: Message) => {
@@ -47,7 +57,7 @@ export const chatMutations = () => {
             )
         } else {
             const oldListElement: MessagesListRecipient = chatList[index];
-            chatList.splice(index);
+            chatList.splice(index, 1);
             
             const messagesUnread = message.sender.username == user.username ? oldListElement.messagesUnread : oldListElement.messagesUnread + 1;
 
@@ -87,5 +97,5 @@ export const chatMutations = () => {
         );
     }
 
-    return { addMessage, readChat };
+    return { newChat, addMessage, readChat };
 }

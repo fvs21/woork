@@ -44,5 +44,5 @@ export type MessagePayload = {
 //the chat_read only returns the chat_id from which the event was triggered
 export type MessageEvent = {
     eventType: 'new_chat' | 'new_message' | 'chat_read';
-    eventPayload: Message | number;
+    eventPayload: MessagesListRecipient | Message | number;
 }
