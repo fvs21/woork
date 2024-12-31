@@ -1,35 +1,36 @@
+import { Address } from "@/types/global";
 import moment from "moment";
 
 const validCountryCodes = ["52", "1"];
 
-export const validateName = (name) => {
+export const validateName = (name: string): boolean => {
     return name != "";
 }
 
-export const validatePhoneNumber = (phoneNumber) => {
+export const validatePhoneNumber = (phoneNumber: string): boolean => {
     //TODO
     return /^[0-9]*$/.test(phoneNumber) && phoneNumber.length == 10; //Mexico phone number length
 }
 
-export const validateCountryCode = (code) => {
+export const validateCountryCode = (code: string): boolean => {
     return validCountryCodes.includes(code);
 }
 
-export const validatePassword = (password) => {
+export const validatePassword = (password: string): boolean => {
     return password.length >= 8;
 }
 
-export const validateAge = (dob) => {
+export const validateAge = (dob: string): boolean => {
     const dateFormat = "YYYY-MM-DD";
 
     return moment().diff(moment(dob, dateFormat), 'years') >= 18;
 }
 
-export const validateEmail = (email) => {
+export const validateEmail = (email: string): boolean => {
     return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
 }
 
-export const validateRegisterBody = (body) => {
+export const validateRegisterBody = (body): boolean => {
     if(!validateName(body.firstName)) {return false;}
     if(!validateName(body.lastName)) {return false;}
     if(!validatePassword(body.password)) {return false;}
@@ -41,19 +42,19 @@ export const validateRegisterBody = (body) => {
 }
 
 //string of only characters
-export const validateString = (text) => {
+export const validateString = (text: string): boolean => {
     return /^([^0-9]*)$/.test(text) && text !== "";
 }
 
-export const validateNumber = (text) => {
+export const validateNumber = (text): boolean => {
     return /^[0-9]*$/.test(text) && text !== "";
 }
 
-export const validateStreet = (text) => {
+export const validateStreet = (text): boolean => {
     return /^[0-9]*[a-zA-Z]+[a-zA-Z0-9, ]*$/.test(text) && text !== "";
 }
 
-export const validateAddress = (address) => {
+export const validateAddress = (address: Address): boolean => {
     if(!validateString(address?.country)) {
         return false;
     }
@@ -75,7 +76,7 @@ export const validateAddress = (address) => {
     return true;
 }
 
-export const validateJobPostingDate = (date) => {
+export const validateJobPostingDate = (date): boolean => {
     const default_day = new Date().getDate();
     const default_month = new Date().getMonth()+1;
     const default_year = new Date().getFullYear();

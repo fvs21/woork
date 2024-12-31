@@ -13,6 +13,7 @@ import Plumbery from "@/components/SVGs/JobCategories/Plumbery";
 import Screwdriver from "@/components/SVGs/JobCategories/Screwdriver";
 import Vehicle from "@/components/SVGs/JobCategories/Vehicle";
 import WaterSVG from "@/components/SVGs/JobCategories/Water";
+import React from "react";
 
 export const Categories = {
     "Jardinería": "8DV7AS",
@@ -32,9 +33,13 @@ export const Categories = {
     "Instalación": "BHDUS3"
 }
 
-const width = "22px";
+type Category = {
+    name: string;
+    tag: string;
+    icon: React.MemoExoticComponent<({ width }: { width: number; }) => React.ReactNode>;
+}
 
-export const CategoriesList = [
+export const CategoriesList: Array<Category> = [
     {
         'name': 'Jardinería',
         'tag': '8DV7AS',

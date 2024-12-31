@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-export const switchTheme = async (val) => {
+export const switchTheme = async (val: string): Promise<void> => {
     const cookieStore = await cookies();
     const year = new Date().getFullYear();
     const month = new Date().getMonth();

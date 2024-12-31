@@ -6,17 +6,19 @@ import { AuthenticationResponse, CredentialVerificationBody, ForgotPasswordBody,
 import { AxiosResponse } from "axios";
 import { User } from "@/types/global";
 
-export const refresh = async () => {
+export const refresh = async (): Promise<string> => {
     try {
-        return await apiGuest.get("/auth/refresh");
+        const request = await apiGuest.get<{ access_token: string }>("/auth/refresh");
+        return request.data.access_token;
     } catch {
         return null;
     }
 }
 
-export const fetchUser = async () => {
+export const fetchUser = async (): Promise<User> => {
     try {
-        return await api.get<User>("/user/verify");
+        const request = await api.get<User>("/user/verify");
+        return request.data;
     } catch {
         return null;
     }

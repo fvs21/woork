@@ -5,7 +5,7 @@ import ProfileViewer from "@/features/profile/components/ProfileViewer";
 import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
-    const username = (await params).username;
+    const username: string = (await params).username;
     const accessToken = await refreshToken();
     const profile = await searchProfile(username, accessToken);
     

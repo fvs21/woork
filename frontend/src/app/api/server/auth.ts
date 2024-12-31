@@ -1,8 +1,13 @@
+import { User } from "@/types/global";
 import { cookies } from "next/headers";
 
-export const refreshToken = async () => {
+export type Auth = { 
+    access_token: string; 
+}
+
+export const refreshToken = async (): Promise<Auth> => {
     const cookiesList = await cookies();
-    const parsed = cookiesList._parsed;
+    const parsed = cookiesList['_parsed'];
 
     if(parsed.get('user_r') === undefined) {
         return null;
@@ -26,8 +31,8 @@ export const refreshToken = async () => {
     }
 }
 
-export const getUser = async (accessToken) => {
-    if(accessToken?.error == true || accessToken == null) {
+export const getUser = async (accessToken: Auth): Promise<User> => {
+    if(accessToken == null || accessToken?.access_token == null) {
         return null;
     }
 
@@ -42,7 +47,6 @@ export const getUser = async (accessToken) => {
         });
 
         const json = await data.json();
-
         return json;
     } catch(error) {
         console.log(error);

@@ -1,6 +1,8 @@
+import { Auth } from "./auth";
+
 const BASE_URL = "http://localhost:8000/api";
 
-export const getUserProfile = async (accessToken) => {
+export const getUserProfile = async (accessToken: Auth) => {
     try {
         const data = await fetch("http://localhost:8000/api/profile", {
             method: 'GET',
@@ -18,7 +20,7 @@ export const getUserProfile = async (accessToken) => {
     }
 }
 
-export const searchProfile = async (username, accessToken) => {
+export const searchProfile = async (username: string, accessToken: Auth) => {
     try {
         const data = await fetch(`${BASE_URL}/profile/show/${username}`, {
             method: 'GET',

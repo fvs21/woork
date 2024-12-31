@@ -9,7 +9,7 @@ export default async function AuthProvider({children}) {
     const user = await getUser(accessToken);
 
     return (
-        <AuthClient accessToken={accessToken} user={user}>
+        <AuthClient accessToken={accessToken?.access_token || null} user={user}>
             {children}
         </AuthClient>
     );

@@ -2,12 +2,19 @@
 
 import { api, apiMultipart } from "@/api/axios";
 import { fetchUser, refresh, useAuth } from "@/api/hooks/authentication";
-import { useLayoutEffect } from "react";
+import { User } from "@/types/global";
+import React, { useLayoutEffect } from "react";
 import { useQuery } from "react-query";
 
-export default function AuthClient({accessToken, user, children}) {
+type AuthClientProps = {
+    accessToken: string;
+    user: User;
+    children: React.ReactNode;
+}
+
+export default function AuthClient({accessToken, user, children}: AuthClientProps) {
     useQuery({
-        initialData: accessToken?.access_token || null,
+        initialData: accessToken || null,
         queryFn: () => refresh(),
         queryKey: ['access-token'],
         refetchOnMount: false,
@@ -27,14 +34,14 @@ export default function AuthClient({accessToken, user, children}) {
     useLayoutEffect(() => {
         const interceptor = api.interceptors.request.use(
             (config) => {
-                config.headers.Authorization = !config._retry && token ? `Bearer ${token}` : config.headers.Authorization;
+                config.headers.Authorization = !config['_retry'] && token ? `Bearer ${token}` : config.headers.Authorization;
                 return config;
             }
         );
 
         const interceptorMulti = apiMultipart.interceptors.request.use(
             (config) => {
-                config.headers.Authorization = !config._retry && token ? `Bearer ${token}` : config.headers.Authorization;
+                config.headers.Authorization = !config['_retry'] && token ? `Bearer ${token}` : config.headers.Authorization;
                 return config;
             }
         );
@@ -54,9 +61,9 @@ export default function AuthClient({accessToken, user, children}) {
                 if(error.response.status === 401 && error.response.data.message === 'Unauthorized') {
                     try {
                         const response = await refresh();
-                        setToken(response.access_token);
+                        setToken(response);
 
-                        original.headers.Authorization = `Bearer ${response.access_token}`;
+                        original.headers.Authorization = `Bearer ${response}`;
                         original._retry = true;
 
                         return api(original);
@@ -76,9 +83,9 @@ export default function AuthClient({accessToken, user, children}) {
                 if(error.response.status === 401 && error.response.data.message === 'Unauthorized') {
                     try {
                         const response = await refresh();
-                        setToken(response.access_token);
+                        setToken(response);
 
-                        original.headers.Authorization = `Bearer ${response.access_token}`;
+                        original.headers.Authorization = `Bearer ${response}`;
                         original._retry = true;
 
                         return apiMultipart(original);

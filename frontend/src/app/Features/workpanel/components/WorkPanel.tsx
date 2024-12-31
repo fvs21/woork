@@ -10,6 +10,7 @@ export default function WorkPanel() {
     const [registerModal, setRegisterModal] = useState<boolean>(false);
 
     useEffect(() => {
+        return;
         if(!user.is_worker) {
             setRegisterModal(true);
         }
@@ -21,11 +22,7 @@ export default function WorkPanel() {
                 Panel de trabajador
             </div>    
             <div>
-                {user.is_worker ? 
-                    ""
-                :
-                    "Registrate como trabajador para comenzar a trabajar."
-                }
+                
             </div>
             {registerModal &&
                 <Suspense fallback={<LoadingModal />}>

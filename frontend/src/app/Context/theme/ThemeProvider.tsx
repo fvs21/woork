@@ -5,10 +5,10 @@ import { ThemeContext } from "./ThemeContext";
 import { useState } from "react";
 
 export default function ThemeProvider({initialTheme, children}) {
-    const [theme, setTheme] = useState(initialTheme);
+    const [theme, setTheme] = useState<string>(initialTheme);
     //come back later
 
-    const changeTheme = async (val) => {
+    const changeTheme = async (val: string) => {
         document.documentElement.classList.remove(theme);
         document.documentElement.classList.toggle(val);
         setTheme(val);

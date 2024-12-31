@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react"
 
-function getWindowDimensions() {
+type Dimensions = {
+    width: number;
+    height: number;
+}
+
+function getWindowDimensions(): Dimensions {
     return {
         width: window.innerWidth,
         height: window.innerHeight
@@ -10,7 +15,7 @@ function getWindowDimensions() {
 }
 
 export default function useWindowDimensions() {
-    const [dimensions, setDimensions] = useState(getWindowDimensions());
+    const [dimensions, setDimensions] = useState<Dimensions>(getWindowDimensions());
 
 
     useEffect(() => {
@@ -25,8 +30,8 @@ export default function useWindowDimensions() {
     return dimensions;
 }
 
-export function usePageScrollTop() {
-    const [scrollTop, setScroll] = useState(document.documentElement.scrollTop);
+export function usePageScrollTop(): number {
+    const [scrollTop, setScroll] = useState<number>(document.documentElement.scrollTop);
 
     useEffect(() => {
         function handleScroll() {

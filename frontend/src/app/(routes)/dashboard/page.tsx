@@ -21,8 +21,8 @@ import MutationButton from '@/components/MutationButton';
 export default function Page() {
     const [user] = useUser();
     
-    const [option, setOption] = useState(-1);
-    const [panel, setPanel] = useState(0); //0 is options menu, and 1 is panel
+    const [option, setOption] = useState<number>(-1);
+    const [panel, setPanel] = useState<number>(0); //0 is options menu, and 1 is panel
     const { width } = useWindowDimensions();
 
     const [leftContainerStyle, setLeftContainerStyle] = useState(styles['left-container']);
@@ -141,13 +141,15 @@ export default function Page() {
                         <button className={`${styles['option-btn']}`}
                             onClick={() => router.push("/profile")}>Ir a mi perfil</button>
                     </li>
-                    <li>
-                        <button 
-                            className={`${styles['option-btn']} ${determineIfClicked(option==2)}`}
-                            onClick={() => changeOption(2)}>
-                                Trabaja
-                        </button>
-                    </li>
+                    {!user.is_worker &&
+                        <li>
+                            <button 
+                                className={`${styles['option-btn']} ${determineIfClicked(option==2)}`}
+                                onClick={() => changeOption(2)}>
+                                    Regístrate como trabajador
+                            </button>
+                        </li>
+                    }
                     <li>
                         <button className={`${styles['option-btn']} ${determineIfClicked(option==3)}`}
                             onClick={() => changeOption(3)}>Contraseña y seguridad</button>
@@ -166,7 +168,7 @@ export default function Page() {
                             <label 
                                 className={styles.switch}
                                 onClick={(e) => {
-                                    e.preventDefault(e);
+                                    e.preventDefault();
                                 }}
                             >
                                 <input 
@@ -180,7 +182,7 @@ export default function Page() {
                         </button>
                     </li>
                     <li>
-                        <MutationButton click={logoutUser} className={styles['option-btn']} disabled={logoutDisabled}>
+                        <MutationButton click={logoutUser} classname={styles['option-btn']} disable={logoutDisabled}>
                             Cerrar sesión
                         </MutationButton>
                     </li>
