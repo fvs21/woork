@@ -13,6 +13,7 @@ export type User = {
     phone: string;
     phoneVerified: boolean;
     address: Address;
+    username: string;
 }
 
 export type Address = {
@@ -34,4 +35,11 @@ export type Worker = {
     rating: string;
     categories: Array<string>;
     pfpUrl: string;
+    userId: number;
+    username: string;
 }
+
+export type SVGProps = {
+    width: string;
+    color?: string;
+};

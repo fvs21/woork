@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.woork.backend.image.Image;
 import org.woork.backend.address.Address;
+import org.woork.backend.messaging.models.Chat;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.role.Role;
 
@@ -158,6 +159,11 @@ public class User implements UserDetails {
 
     @Getter
     private LocalDate createdAt;
+
+    @ManyToMany(mappedBy = "participants")
+    @Getter
+    @Setter
+    private List<Chat> chats;
 
     public User() {
         this.role = Role.USER;
@@ -307,9 +313,9 @@ public class User implements UserDetails {
 
     public String getProfilePictureUrl() {
         if(profilePicture == null) {
-            return "/api/images/default-pfp";
+            return "http://localhost:8000/api/images/default-pfp";
         }
-        return profilePicture.getImageUrl();
+        return "http://localhost:8000" + profilePicture.getImageUrl();
     }
 
     public void setPassword(String password) {
@@ -332,6 +338,11 @@ public class User implements UserDetails {
 
     public boolean hasIdentityVerified() {
         return identityVerifiedAt != null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this.getId().equals(((User) o).getId());
     }
 
 }

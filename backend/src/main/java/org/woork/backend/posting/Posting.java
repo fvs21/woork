@@ -9,7 +9,7 @@ import org.woork.backend.image.Image;
 import org.woork.backend.address.Address;
 import org.woork.backend.postingapplication.PostingApplication;
 import org.woork.backend.user.User;
-import org.woork.backend.worker.Worker;
+import org.woork.backend.worker.models.Worker;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

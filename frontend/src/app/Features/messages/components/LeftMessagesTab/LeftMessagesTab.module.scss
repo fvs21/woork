@@ -1,0 +1,29 @@
+.leftMessagesTab {
+    min-width: 450px;
+    height: 100%;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    margin: 0;
+    font-weight: 600;
+}
+
+.header { 
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 40px;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.filtersBtn {
+    line-height: 0;
+    padding: 6px;
+    border-radius: 50%;
+    border: 1px solid var(--input-color);
+    background-color: var(--input-color);
+    cursor: pointer;
+}

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.woork.backend.exceptions.exceptions.*;
 
 @ControllerAdvice
 public class DefaultExceptionHandler {
@@ -33,7 +34,8 @@ public class DefaultExceptionHandler {
             ImageNotFoundException.class,
             NotificationDoesNotExistException.class,
             PostingDoesNotExistException.class,
-            UnableToParseIdException.class
+            UnableToParseIdException.class,
+            ChatDoesNotExistException.class,
     })
     public ResponseEntity<DefaultExceptionResponse> handleNotFoundRequest(DefaultException e) {
         return new ResponseEntity<>(

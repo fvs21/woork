@@ -5,10 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.woork.backend.exceptions.ImageNotFoundException;
-import org.woork.backend.exceptions.UnableToDownloadImageException;
-import org.woork.backend.exceptions.UnableToUploadImageException;
-import org.woork.backend.exceptions.UnsupportedImageTypeException;
 
 @RestController
 @RequestMapping("api/images")

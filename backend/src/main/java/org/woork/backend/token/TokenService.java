@@ -6,9 +6,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.stereotype.Service;
-import org.woork.backend.exceptions.InvalidTokenException;
-import org.woork.backend.exceptions.RefreshTokenExpiredException;
-import org.woork.backend.exceptions.UserDoesNotExistException;
+import org.woork.backend.exceptions.exceptions.InvalidTokenException;
+import org.woork.backend.exceptions.exceptions.RefreshTokenExpiredException;
+import org.woork.backend.exceptions.exceptions.UserDoesNotExistException;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserRepository;
 

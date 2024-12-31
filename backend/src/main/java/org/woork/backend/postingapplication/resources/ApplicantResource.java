@@ -2,8 +2,7 @@ package org.woork.backend.postingapplication.resources;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.woork.backend.user.User;
-import org.woork.backend.worker.Worker;
+import org.woork.backend.worker.models.Worker;
 
 @Getter
 @Setter
@@ -15,7 +14,7 @@ public class ApplicantResource {
     private Long id;
 
     public ApplicantResource(Worker worker) {
-        this.pfpUrl = "http://localhost:8000" + worker.getUser().getProfilePictureUrl();
+        this.pfpUrl = worker.getUser().getProfilePictureUrl();
         this.name = worker.getUser().getFullName();
         this.username = worker.getUser().getUsername();
         this.rating = String.valueOf(worker.getRating());

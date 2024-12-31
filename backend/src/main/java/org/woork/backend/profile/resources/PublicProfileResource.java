@@ -25,7 +25,7 @@ public class PublicProfileResource {
         this.phoneVerified = user.hasPhoneVerified();
         this.emailVerified = user.hasEmailVerified();
         this.identityVerified = user.hasIdentityVerified();
-        this.pfp_url = "http://localhost:8000" + user.getProfilePictureUrl();
+        this.pfp_url = user.getProfilePictureUrl();
         this.timeInPlatform = calculateTimeInPlatform(user.getCreatedAt());
     }
 

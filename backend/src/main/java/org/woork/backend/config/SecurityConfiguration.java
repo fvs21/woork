@@ -7,16 +7,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 
 @Configuration
 public class SecurityConfiguration {
@@ -45,6 +44,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .headers(headers ->
+                    headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.sameOrigin())
+                )
                 .authorizeHttpRequests((authorize) -> authorize
                         //AUTH
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
@@ -94,7 +96,7 @@ public class SecurityConfiguration {
                                 "/api/posting/{id}/applicants"
                         ).authenticated()
                         //WS
-                        .requestMatchers("/ws").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         //USER
                         .requestMatchers("/api/user/**").authenticated()
                         //EXPLORE
@@ -119,6 +121,11 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/pending_jobs"
+                        ).authenticated()
+                        //CHATS
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/chats/**"
                         ).authenticated()
                         .anyRequest().permitAll()
                 )

@@ -7,7 +7,6 @@ import CurrencyInput from "@/components/CurrencyInput/CurrencyInput";
 import LocationSelector from "./LocationSelector";
 import { lazy, Suspense, useState } from "react";
 import ImagesInput from "./ImagesInput";
-import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import CloseSVG from "@/components/SVGs/Close";
 import ArrowButton from "@/components/ArrowButton/ArrowButton";
 import TextInput from "@/components/TextInput/TextInput";

@@ -9,6 +9,8 @@
     z-index: 100;
     padding: 10px;
     border-radius: 10px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
 }
 
 .dropdownDark {

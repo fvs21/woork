@@ -11,8 +11,8 @@
     z-index: 1000;
     border-bottom: 1px solid var(--border-color);
     box-shadow: 0 3px 3px -3px rgba(0,0,0,0.2);
+    position: fixed;
 }
-
 
 .logotype {
     line-height: 0;
@@ -68,4 +68,13 @@
 
 .loginLink:hover {
     background-color: var(--button-hover);
+}
+
+.content {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
 }

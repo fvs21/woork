@@ -1,0 +1,9 @@
+.chatContent {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 10px 20px;
+    overflow-y: auto;
+}

@@ -16,6 +16,8 @@ public class HostPendingJobResource {
     private String postingTitle;
     private LocalDateTime location_shared_at;
     private LocalDateTime completed_at;
+    private boolean chatCreated;
+    private Long chatId;
 
     public HostPendingJobResource(PendingJob pendingJob, String postingHashId) {
         this.jobId = pendingJob.getId();
@@ -24,5 +26,17 @@ public class HostPendingJobResource {
         this.postingTitle = pendingJob.getPosting().getTitle();
         this.location_shared_at = pendingJob.getLocation_shared_at();
         this.completed_at = pendingJob.getCompleted_at();
+        this.chatCreated = false;
+    }
+
+    public HostPendingJobResource(PendingJob pendingJob, String postingHashId, Long chatId) {
+        this.jobId = pendingJob.getId();
+        this.worker = new WorkerResource(pendingJob.getWorker());
+        this.postingUrl = postingHashId;
+        this.postingTitle = pendingJob.getPosting().getTitle();
+        this.location_shared_at = pendingJob.getLocation_shared_at();
+        this.completed_at = pendingJob.getCompleted_at();
+        this.chatCreated = true;
+        this.chatId = chatId;
     }
 }

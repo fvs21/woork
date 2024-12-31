@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.woork.backend.exceptions.*;
+import org.woork.backend.exceptions.exceptions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

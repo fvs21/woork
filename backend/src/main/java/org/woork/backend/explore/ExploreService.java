@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.woork.backend.address.Address;
@@ -21,6 +22,7 @@ import org.woork.backend.url.UrlService;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,6 @@ public class ExploreService {
     private final PostingService postingService;
     private final UrlService urlService;
     private final UserService userService;
-    private final PostingRepository postingRepository;
     private final AuthenticationService authenticationService;
 
     @Autowired
@@ -40,14 +41,12 @@ public class ExploreService {
             PostingService postingService,
             UrlService urlService,
             UserService userService,
-            PostingRepository postingRepository,
             AuthenticationService authenticationService
     ) {
         this.addressService = addressService;
         this.postingService = postingService;
         this.urlService = urlService;
         this.userService = userService;
-        this.postingRepository = postingRepository;
         this.authenticationService = authenticationService;
     }
 
@@ -90,14 +89,7 @@ public class ExploreService {
             }
         }
 
-        List<Posting> postings = postingRepository
-                .findAllByCategory(category)
-                .orElse(new ArrayList<>());
-
-        List<PostingResource> resources = postings.stream().map(posting -> new PostingResource(
-                posting,
-                urlService.encodeIdToUrl(posting.getId())
-        )).toList();
+        List<PostingResource> resources = postingService.filterPostingsByCategory(category);
 
         return new ExploreResponse(
                 resources,

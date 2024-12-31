@@ -25,7 +25,10 @@ export default function PendingJobs() {
                             workerPfpUrl={job.worker.pfpUrl}
                             workerName={job.worker.name}
                             workerRating={job.worker.rating}
+                            workerUsername={job.worker.username}
                             jobId={job.postingUrl}
+                            chatCreated={job.chatCreated}
+                            chatId={job?.chatId}
                         />
                     )
                 })}

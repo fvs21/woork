@@ -16,13 +16,13 @@ import org.woork.backend.address.AddressRepository;
 import org.woork.backend.address.AddressResource;
 import org.woork.backend.address.records.LocationQuery;
 import org.woork.backend.authentication.AuthenticationService;
-import org.woork.backend.exceptions.*;
+import org.woork.backend.exceptions.exceptions.*;
 import org.woork.backend.image.Image;
 import org.woork.backend.image.ImageService;
 import org.woork.backend.address.Address;
 import org.woork.backend.address.AddressService;
 import org.woork.backend.notification.NotificationService;
-import org.woork.backend.notification.NotificationType;
+import org.woork.backend.notification.models.NotificationType;
 import org.woork.backend.notification.records.NotificationData;
 import org.woork.backend.pendingjob.PendingJob;
 import org.woork.backend.pendingjob.PendingJobService;
@@ -39,11 +39,9 @@ import org.woork.backend.postingapplication.Status;
 import org.woork.backend.postingapplication.resources.ApplicantResource;
 import org.woork.backend.url.UrlService;
 import org.woork.backend.user.User;
-import org.woork.backend.user.UserService;
 import org.woork.backend.validators.ValidatorImpl;
-import org.woork.backend.worker.Worker;
+import org.woork.backend.worker.models.Worker;
 import org.woork.backend.worker.WorkerService;
-import org.woork.backend.worker.resources.WorkerResource;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -192,26 +190,36 @@ public class PostingService {
     public PostingResponse getPostingByHashId(String hashId) {
         Long postingId = urlService.decodeIdFromUrl(hashId).get(0);
 
+        Posting posting = postingRepository.findById(postingId).orElseThrow(PostingDoesNotExistException::new);
+        boolean postingAvailable = isJobAvailable(posting);
+
         if(authenticationService.isUserAuthenticated()) {
             User user = authenticationService.getCurrentUser();
+
+            if(!postingAvailable && !posting.belongsToUser(user))
+                throw new PostingDoesNotExistException();
+
             if(user.isWorker()) {
                 Worker worker = workerService.getWorker(user);
                 String status = getUsersPostingApplicationStatus(worker.getId(), postingId);
 
                 return new PostingResponse(
-                        getPosting(postingId),
+                        getPostingResource(postingId),
                         status
                 );
             }
+        } else {
+            if(!postingAvailable)
+                throw new PostingDoesNotExistException();
         }
 
         return new PostingResponse(
-                getPosting(postingId),
+                getPostingResource(postingId),
                 ""
         );
     }
 
-    public PostingResource getPosting(Long id) {
+    public PostingResource getPostingResource(Long id) {
         Posting posting = postingRepository.findPostingById(id).orElseThrow(PostingDoesNotExistException::new);
         String url = urlService.encodeIdToUrl(posting.getId());
 
@@ -257,8 +265,11 @@ public class PostingService {
     }
 
     public boolean isJobAvailable(Long postingId) {
-        PostingApplication postingApplication = postingApplicationRepository.findByPostingIdAndStatus(postingId, Status.ACCEPTED.toString()).orElse(null);
-        return postingApplication == null;
+        return !postingApplicationRepository.existsByPostingIdAndStatus(postingId, Status.ACCEPTED.toString());
+    }
+
+    private boolean isJobAvailable(Posting posting) {
+        return !pendingJobService.pendingJobExistForPosting(posting);
     }
 
     public String getUsersPostingApplicationStatus(Long userId, Long postingId) {
@@ -283,7 +294,7 @@ public class PostingService {
     public String applyToJob(User user, String hashId) {
         Long postingId = urlService.decodeIdFromUrl(hashId).get(0);
 
-        if(!isJobAvailable(postingId)) {
+        if (!isJobAvailable(postingId)) {
             throw new UnableToApplyToJobException("Job is no longer available.");
         }
 
@@ -293,13 +304,12 @@ public class PostingService {
         PostingApplication application = postingApplicationRepository.findByPostingIdAndWorkerId(postingId, worker.getId()).orElse(null);
         Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
 
-        if(application != null) {
-            if(application.isRejected()) {
+        if (application != null) {
+            if (application.isRejected()) {
                 throw new UnableToApplyToJobException("Job is rejected.");
-            } else if(application.isAccepted()) {
+            } else if (application.isAccepted()) {
                 throw new UnableToApplyToJobException("Job is accepted.");
-            }
-            else {
+            } else {
                 postingApplicationRepository.delete(application);
                 return "Solicitud cancelada";
             }
@@ -317,17 +327,34 @@ public class PostingService {
         }
     }
 
+    //filter all postings by coordinates and a radius, specified by the user
+    //Also filtering the unavailable jobs
     public List<PostingResource> filterPostingsByLocationAndCategory(LocationQuery coordinates, String category) {
         List<Address> filteredAddresses = addressService.filterLocationsByCoords(coordinates);
 
         List<Posting> filteredPostings = new ArrayList<>();
 
         filteredAddresses.forEach(address -> {
-            List<Posting> filtered = postingRepository.findPostingsByAddressAndCategory(address, category).orElse(new ArrayList<>());
+            List<Posting> filtered = postingRepository.findPostingsByAddressAndCategory(address, category).orElse(new ArrayList<>())
+                    .stream().filter(this::isJobAvailable).toList();
+
             filteredPostings.addAll(filtered);
         });
 
         return filteredPostings.stream().map(filtered -> new PostingResource(filtered, urlService.encodeIdToUrl(filtered.getId()))).collect(Collectors.toList());
+    }
+
+    //filter all postings by category.
+    //Also filtering the unavailable jobs
+    public List<PostingResource> filterPostingsByCategory(String category) {
+        List<Posting> postings = postingRepository
+                .findAllByCategory(category)
+                .orElse(new ArrayList<>());
+
+        return postings.stream().filter(this::isJobAvailable).map(posting -> {
+            String url = urlService.encodeIdToUrl(posting.getId());
+            return new PostingResource(posting, url);
+        }).toList();
     }
 
     public List<ApplicantResource> getJobPostingApplicants(User user, String hashId) {

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.woork.backend.address.records.LocationQuery;
 import org.woork.backend.address.requests.SearchLocationRequest;
-import org.woork.backend.exceptions.UnableToParseLocationException;
+import org.woork.backend.exceptions.exceptions.UnableToParseLocationException;
 import org.woork.backend.posting.resources.FetchedLocationResource;
 import org.woork.backend.url.UrlService;
 

@@ -1,12 +1,13 @@
+import { Dispatch, SetStateAction } from "react";
 import { FlashMessage, FlashMessageCreator } from "./types/flashMessagesTypes";
 
-type SetMessagesFunction = undefined | Function;
+type SetMessagesFunction = undefined | Dispatch<SetStateAction<FlashMessage[]>>;
 
 const { flash, setUpdateFlashes, deleteAll }: FlashMessageCreator = (function() {
     const flashes = new Map();
-    let updateMessages: SetMessagesFunction = Function || undefined;
+    let updateMessages: SetMessagesFunction = undefined;
 
-    function setUpdateFlashes(func: FunctionConstructor) {
+    function setUpdateFlashes(func: Dispatch<SetStateAction<FlashMessage[]>>) {
         updateMessages = func;
     }
 
@@ -20,7 +21,7 @@ const { flash, setUpdateFlashes, deleteAll }: FlashMessageCreator = (function() 
         }
     }
 
-    function createFlashMessage(message: string, timeout = 3000, type: string) {
+    function createFlashMessage(message: string, timeout = 3000, type: 'success' | 'error') {
         const currentTime = new Date().getTime();
         const id = currentTime + "-" + Object.keys(flashes).length;
 

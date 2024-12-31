@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.woork.backend.posting.Posting;
-import org.woork.backend.user.User;
-import org.woork.backend.worker.Worker;
+import org.woork.backend.worker.models.Worker;
 
 @Entity(name = "posting_applications")
 @Getter
