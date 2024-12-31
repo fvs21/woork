@@ -22,7 +22,8 @@ export const refreshToken = async (): Promise<Auth> => {
                 'Content-Type': 'application/json'
             },
             next: {
-                revalidate: 0
+                revalidate: 0,
+                tags: ['refresh']
             }
         });
         return await data.json();
@@ -44,6 +45,9 @@ export const getUser = async (accessToken: Auth): Promise<User> => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken?.access_token}`
             },
+            next: {
+                tags: ['user']
+            }
         });
 
         const json = await data.json();

@@ -14,7 +14,8 @@ const authenticatedRoutes: Array<string> = [
     '/profile',
     '/profile/edit',
     '/posting/create',
-    '/messages'
+    '/messages',
+    '/work'
 ];
 
 const dynamicAuthRoutes: Array<string> = [

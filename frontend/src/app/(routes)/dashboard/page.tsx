@@ -12,7 +12,7 @@ import { useUser } from '@/api/hooks/user';
 import { useTheme } from '@/hooks/theme';
 import LogotypeWhite from '@/components/Logotype/LogotypeWhite';
 import { svgColor } from '@/utils/extra/utils';
-import WorkPanel from '@/features/workpanel/components/WorkPanel';
+import WorkPanel from '@/features/workerRegistration/components/WorkPanel';
 import SecurityPanel from '@/features/security/SecurityPanel';
 import { useLogout } from '@/api/hooks/authentication';
 import { useRouter } from 'next/navigation';
@@ -29,7 +29,7 @@ export default function Page() {
     const [rightContainerStyle, setRightContainerStyle] = useState(styles['right-container']);
 
     const [theme, switchTheme] = useTheme();
-    const dark = theme == 'dark';
+    const dark: boolean = theme == 'dark';
 
     const svgClr = svgColor();
 

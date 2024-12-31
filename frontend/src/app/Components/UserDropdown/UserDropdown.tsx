@@ -12,6 +12,7 @@ import Profile from "../SVGs/Profile";
 import MutationButton from "../MutationButton";
 import Messages from "../SVGs/Messages";
 import { svgColor } from "@/utils/extra/utils";
+import Briefcase from "../SVGs/Briefcase";
 
 export default function UserDropdown() {
     const [user] = useUser();
@@ -39,10 +40,6 @@ export default function UserDropdown() {
                         <UserSVG width={"25px"} color={color}/>
                         Cuenta
                     </Link>
-                    <Link className={styles.dropdownItem + " " + styles.link} href="/jobs" onMouseDown={(e) => e.preventDefault()}>
-                        <MegaphoneSVG width={"22px"} color={color}/>
-                        Publicaciones
-                    </Link>
                     <Link className={styles.dropdownItem + " " + styles.link} href="/profile" onMouseDown={(e) => e.preventDefault()}>
                         <Profile width={"25px"} color={color} />
                         Perfil
@@ -51,6 +48,16 @@ export default function UserDropdown() {
                         <Messages width={"25px"} color={color} />
                         Mensajes
                     </Link>
+                    <Link className={styles.dropdownItem + " " + styles.link} href="/jobs" onMouseDown={(e) => e.preventDefault()}>
+                        <MegaphoneSVG width={"22px"} color={color}/>
+                        Publicaciones
+                    </Link>
+                    {user.is_worker && 
+                        <Link className={styles.dropdownItem + " " + styles.link} href="/work" onMouseDown={(e) => e.preventDefault()}>
+                            <Briefcase width={"22px"} color={color}/>
+                            Trabajos
+                        </Link>
+                    }
                 </>
             }
             <div 

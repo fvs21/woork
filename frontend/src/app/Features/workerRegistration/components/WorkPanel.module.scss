@@ -6,6 +6,10 @@
     margin-bottom: var.$margin-xl;
 }
 
+.description {
+    margin-bottom: 2.5rem;
+}
+
 .profileContainer {
     display: flex;
     justify-content: center;
@@ -117,4 +121,33 @@
 .verificationSection {
     height: 200px;
     padding: 20px;
+}
+
+.workerRegistrationRequirementsContainer {
+    width: 100%;
+}
+
+.requirement {
+    width: 100%;
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.requirement:last-child {
+    border: none;
+}
+
+.canSubmit {
+    cursor: pointer;
+}
+
+.canSubmit:hover {
+    background-color: var(--button-hover);
+}
+
+.cannotSubmit {
+    cursor:default;
 }

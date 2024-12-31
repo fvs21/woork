@@ -74,6 +74,7 @@ export default function ResetPasswordForm({credential, token}) {
                 <form onSubmit={handleSubmit}>
                     <div className={styles['input-field']}>
                         <PasswordInput
+                            name={"newPassword"}
                             className={styles.formInput}
                             label={"Nueva contraseña"}
                             valid={validNewPassword}
@@ -83,6 +84,7 @@ export default function ResetPasswordForm({credential, token}) {
                     </div>
                     <div className={styles['input-field']}>
                         <PasswordInput
+                            name={"confirmPassword"}
                             className={styles.formInput}
                             label={"Confirma tu nueva contraseña"}
                             valid={validConfirmPassword}

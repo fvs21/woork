@@ -1,6 +1,7 @@
-const { memo } = require("react")
+import { SVGProps } from "@/types/global";
+import { memo } from "react";
 
-const Checkmark = ({width, color}) => {
+const Verified = ({width, color}: SVGProps) => {
     const style = {
         color: color || "black"
     }
@@ -11,4 +12,4 @@ const Checkmark = ({width, color}) => {
     );
 }
 
-export default memo(Checkmark);
+export default memo(Verified);

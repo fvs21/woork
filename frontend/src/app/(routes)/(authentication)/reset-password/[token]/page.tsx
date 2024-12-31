@@ -12,7 +12,7 @@ export default async function Page({searchParams, params}) {
     const token = await params?.token;
     const searchQuery = await searchParams;
 
-    const credential = searchQuery?.email || searchQuery?.phone;
+    const credential: string = searchQuery?.email || searchQuery?.phone;
 
     if(!token || ! credential)
         notFound();

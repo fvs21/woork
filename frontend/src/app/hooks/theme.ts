@@ -18,7 +18,7 @@ const transitionManager = () => {
     return {enable, disable, style};
 }
 
-export const useTheme = () => {
+export const useTheme = (): ThemeContext => {
     const [theme, setTheme] = useContext(ThemeContext);
 
     const changeTheme = () => {

@@ -9,6 +9,18 @@ import { svgColor } from "@/utils/extra/utils";
 import { useRef } from "react";
 import styles from "./PasswordInput.module.scss";
 
+type PasswordInputProps = {
+    name: string;
+    className: string;
+    value: string;
+    setValue: (value: string) => void;
+    label?: string;
+    placeholder?: string;
+    autofocus?: boolean;
+    errorMsg?: string;
+    [x:string]: any;
+}
+
 export default function PasswordInput({
     name,
     className,
@@ -20,7 +32,7 @@ export default function PasswordInput({
     autofocus,
     errorMsg,
     ...props
-}) {
+}: PasswordInputProps) {
     const [active, setActive] = useState(false);
     const [color, setColor] = useState("");
     const [visible, setVisible] = useState(false);

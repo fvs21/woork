@@ -37,7 +37,7 @@ export type ResetPasswordBody = {
     token: string;
     credential: string;
     password: string;
-    newPassword: string;
+    confirmPassword: string;
 }
 
 export type UpdatePasswordBody = {
