@@ -12,6 +12,16 @@ export default function Chat() {
     const [stompClient] = useStompClient();
 
     const addMessage = (message: string) => {
+        if(selectedChat.create) {
+            stompClient.send("/app/chat.create", {}, JSON.stringify({
+                "receiver": selectedChat.recipient.username,
+                "content": message,
+                'type': 'TEXT'
+            } as MessagePayload)); 
+
+            return;
+        }
+
         stompClient.send("/app/chat.sendMessage/" + selectedChat.chatId, {}, JSON.stringify({
             "receiver": selectedChat.recipient.username,
             "content": message,

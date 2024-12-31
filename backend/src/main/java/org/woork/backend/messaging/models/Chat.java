@@ -24,10 +24,15 @@ public class Chat {
             strategy = GenerationType.SEQUENCE,
             generator = "chat_sequence"
     )
+    @Column(name = "chat_id")
     private Long id;
 
-    @OneToMany(fetch = FetchType.EAGER) //As I use it in every method
-    @JoinColumn(name = "participant_id")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_chats",
+            joinColumns = @JoinColumn(name = "chat_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> participants;
 
     private LocalDateTime createdAt;

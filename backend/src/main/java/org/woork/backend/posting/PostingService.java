@@ -191,7 +191,7 @@ public class PostingService {
         Long postingId = urlService.decodeIdFromUrl(hashId).get(0);
 
         Posting posting = postingRepository.findById(postingId).orElseThrow(PostingDoesNotExistException::new);
-        boolean postingAvailable = postingAvailable(posting);
+        boolean postingAvailable = isJobAvailable(posting);
 
         if(authenticationService.isUserAuthenticated()) {
             User user = authenticationService.getCurrentUser();
@@ -265,7 +265,11 @@ public class PostingService {
     }
 
     public boolean isJobAvailable(Long postingId) {
-        return postingApplicationRepository.existsByPostingIdAndStatus(postingId, Status.ACCEPTED.toString());
+        return !postingApplicationRepository.existsByPostingIdAndStatus(postingId, Status.ACCEPTED.toString());
+    }
+
+    private boolean isJobAvailable(Posting posting) {
+        return !pendingJobService.pendingJobExistForPosting(posting);
     }
 
     public String getUsersPostingApplicationStatus(Long userId, Long postingId) {
@@ -290,7 +294,7 @@ public class PostingService {
     public String applyToJob(User user, String hashId) {
         Long postingId = urlService.decodeIdFromUrl(hashId).get(0);
 
-        if(!isJobAvailable(postingId)) {
+        if (!isJobAvailable(postingId)) {
             throw new UnableToApplyToJobException("Job is no longer available.");
         }
 
@@ -300,13 +304,12 @@ public class PostingService {
         PostingApplication application = postingApplicationRepository.findByPostingIdAndWorkerId(postingId, worker.getId()).orElse(null);
         Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
 
-        if(application != null) {
-            if(application.isRejected()) {
+        if (application != null) {
+            if (application.isRejected()) {
                 throw new UnableToApplyToJobException("Job is rejected.");
-            } else if(application.isAccepted()) {
+            } else if (application.isAccepted()) {
                 throw new UnableToApplyToJobException("Job is accepted.");
-            }
-            else {
+            } else {
                 postingApplicationRepository.delete(application);
                 return "Solicitud cancelada";
             }
@@ -324,11 +327,6 @@ public class PostingService {
         }
     }
 
-    //method to check if a job is available for workers to see
-    private boolean postingAvailable(Posting posting) {
-        return !pendingJobService.pendingJobExistForPosting(posting);
-    }
-
     //filter all postings by coordinates and a radius, specified by the user
     //Also filtering the unavailable jobs
     public List<PostingResource> filterPostingsByLocationAndCategory(LocationQuery coordinates, String category) {
@@ -338,7 +336,7 @@ public class PostingService {
 
         filteredAddresses.forEach(address -> {
             List<Posting> filtered = postingRepository.findPostingsByAddressAndCategory(address, category).orElse(new ArrayList<>())
-                    .stream().filter(this::postingAvailable).toList();
+                    .stream().filter(this::isJobAvailable).toList();
 
             filteredPostings.addAll(filtered);
         });
@@ -353,7 +351,7 @@ public class PostingService {
                 .findAllByCategory(category)
                 .orElse(new ArrayList<>());
 
-        return postings.stream().filter(this::postingAvailable).map(posting -> {
+        return postings.stream().filter(this::isJobAvailable).map(posting -> {
             String url = urlService.encodeIdToUrl(posting.getId());
             return new PostingResource(posting, url);
         }).toList();

@@ -14,7 +14,7 @@ public class ApplicantResource {
     private Long id;
 
     public ApplicantResource(Worker worker) {
-        this.pfpUrl = "http://localhost:8000" + worker.getUser().getProfilePictureUrl();
+        this.pfpUrl = worker.getUser().getProfilePictureUrl();
         this.name = worker.getUser().getFullName();
         this.username = worker.getUser().getUsername();
         this.rating = String.valueOf(worker.getRating());

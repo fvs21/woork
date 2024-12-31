@@ -36,6 +36,7 @@ export type Worker = {
     categories: Array<string>;
     pfpUrl: string;
     userId: number;
+    username: string;
 }
 
 export type SVGProps = {

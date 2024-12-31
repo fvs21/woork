@@ -23,7 +23,7 @@ function useWebSockets(): { connected: boolean; connect: () => Client; } {
         stompClient.connect({
             Authorization: 'Bearer ' + token
         }, onConnected, onError);
-        
+
         return stompClient;
     }
 

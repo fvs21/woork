@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.woork.backend.image.Image;
 import org.woork.backend.address.Address;
+import org.woork.backend.messaging.models.Chat;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.role.Role;
 
@@ -158,6 +159,11 @@ public class User implements UserDetails {
 
     @Getter
     private LocalDate createdAt;
+
+    @ManyToMany(mappedBy = "participants")
+    @Getter
+    @Setter
+    private List<Chat> chats;
 
     public User() {
         this.role = Role.USER;

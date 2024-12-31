@@ -29,6 +29,7 @@ import org.woork.backend.user.UserService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChatService {
@@ -63,10 +64,13 @@ public class ChatService {
         User receiver = userService.getUserByUsername(receiverUsername);
 
         //check if chat already exists
-        chatRepository.findByParticipantsIn(List.of(sender, receiver)).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.CONFLICT,
-                "Chat already created"
-        ));
+        if (chatRepository.existsByParticipantsContainingAndParticipantsContaining(sender, receiver)) {
+            log.info("Error here");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Chat already created"
+            );
+        }
 
         if(!pendingJobService.pendingJobRelationExists(sender, receiver)) {
             throw new UnableToCreateChatException();
@@ -125,16 +129,16 @@ public class ChatService {
     }
 
     public List<MessagesListRecipientResource> getUserChats(User user) {
-        List<Chat> chats = chatRepository.findAllByParticipantsContaining(user).orElse(new ArrayList<>());
+        List<Chat> chats = chatRepository.findAllUsersChat(user.getId());
 
         return chats.stream().map(
                 chat -> {
+                    log.info(chat.getParticipants());
                     List<User> users = chat.getParticipants();
                     User otherUser = users.get(0).getId().equals(user.getId()) ? users.get(1) : users.get(0);
 
                     Message lastMessage = messageRepository.findFirstByChatOrderByIdDesc(chat);
                     int messagesUnread = messageRepository.countAllByChatAndSenderAndReadAtIsNull(chat, otherUser);
-                    log.info(messagesUnread);
                     return new MessagesListRecipientResource(otherUser, lastMessage, messagesUnread);
                 }
         ).toList();
@@ -166,8 +170,6 @@ public class ChatService {
 
         if(messages.isEmpty())
             return;
-
-        log.info(messages.get(0));
 
         messages.forEach(
                 message -> {

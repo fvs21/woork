@@ -2,18 +2,54 @@
 
 import styles from "./PendingJobs.module.scss";
 import StarSVG from "@/components/SVGs/Star";
+import { useSelectedChat } from "@/features/messages/store";
+import { Participant, SelectedChat } from "@/features/messages/types";
 import { svgColor } from "@/utils/extra/utils";
+import { useRouter } from "next/navigation";
 
 type PendingJobProps = {
     title: string;
     workerPfpUrl: string;
     workerName: string;
     workerRating: string;
+    workerUsername: string;
     jobId: string;
+    chatCreated: boolean;
+    chatId?: number;
 };
 
-export default function PendingJob({title, workerPfpUrl, workerName, workerRating, jobId}: PendingJobProps) {
+export default function PendingJob({title, workerPfpUrl, workerName, workerUsername, workerRating, jobId, chatCreated, chatId}: PendingJobProps) {
     const svgClr = svgColor();
+    const [, setSelectedChat] = useSelectedChat();
+    const router = useRouter();
+    
+
+    function sendMessage() {
+        const recipient: Participant = {
+            name: workerName,
+            pfpUrl: workerPfpUrl,
+            username: workerUsername
+        };
+
+        if(chatCreated) {
+            const chatSelection: SelectedChat = {
+                recipient: recipient,
+                chatId: chatId,
+                create: false
+            };
+
+            setSelectedChat(chatSelection);
+            router.push("/messages");
+        } else {
+            const chatSelection: SelectedChat = {
+                recipient: recipient,
+                create: true
+            };
+
+            setSelectedChat(chatSelection);
+            router.push("/messages");
+        }
+    }
 
     return (
         <div className={styles.pendingJobContainer}>
@@ -33,7 +69,7 @@ export default function PendingJob({title, workerPfpUrl, workerName, workerRatin
                 </div>
             </div>
             <div className={styles.sendMsgBtnContainer}>
-                <button className={styles.sendMsgBtn}>Enviar mensaje</button>
+                <button className={styles.sendMsgBtn} onClick={sendMessage}>Enviar mensaje</button>
             </div>
         </div>
     )

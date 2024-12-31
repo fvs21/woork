@@ -6,6 +6,8 @@ import Applicant from "./Applicant";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
 import { useFetchPostingApplicants } from "@/api/hooks/postings";
 import { useAcceptApplicant } from "@/api/hooks/jobapplications";
+import { useRouter } from "next/navigation";
+import { flash } from "@/flash-message/flashMessageCreator";
 
 type JobApplicantsListProps = {
     closeModal: () => void;
@@ -18,6 +20,7 @@ export default function JobApplicantsList({closeModal, postingUrl}: JobApplicant
     const { data, isLoading } = useFetchPostingApplicants(postingUrl);
 
     const { accept, acceptApplicantInvalid } = useAcceptApplicant();
+    const router = useRouter();
 
     async function handleAccept(applicantId: number) {
         try {
@@ -25,8 +28,9 @@ export default function JobApplicantsList({closeModal, postingUrl}: JobApplicant
                 applicantId: applicantId,
                 postingId: postingUrl
             });
+            router.push("/jobs");
         } catch(error) {
-            console.log(error);
+            flash(error.response.data.message, 4000, "error");
         }
     }
 

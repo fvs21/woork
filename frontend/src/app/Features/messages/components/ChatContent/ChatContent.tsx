@@ -17,6 +17,9 @@ export default function ChatContent({chatId}: ChatContentProps) {
     const [stompClient] = useStompClient();
     const queryClient = useQueryClient();
 
+    const messages = data?.messages;
+    let lastReadMessageIndex = messages?.findIndex(msg => msg.readAt != null);
+
     useEffect(() => {
         if(isLoading)
             return;
@@ -32,7 +35,7 @@ export default function ChatContent({chatId}: ChatContentProps) {
             queryClient.setQueryData(['chats'], chatList);
         }
 
-        if(data.messages && data.messages[0].readAt == null && data.messages[0].sender.username != user.username) {
+        if(messages && messages[0].readAt == null && messages[0].sender.username != user.username) {
             readChat();
         }
 
@@ -41,12 +44,9 @@ export default function ChatContent({chatId}: ChatContentProps) {
     if(isLoading)
         return (<div className={styles.chatContent}></div>)
 
-    const messages = data.messages;
-    let lastReadMessageIndex = messages.findIndex(msg => msg.readAt != null);
-
     return ( 
         <div className={styles.chatContent}>
-            {messages.map(function(msg, i) {
+            {messages?.map(function(msg, i) {
                 //check if the displayed message if the current user
                 const ownMessage = msg.sender.username == user.username;
                 if(i == lastReadMessageIndex && messages[i].readAt != null && ownMessage) {

@@ -12,6 +12,8 @@ export type HostPendingJob = {
     postingTitle: string;
     location_shared_at: string;
     completed_at: string;
+    chatCreated: boolean;
+    chatId?: number;
 }
 
 export type AcceptApplicantRequest = {

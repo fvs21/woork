@@ -30,7 +30,7 @@ export default function MessagesList() {
             {data.map(function(msg, i) {
                 return (
                     <Recipient 
-                        key={i} 
+                        key={msg.chatId} 
                         chatUser={msg.chatUser} 
                         lastMessage={msg.lastMessage} 
                         messagesUnread={msg.messagesUnread} 
