@@ -1,14 +1,5 @@
 import { User } from "./global"
 
-export type RegistrationBody = {
-    firstName: string;
-    lastName: string;
-    countryCode: number;
-    phone: string;
-    dateOfBirth: string;
-    password: string;
-}
-
 export type LoginBody = {
     credential: string;
     countryCode?: number;

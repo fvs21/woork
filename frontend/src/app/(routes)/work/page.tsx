@@ -1,5 +1,6 @@
 import { getUser, refreshToken } from "@/api/server/auth"
 import Layout from "@/components/Layout/Layout";
+import WorkerDashboard from "@/features/workerdashboard/components/WorkerDashboard";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
@@ -11,7 +12,7 @@ export default async function Page() {
 
     return (
         <Layout>
-            mfdjklsa
+            <WorkerDashboard />
         </Layout>
     )
 }

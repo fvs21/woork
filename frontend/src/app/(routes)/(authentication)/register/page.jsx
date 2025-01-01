@@ -1,5 +1,5 @@
 import Logotype from '@/components/Logotype/Logotype';
-import RegisterForm from '@/features/registration/RegisterForm';
+import RegisterForm from '@/features/registration/components/RegisterForm';
 import styles from "../Auth.module.scss";
 import Footer from '@/components/Footer/Footer';
 

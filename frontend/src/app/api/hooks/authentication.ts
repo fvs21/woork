@@ -2,9 +2,10 @@ import { useMutation, useQueryClient } from "react-query";
 import { api, apiGuest } from "../axios";
 import { useUser } from "./user";
 import { logoutServer } from "../server/actions";
-import { AuthenticationResponse, CredentialVerificationBody, ForgotPasswordBody, LoginBody, RegistrationBody, ResetPasswordBody, UpdatePasswordBody, UpdatePhoneBody } from "@/types/auth";
+import { AuthenticationResponse, CredentialVerificationBody, ForgotPasswordBody, LoginBody, ResetPasswordBody, UpdatePasswordBody, UpdatePhoneBody } from "@/types/auth";
 import { AxiosResponse } from "axios";
 import { User } from "@/types/global";
+import { RegistrationBody } from "@/features/registration/types";
 
 export const refresh = async (): Promise<string> => {
     try {

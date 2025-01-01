@@ -1,18 +1,18 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { validatePassword } from "@/services/validators";
 import styles from "./Registration.module.scss";
 import PasswordInput from "@/components/PasswordInput/PasswordInput";
 
-export default function RegisterPasswordInput({password, setPassword}) {
+type RegisterPasswordInputProps = {
+    password: string;
+    setPassword: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function RegisterPasswordInput({password, setPassword}: RegisterPasswordInputProps) {
     const [passwordValid, setPasswordValid] = useState(true);
 
-    //const errorMsg = usePage().props.errors?.password;
-
-    const changePassword = (value) => {
-        setPassword({
-            ...password,
-            value: value
-        });
+    const changePassword = (value: string) => {
+        setPassword(value);
 
         setPasswordValid(validatePassword(value));
     }
@@ -26,8 +26,8 @@ export default function RegisterPasswordInput({password, setPassword}) {
                 value={password} 
                 label={"Contraseña"} 
                 placeholder={"Contraseña"} 
-                setValue={changePassword} />
-            {false && <span className="error-msg">{errorMsg}</span>}
+                setValue={changePassword}
+            />
         </div>
     )
 } 

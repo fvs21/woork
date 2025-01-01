@@ -1,15 +1,19 @@
 import styles from "./Registration.module.scss";
 import ValidatedInput from "@/components/ValidatedInput/ValidatedInput";
-import { useState } from "react";
+import React, { Dispatch, useState } from "react";
 import { validateString } from "@/services/validators";
+import { Fullname } from "../types";
 
-export default function RegisterNameInput({fullName, setName}) {
+type RegisterNameInputProps = {
+    fullName: Fullname;
+    setName: Dispatch<React.SetStateAction<Fullname>>;
+}
+
+export default function RegisterNameInput({fullName, setName}: RegisterNameInputProps) {
     const [firstValid, setFirstValid] = useState(true);
     const [lastValid, setLastValid] = useState(true);
 
-    //const {errors} = usePage().props;
-
-    const changeFirstName = (value) => {
+    const changeFirstName = (value: string) => {
         setName(prevState => ({
             ...prevState,
             firstName: value
@@ -17,7 +21,7 @@ export default function RegisterNameInput({fullName, setName}) {
 
         setFirstValid(validateString(value));
     }
-    const changeLastName = (value) => {
+    const changeLastName = (value: string) => {
         setName(prevState => ({
             ...prevState,
             lastName: value
@@ -31,7 +35,7 @@ export default function RegisterNameInput({fullName, setName}) {
             <div className={styles["fullname-field"]}>
                 <ValidatedInput
                     className={styles.formInput} 
-                    valid={firstValid && !fullName.firstError} 
+                    valid={firstValid} 
                     name={"firstName"} value={fullName.firstName} 
                     type={"text"} 
                     placeholder={"Nombre(s)"} 
@@ -39,7 +43,7 @@ export default function RegisterNameInput({fullName, setName}) {
                     autofocus={false} />
                 <ValidatedInput 
                     className={styles.formInput}
-                    valid={lastValid && !fullName.lastError} 
+                    valid={lastValid} 
                     name={"lastName"} 
                     value={fullName.lastName} 
                     type={"text"} 
@@ -47,7 +51,6 @@ export default function RegisterNameInput({fullName, setName}) {
                     setValue={changeLastName} 
                     autofocus={false}/>
             </div>
-            { false && <span className="error-msg">{errors.firstName}</span>}
         </div>
     )
 }

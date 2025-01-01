@@ -14,48 +14,46 @@ import Form from "@/components/Form/Form";
 import { useRegister } from "@/api/hooks/authentication";
 import { useRouter } from "next/navigation";
 import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
-import { useDobError, useNamesError, usePasswordError, usePhoneNumberError } from "@/jotai/registration/registrationState";
+import { useDobError, useNamesError, usePasswordError, usePhoneNumberError } from "../store";
+import { DateOfBirth, Fullname, PhoneNumber, RegistrationBody } from "../types";
 
 export default function RegisterForm() {
     const day = new Date().getDate();
     const month = new Date().getMonth()+1;
     const year = new Date().getFullYear();
 
-    const [fullName, setFullName] = useState({
+    const [fullName, setFullName] = useState<Fullname>({
         firstName: "",
         lastName: "",
     });
     const [, setNamesError] = useNamesError();
     
-    const [phoneNumber, setPhoneNumber] = useState({
+    const [phoneNumber, setPhoneNumber] = useState<PhoneNumber>({
         countryCode: "52",
         phone: "",
     });
     const [, setPhoneNumberError] = usePhoneNumberError();
 
-    const [dateOfBirth, setDateOfBirth] = useState({
+    const [dateOfBirth, setDateOfBirth] = useState<DateOfBirth>({
         month: month,
         year: year,
         day: day,
-        error: false
     });
     const [, setDobError] = useDobError();
 
-    const [password, setPassword] = useState({
-        value: "",
-    });
+    const [password, setPassword] = useState<string>("");
     const [, setPasswordError] = usePasswordError();
 
     const { register, isLoading, registerDisabled } = useRegister();
     const router = useRouter();
 
-    const body = {
+    const body: RegistrationBody = {
         "firstName": fullName.firstName,
         "lastName": fullName.lastName,
         "countryCode": phoneNumber.countryCode,
         "phone": phoneNumber.phone,
         "dateOfBirth": stringifyDateOfBirth(dateOfBirth.year, dateOfBirth.month, dateOfBirth.day),
-        "password": password.value
+        "password": password
     }
 
     const clearErrors = () => {
@@ -88,7 +86,7 @@ export default function RegisterForm() {
     };
 
     return (
-        <Form className={styles.registerFormContainer} height={"636px"}>
+        <Form className={styles.registerFormContainer}>
             <div className={styles['register-form']}>
                 <div className={styles['form-title']}>
                     Crea tu cuenta
@@ -101,7 +99,7 @@ export default function RegisterForm() {
                         phoneNumber={phoneNumber} 
                         setPhoneNumber={setPhoneNumber} />
                     <RegisterPasswordInput 
-                        password={password.value} 
+                        password={password} 
                         setPassword={setPassword}/>
                     <RegisterDateInput 
                         dateOfBirth={dateOfBirth} 

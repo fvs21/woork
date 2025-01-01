@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { stringifyDateOfBirth } from "@/utils/authentication/RegisterUtils";
 import InputDate from "@/components/InputDate/InputDate";
 import { validateAge } from "@/services/validators";
 import InputLabel from "@/components/ValidatedInput/InputLabel";
 import styles from "./Registration.module.scss";
-import { useDobError } from "@/jotai/registration/registrationState";
+import { useDobError } from "../store";
+import { DateOfBirth } from "../types";
 
-export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}) {
+type RegisterDateInputProps = {
+    dateOfBirth: DateOfBirth;
+    setDateOfBirth: React.Dispatch<React.SetStateAction<DateOfBirth>>;
+    label: boolean;
+}
+
+export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}: RegisterDateInputProps) {
     const [active, setActive] = useState(false);
     const [dateValid, setDateValid] = useState(false);
     
@@ -15,7 +22,6 @@ export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}) 
     const default_year = new Date().getFullYear();
 
     const [error] = useDobError();
-
 
     const changeDateOfBirth = (e) => {
         const value = e.target.value;
@@ -40,7 +46,7 @@ export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}) 
     }
 
 
-    const displayError = !dateValid && error;
+   const displayError = !dateValid && error;
 
     useEffect(() => {
         function checkDateOfBirth() {
@@ -68,11 +74,10 @@ export default function RegisterDateInput({dateOfBirth, setDateOfBirth, label}) 
                 day={dateOfBirth.day} 
                 year={dateOfBirth.year} 
                 changeDateOfBirth={changeDateOfBirth} 
-                valid={!displayError} 
                 setActive={setActive} 
                 yearsArray={[...Array(101)].map((x, i) => default_year-100+i)}/>
             {
-                displayError &&  <span style={{position: "absolute"}} className="error-msg">{error}</span>
+                displayError && <span style={{position: "absolute"}} className="error-msg">{error}</span>
             }  
         </div>
     )
