@@ -2,7 +2,12 @@ import ArrowButton from "../ArrowButton/ArrowButton";
 import styles from "./PostingImagesDisplay.module.scss";
 import { useState, useRef } from "react";
 
-export default function PostingImagesDisplay({urls, className}) {
+type PostingImagesDisplayProps = {
+    urls: Array<string>;
+    className: string;
+}
+
+export default function PostingImagesDisplay({urls, className}: PostingImagesDisplayProps) {
     const [imageDisplayed, setImageDisplayed] = useState(0);
     const ref = useRef(null);
 

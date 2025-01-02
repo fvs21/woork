@@ -1,7 +1,17 @@
 import InputLabel from "../ValidatedInput/InputLabel";
 import styles from "./TextInput.module.scss";
 
-export default function TextInput({name, value, setValue, label, placeholder, className, type, ...props}) {
+type TextInputProps = {
+    name: string;
+    value: string;
+    setValue: (value: string) => void;
+    label?: string;
+    className: string;
+    type: string;
+    [x:string]: any;
+}
+
+export default function TextInput({name, value, setValue, label, placeholder, className, type, ...props}: TextInputProps) {
     const changeValue = (e) => {
         setValue(e.target.value);
     }

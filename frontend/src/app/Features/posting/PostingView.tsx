@@ -6,7 +6,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import ArrowButton from "@/components/ArrowButton/ArrowButton";
 import SendSVG from "@/components/SVGs/Send";
 import "leaflet/dist/leaflet.css";
-import "leaflet";
+import * as L from "leaflet";
 import { lazy } from "react";
 import { Suspense } from "react";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
@@ -35,7 +35,7 @@ export default function PostingView({ id }) {
   const [seeMore, setSeeMore] = useState(false);
 
   const contentRef = useRef(null);
-  const [contentHeight, setContentHeight] = useState();
+  const [contentHeight, setContentHeight] = useState(0);
 
   const [jobApplicantsModal, setJobApplicantsModal] = useState(false);
 
@@ -76,7 +76,7 @@ export default function PostingView({ id }) {
     setContentHeight(contentRef.current.clientHeight);
 
     const view = [coordinates.latitude, coordinates.longitude];
-    map = L.map("map").setView(view, 12);
+    map = L.map("map").setView(view as L.LatLngExpression, 12);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
       attribution:
@@ -137,7 +137,7 @@ export default function PostingView({ id }) {
       <div className={styles.contentContainer}>
         <div className={styles.title}>
           {postingData.title}
-          {postingData.userCreator && (
+          {postingData.isUserCreator && (
             <button
               className={styles.viewApplicantsBtn}
               onClick={() => setJobApplicantsModal(true)}
@@ -156,7 +156,7 @@ export default function PostingView({ id }) {
         <div className={styles.category}>
           {"Categoría: " + postingData.category}
         </div>
-        {!postingData.userCreator && (
+        {!postingData.isUserCreator && (
           <div className={styles.applyButtonContainer}>
             {application_status != "rejected" ? (
               <button
@@ -207,7 +207,7 @@ export default function PostingView({ id }) {
         </div>
         <div className={styles.location}>
           <div className={styles.locationTitle}>Ubicación aproximada</div>
-          {postingData.userCreator && (
+          {postingData.isUserCreator && (
             <div className={styles.selectedLocationName}>
               {postingData.location_name} {"(Solo tú puedes ver este nombre)"}
             </div>

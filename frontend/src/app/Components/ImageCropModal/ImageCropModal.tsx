@@ -3,23 +3,23 @@ import Modal from "../Modal/Modal";
 import CloseSVG from "../SVGs/Close";
 import ZoomSVG from "../SVGs/Zoom";
 import styles from "./ImageCropModal.module.scss";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function ImageCropModal({image, setImage, closeModal}) {
     const [mouseDown, setMouseDown] = useState(false);
-    const [startY, setStartY] = useState();
-    const [startX, setStartX] = useState();
-    const [scrollTop, setScrollTop] = useState();
-    const [scrollLeft, setScrollLeft] = useState();
+    const [startY, setStartY] = useState<number>();
+    const [startX, setStartX] = useState<number>();
+    const [scrollTop, setScrollTop] = useState<number>();
+    const [scrollLeft, setScrollLeft] = useState<number>();
     const [showGrid, setShowGrid] = useState(false);
 
     const cropRef = useRef(null);
-    const imageRef = useRef(null);
+    const imageRef = useRef<HTMLImageElement>(null);
 
     const [zoom, setZoom] = useState(1);
     const [transformedZoom, setTransformedZoom] = useState(1);
 
-    const startDragging = (e) => {
+    const startDragging = (e: React.MouseEvent) => {
         e.preventDefault();
 
         setShowGrid(true);
@@ -31,14 +31,14 @@ export default function ImageCropModal({image, setImage, closeModal}) {
         setScrollLeft(cropRef.current.scrollLeft);
     }
 
-    const stopDragging = (e) => {
+    const stopDragging = (e: React.MouseEvent) => {
         setMouseDown(false);
 
         if(showGrid)
             setShowGrid(false);
     }
 
-    const move = (e) => {
+    const move = (e: React.MouseEvent) => {
         e.preventDefault();
         
         if(!mouseDown)
@@ -94,12 +94,13 @@ export default function ImageCropModal({image, setImage, closeModal}) {
         closeModal()
     }
 
-    function changeZoom(zoom) {
+    function changeZoom(zoom: string) {
+        const zoomNumber: number = Number(zoom);
         const oldRange = 100 - 1;
         const newRange = 2 - 1;
         
-        setTransformedZoom((((zoom - 1) * newRange) / oldRange) + 1); 
-        setZoom(zoom);
+        setTransformedZoom((((zoomNumber - 1) * newRange) / oldRange) + 1); 
+        setZoom(zoomNumber);
     }
 
     useEffect(() => {
@@ -153,7 +154,7 @@ export default function ImageCropModal({image, setImage, closeModal}) {
                             min={1} 
                             max={100}/>
                     </div>
-                    <button className={styles.cropBtn} type="button" onClick={(e) => crop(e)}>Recortar</button>
+                    <button className={styles.cropBtn} type="button" onClick={crop}>Recortar</button>
                 </div>
             </div>
         </Modal>

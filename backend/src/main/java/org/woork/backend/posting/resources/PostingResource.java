@@ -1,5 +1,6 @@
 package org.woork.backend.posting.resources;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class PostingResource {
     private String url;
     private String creator;
     private String creatorUsername;
+    @JsonProperty(value = "isUserCreator")
     private boolean isUserCreator;
     private String location_name;
     private Map<String, Double> display_coordinates;

@@ -4,9 +4,9 @@ import { useState } from "react";
 import { svgColor } from "@/utils/extra/utils";
 
 export default function Searchbar() {
-    const [active, setActive] = useState(false);
+    const [active, setActive] = useState<boolean>(false);
 
-    const focus = () => {
+    const focus = (): void => {
         setActive(!active);
     }
 

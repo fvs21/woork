@@ -1,6 +1,10 @@
 import styles from "./Logotype.module.scss";
 
-export default function Logotype({width}) {
+type LogotypeProps = {
+    width: string;
+}
+
+export default function Logotype({width}: LogotypeProps) {
     return (
         <div className={styles['logotype-container']}>
             <img src="/woork-logotype.png" height={"auto"} width={width} alt="Woork logotype" />

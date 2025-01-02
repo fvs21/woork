@@ -1,6 +1,6 @@
 import styles from "./LoadingSpinnerClear.module.scss";
 
-export default function LoadingSpinnerClear({width}) {
+export default function LoadingSpinnerClear({width}: { width: string }) {
     const style = {
         width: width,
         height: width,

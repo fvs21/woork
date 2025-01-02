@@ -25,17 +25,6 @@ export default function Navbar() {
         return e.buttons === 1 || e.buttons === 0;
     }
 
-    useEffect(() => {
-        /**
-        window.Echo.private(`notifications.` + user.id).listen(
-            ".notification.received",
-            (e) => {
-                addNotification(e);
-            }
-        );
-        */
-    }, []);
-
     return (
         <div>
             <header
