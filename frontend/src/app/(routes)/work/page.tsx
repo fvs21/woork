@@ -1,6 +1,6 @@
 import { getUser, refreshToken } from "@/api/server/auth"
 import Layout from "@/components/Layout/Layout";
-import WorkerDashboard from "@/features/workerdashboard/components/WorkerDashboard";
+import WorkerDashboard from "@/features/workerdashboard/components/WorkerDashboard/WorkerDashboard";
 import { redirect } from "next/navigation";
 
 export const metadata = {

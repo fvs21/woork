@@ -23,6 +23,7 @@
     --auth-background-color: rgb(247, 247, 247);
     --invalid-color: #{var.$invalid-color};
     --color-error: rgb(199, 0, 0);
+    --side-bar-color: rgb(249, 249, 249);
 }
 
 .dark {
@@ -44,6 +45,7 @@
     --auth-background-color: #{var.$dark-bg};
     --invalid-color: rgb(75, 75, 75);
     --color-error: rgb(223, 4, 4);
+    --side-bar-color: rgb(24, 24, 24);
 }
 
 

@@ -1,0 +1,61 @@
+@use "@/styles/variables" as var;
+
+.sideBarContainer {
+    height: 100%;
+    position: fixed;
+    left: 0;
+    width: 220px;
+    border-right: 1px solid var(--border-color);
+}
+
+.shrinkButtonContainer {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    padding-right: 20px;
+}
+
+.shrinkButton {
+    border: none;
+    background-color: transparent;
+    line-height: 0;
+    padding: 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.shrinkButton:hover {
+    background-color: var(--button-hover);
+}
+
+.menuContainer {
+    padding: 0 10px;
+}
+
+.menuItem {
+    color: var(--text-color);
+    border: none;
+    display: block;
+    background-color: inherit;
+    width: 100%;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.menuItem:not(.selected):hover {
+    background-color: var(--button-hover);
+}
+
+.selected {
+    font-weight: bold;
+    cursor: default;
+}

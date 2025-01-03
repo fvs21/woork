@@ -82,6 +82,7 @@ export default function Page() {
                                     changeCountryCode={setCountryCode}/>
                                 <div className={styles['input-field']}>
                                     <ValidatedInput 
+                                        name="password"
                                         className={styles.formInput}
                                         type={"password"} 
                                         valid={true} 
