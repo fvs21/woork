@@ -12,5 +12,27 @@
 .pendingJobs {
     margin-top: var.$margin-m;
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: minmax(min-content, max-content);
+    grid-auto-columns: max-content;
+    grid-auto-flow: row dense;
+    gap: 20px;
+}
+
+@media only screen and (max-width: 1650px) {
+    .pendingJobs {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media only screen and (max-width: 1320px) {
+    .pendingJobs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media only screen and (max-width: 970px) {
+    .pendingJobs {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
 }

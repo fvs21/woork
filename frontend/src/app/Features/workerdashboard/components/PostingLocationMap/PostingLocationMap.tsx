@@ -8,14 +8,16 @@ type PostingLocationMapProps = {
     latitude: number;
     longitude: number;
     aproximate: boolean;
+    mapId: number;  
 };
 
-export default function PostingLocationMap({latitude, longitude, aproximate}: PostingLocationMapProps) {
+export default function PostingLocationMap({latitude, longitude, aproximate, mapId}: PostingLocationMapProps) {
     let map;
+    const mapIdFormatted: string = 'map' + mapId;
 
     useEffect(() => {
         const view = [latitude, longitude];
-        map = L.map('map').setView(view as L.LatLngExpression, 11);
+        map = L.map(mapIdFormatted).setView(view as L.LatLngExpression, 11);
 
         L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 19,
@@ -39,7 +41,7 @@ export default function PostingLocationMap({latitude, longitude, aproximate}: Po
     
     return (
         <div 
-            id="map"
+            id={mapIdFormatted}
             style={{
                 width: "100%",
                 height: "100%",

@@ -30,7 +30,7 @@ export default function WorkerPendingJobCard(
                 {postingDescription}
             </div>
             <div className={styles.mapContainer}>
-                <PostingLocationMap latitude={location.latitude} longitude={location.longitude} aproximate={aproximate} />
+                <PostingLocationMap latitude={location.latitude} longitude={location.longitude} aproximate={aproximate} mapId={jobId}/>
             </div>
             <div className={styles.creatorInformationContainer}>
                 <span style={{fontWeight: 500}}>Creador: </span>

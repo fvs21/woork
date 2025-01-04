@@ -59,4 +59,16 @@
 .selected {
     font-weight: bold;
     cursor: default;
+    background-color: var(--button-hover);
+}
+
+@media only screen and (max-width: 610px) {
+    .optionName {
+        display: none;
+        visibility: hidden;
+    }
+
+    .sideBarContainer {
+        width: min-content;
+    }
 }

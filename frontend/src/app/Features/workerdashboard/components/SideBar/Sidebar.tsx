@@ -21,17 +21,17 @@ export default function Sidebar({option, setOption}: SideBarProps) {
                 <button className={`${styles.menuItem} ${option == 0 && styles.selected}`}
                     onClick={() => setOption(0)}>
                     <House width="22px" color={svgClr} />
-                    Principal
+                    <span className={styles.optionName}>Principal</span>
                 </button>
                 <button className={`${styles.menuItem} ${option == 1 && styles.selected}`}
                     onClick={() => setOption(1)}>
                     <Pencil width="22px" color={svgClr} />
-                    Editar perfil
+                    <span className={styles.optionName}>Editar perfil</span>
                 </button>
                 <button className={`${styles.menuItem} ${option == 2 && styles.selected}`}
                     onClick={() => setOption(2)}>
                     <Cash width="22px" color={svgClr} />
-                    Ingresos
+                    <span className={styles.optionName}>Ingresos</span>
                 </button>
             </div>
         </div>
