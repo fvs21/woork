@@ -9,8 +9,15 @@ export type WorkerPendingJob = {
     host: Host;
     postingUrl: string;
     postingTitle: string;
-    location_shared_at: string;
-    completed_at: string;
+    postingDescription: string;
+    location: Coordinates; //this could either be display coordinates or the actual posting coordinates
+    location_shared_at: string | null;
+    completed_at: string | null;
     chatCreated: boolean;
     chatId?: number;
+}
+
+export type Coordinates = {
+    latitude: number;
+    longitude: number;
 }

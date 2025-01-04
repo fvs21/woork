@@ -1,4 +1,5 @@
 import { useGetWorkerPendingJobs } from "../../api";
+import WorkerPendingJobCard from "../WorkerPendingJobCard/WorkerPendingJobCard";
 import styles from "./WorkerPendingJobs.module.scss";
 
 export default function WorkerPendingJobs() {
@@ -13,7 +14,21 @@ export default function WorkerPendingJobs() {
                 Trabajos pendientes
             </div>
             <div className={styles.pendingJobs}>
-                
+                {data.map(function(job, i) {
+                    return (
+                        <WorkerPendingJobCard 
+                            key={job.jobId}
+                            jobId={job.jobId}
+                            host={job.host}
+                            postingUrl={job.postingUrl}
+                            postingDescription={job.postingDescription}
+                            postingTitle={job.postingTitle}
+                            location={job.location}
+                            aproximate={job.location_shared_at == null}
+                            chatId={job.chatCreated ? job.chatId : null}
+                        />
+                    )
+                })}
             </div>
         </div>
     )    

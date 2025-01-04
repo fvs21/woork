@@ -1,4 +1,79 @@
+@use "@/styles/variables" as var;
+
 .workerPendingJobCard {
-    min-width: 200px;
+    min-width: 400px;
     border: 1px solid var(--border-color); 
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.description {
+    padding-top: var.$margin-xxs;
+    font-size: 14px;
+}
+
+.mapContainer {
+    margin-top: var.$margin-xs;
+    height: 200px;
+}
+
+.creatorInformationContainer {
+    margin-top: var.$margin-xs;
+}
+
+.creatorInformation {
+    padding-top: var.$margin-xs;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pfpContainer {
+    width: 16%;
+}
+
+.pfp {
+    width: 100%;
+    border-radius: 50%;
+}
+
+.nameAndRating {
+    font-weight: 500;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.contactButton {
+    margin-top: var.$margin-s;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background-color: var.$primary-color;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.contactButton:hover {
+    background-color: var.$secondary-color;
+}
+
+.name {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.name:hover {
+    text-decoration: underline;
 }

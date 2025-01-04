@@ -1,3 +1,5 @@
+@use "@/styles/variables" as var;
+
 .pendingJobsContainer {
     padding: 30px;
 }
@@ -5,4 +7,10 @@
 .header {
     font-size: 30px;
     font-weight: 600;
+}
+
+.pendingJobs {
+    margin-top: var.$margin-m;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
 }
