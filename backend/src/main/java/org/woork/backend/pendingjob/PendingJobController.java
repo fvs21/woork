@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.woork.backend.authentication.AuthenticationService;
 import org.woork.backend.pendingjob.resources.HostPendingJobResource;
+import org.woork.backend.pendingjob.resources.WorkerPendingJobResource;
 import org.woork.backend.user.User;
 
 import java.util.List;
@@ -25,7 +26,12 @@ public class PendingJobController {
     @GetMapping
     public List<HostPendingJobResource> getUserPendingJobs() {
         User user = authenticationService.getCurrentUser();
-
         return pendingJobService.getUserPendingJobs(user);
+    }
+
+    @GetMapping("/worker")
+    public List<WorkerPendingJobResource> getWorkerPendingJobs() {
+        User user = authenticationService.getCurrentUser();
+        return pendingJobService.getWorkerPendingJobs(user);
     }
 }

@@ -6,6 +6,7 @@ import org.woork.backend.messaging.ChatService;
 import org.woork.backend.messaging.models.Chat;
 import org.woork.backend.messaging.repositories.ChatRepository;
 import org.woork.backend.pendingjob.resources.HostPendingJobResource;
+import org.woork.backend.pendingjob.resources.WorkerPendingJobResource;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.url.UrlService;
 import org.woork.backend.user.User;
@@ -84,5 +85,25 @@ public class PendingJobService {
 
     public boolean pendingJobExistForPosting(Posting posting) {
         return pendingJobRepository.existsByPosting(posting);
+    }
+
+    public List<WorkerPendingJobResource> getWorkerPendingJobs(User user) {
+        Worker worker = workerService.getWorker(user);
+
+        List<PendingJob> pendingJobs = pendingJobRepository.findAllByWorker(worker).orElse(new ArrayList<>());
+
+        return pendingJobs.stream().map(
+                job -> {
+                    Posting posting = job.getPosting();
+                    String postingUrl = urlService.encodeIdToUrl(posting.getId());
+
+                    Chat chat = chatRepository.findByParticipantsContainingAndParticipantsContaining(user, job.getHost()).orElse(null);
+
+                    if(chat == null)
+                        return new WorkerPendingJobResource(job, postingUrl);
+
+                    return new WorkerPendingJobResource(job, postingUrl, chat.getId());
+                }
+        ).toList();
     }
 }
