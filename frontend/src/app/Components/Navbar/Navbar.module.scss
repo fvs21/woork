@@ -66,6 +66,8 @@
     text-decoration: none;
     height: 100%;
     font-weight: 500;
+    display: inline-block;
+    white-space: nowrap;
 }
 
 .nav-bar-btn:hover {
@@ -157,6 +159,19 @@
 
 .searchButton:hover {
     background-color: var(--button-hover);
+}
+
+@media only screen and (max-width: 700px ) {
+    .registerLink {
+        display: none;
+    }
+    .logo {
+        display: none;
+    } 
+    .mainNavBar {
+        padding: 10px 10px 0 0;
+        margin-bottom: 30px;
+    }
 }
 
 @media only screen and (max-width: 1090px) {

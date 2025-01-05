@@ -11,6 +11,7 @@ import Form from "@/components/Form/Form";
 import { useLogin } from "@/api/hooks/authentication";
 import { useRouter } from "next/navigation";
 import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
+import Logotype from "@/components/Logotype/Logotype";
 
 type LoginFormProps = {
     error?: string;
@@ -55,6 +56,9 @@ export default function LoginForm({error}: LoginFormProps) {
             <div className={styles['login-form']}>
                 <form onSubmit={handleSubmit} method="post">
                     <div className={styles['form-title']}>
+                        <div className={styles.formLogotype}>
+                            <Logotype width="150px" />
+                        </div>
                         Inicia sesión
                     </div>
                     <div className={styles['login-input-container']}>

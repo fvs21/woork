@@ -99,10 +99,8 @@ export default function Navbar() {
                             >
                                 Inicia sesión
                             </Link>
-                            <Link href={"/register"}>
-                                <button className={styles["nav-bar-btn"]}>
-                                    Regístrate
-                                </button>
+                            <Link href={"/register"} className={`${styles["nav-bar-btn"]} ${styles.registerLink}`}>
+                                Regístrate
                             </Link>
                         </>
                     )}

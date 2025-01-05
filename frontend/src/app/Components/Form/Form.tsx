@@ -11,9 +11,25 @@ export default function Form({overflow, children, className}: FormProps) {
     return (
         <div className={styles['form-overlay']}>
             <div 
-                style={{overflow: overflow || "hidden"}} 
-                className={`${styles['form-container']} ${className}`}>
+                className={`${styles['form-container']} ${className}`}
+            >
                 {children}
+                <div className={styles.tosShrinked}>
+                    <div className={styles.element}>
+                        Términos y condiciones
+                    </div>
+                    <div className={styles.element}>
+                        Privacidad
+                    </div> 
+                </div>
+            </div>
+            <div className={styles.tosAndPrivacy}>
+                <div className={styles.element}>
+                    Términos y condiciones
+                </div>
+                <div className={styles.element}>
+                    Privacidad
+                </div>
             </div>
         </div>
     )

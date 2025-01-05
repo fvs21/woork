@@ -2,12 +2,54 @@
 
 .form-overlay {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
+    position: relative;
 }
 
 .form-container {
     border-radius: 8px;
     padding: 0 30px 30px;
     border: 1px solid var(--border-color);
+}
+
+.tosAndPrivacy {
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.element {
+    font-size: 14px;
+    color: var(--text-secondary-color);
+}
+
+.tosShrinked {
+    display: none;
+    gap: 20px;
+    padding-top: 30px;
+    width: 100%;
+}
+
+@media only screen and (max-width: 650px) {
+    .form-container {
+        width: 100% !important;
+        border-radius: 0;
+        padding-top: 30px;
+    }
+
+    .form-overlay {
+        height: 100%;
+    }
+
+    .tosAndPrivacy {
+        display: none;
+    }
+
+    .tosShrinked {
+        display: flex;
+        justify-content: right;
+    }
 }

@@ -47,5 +47,5 @@ export type Applicant = {
 
 export type PostingResponse = {
     data: Posting;
-    postingApplicationStatus: 'requested' | 'accepted' | 'rejected';
+    postingApplicationStatus: 'requested' | 'ACCEPTED' | 'REJECTED' | null;
 }

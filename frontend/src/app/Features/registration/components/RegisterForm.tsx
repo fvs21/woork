@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
 import { useDobError, useNamesError, usePasswordError, usePhoneNumberError } from "../store";
 import { DateOfBirth, Fullname, PhoneNumber, RegistrationBody } from "../types";
+import Logotype from "@/components/Logotype/Logotype";
 
 export default function RegisterForm() {
     const day = new Date().getDate();
@@ -87,8 +88,11 @@ export default function RegisterForm() {
 
     return (
         <Form className={styles.registerFormContainer}>
-            <div className={styles['register-form']}>
+            <div>
                 <div className={styles['form-title']}>
+                    <div className={styles.formLogotype}>
+                        <Logotype width="150px" />
+                    </div>
                     Crea tu cuenta
                 </div>
                 <form onSubmit={handleSubmit} method="post">

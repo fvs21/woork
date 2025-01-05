@@ -2,10 +2,7 @@
 
 .registerFormContainer {
     background-color: var(--auth-forms-bg); 
-}
-
-.register-form {
-    width: 400px;
+    width: 500px;
 }
 
 .fullname-field {
@@ -147,4 +144,22 @@
 .country-code:focus {
     outline: none !important;
     box-shadow: 0 0 3px 1px var.$primary-color;
+}
+
+.formLogotype {
+    display: none;
+}
+
+@media only screen and (max-width: 650px) {
+    .formLogotype {
+        display: block;
+    }
+
+    .form-title {
+        text-align: left;
+    }
+
+    .registerFormContainer {
+        height: 100%;
+    }
 }

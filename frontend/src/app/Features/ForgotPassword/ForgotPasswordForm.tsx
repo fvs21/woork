@@ -6,9 +6,9 @@ import InputEmailOrPhone from "../login/InputEmailOrPhone";
 import { useState } from "react";
 import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import { isEmail } from "@/utils/authentication/LoginUtils";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForgotPassword } from "@/api/hooks/authentication";
+import Logotype from "@/components/Logotype/Logotype";
 
 export default function ForgotPasswordForm() {
     const [credential, setCredential] = useState("");
@@ -41,6 +41,9 @@ export default function ForgotPasswordForm() {
         <Form className={styles.forgotPasswordFormContainer}>
             <div className={styles['forgot-password-form']}>
                 <div className={styles['form-title']}>
+                    <div className={styles.formLogotype}>
+                        <Logotype width="150px" />
+                    </div>
                     Restablece tu contraseña
                 </div>
                 <div className={styles['forgot-password-instructions']}>

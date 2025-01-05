@@ -1,35 +1,12 @@
 @use "@/styles/variables" as var;
 
-
-.loginContainer {
-    padding-top: 40px;
-    min-height: 650px;
+.authContainer {
+    padding-top: 80px;
+    height: 100%;
     background-color: var(--auth-background-color);
-}
-
-.registerContainer {
-    padding-top: 30px;
-    height: 780px;
-    margin-bottom: 10px;
-    background-color: var(--auth-background-color);
-}
-
-.forgot-password-container {
-    padding-top: 40px;
-    height: 600px;
-    background-color: var(--auth-background-color);
-}
-
-.reset-password-container {
-    padding-top: 100px;
-    height: 700px;
-    background-color: var(--background-color);
-}
-
-.verify-phone-container {
-    padding-top: 50px;
-    height: 650px;
-    background-color: var(--auth-background-color);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 .logotype-container {
@@ -93,4 +70,14 @@
 
 .close-btn:hover {
     background-color: var(--button-hover)
+}
+
+@media only screen and (max-width: 650px) {
+    .authContainer {
+        padding-top: 0;
+    }
+
+    .logotype-container {
+        display: none;
+    }
 }

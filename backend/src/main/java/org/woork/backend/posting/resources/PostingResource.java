@@ -31,6 +31,7 @@ public class PostingResource {
     private String url;
     private String creator;
     private String creatorUsername;
+
     @JsonProperty(value = "isUserCreator")
     private boolean isUserCreator;
     private String location_name;

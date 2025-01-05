@@ -158,7 +158,9 @@ export default function PostingView({ id }) {
         </div>
         {!postingData.isUserCreator && (
           <div className={styles.applyButtonContainer}>
-            {application_status != "rejected" ? (
+            {
+            //check if application status is request
+            (application_status == "requested" || application_status == null) ? (
               <button
                 className={`
                     ${styles.applyButton} 
@@ -176,11 +178,19 @@ export default function PostingView({ id }) {
                     : "Enviar solicitud"}
                 </span>
               </button>
-            ) : (
+            ) 
+            //if application status is rejected
+            : (application_status == "REJECTED" ?
+            
+            (
               <span className={styles.rejected}>
                 Tu solicitud fue rechazada por el autor
               </span>
-            )}
+            ) //if is accepted, return none
+              : <></>
+            )
+          }
+
           </div>
         )}
         <div className={styles.description}>

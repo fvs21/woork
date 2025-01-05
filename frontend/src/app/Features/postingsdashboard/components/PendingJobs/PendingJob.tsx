@@ -39,7 +39,6 @@ export default function PendingJob({title, workerPfpUrl, workerName, workerUsern
             };
 
             setSelectedChat(chatSelection);
-            router.push("/messages");
         } else {
             const chatSelection: SelectedChat = {
                 recipient: recipient,
@@ -47,8 +46,9 @@ export default function PendingJob({title, workerPfpUrl, workerName, workerUsern
             };
 
             setSelectedChat(chatSelection);
-            router.push("/messages");
         }
+
+        router.push("/messages");
     }
 
     return (
