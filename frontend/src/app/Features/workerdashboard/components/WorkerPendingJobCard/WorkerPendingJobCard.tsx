@@ -4,6 +4,9 @@ import PostingLocationMap from "../PostingLocationMap/PostingLocationMap";
 import styles from "./WorkerPendingJobCard.module.scss";
 import { svgColor } from "@/utils/extra/utils";
 import Link from "next/link";
+import { useSelectedChat } from "@/features/messages/store";
+import { Participant, SelectedChat } from "@/features/messages/types";
+import { useRouter } from "next/navigation";
 
 type WorkerPendingJobCardProps = {
     jobId: number;
@@ -14,12 +17,43 @@ type WorkerPendingJobCardProps = {
     location: Coordinates;
     aproximate: boolean;
     chatId?: number;
+    chatCreated: boolean;
 };
 
 export default function WorkerPendingJobCard(
-    {jobId, host, postingUrl, postingTitle, postingDescription, location, aproximate, chatId}: WorkerPendingJobCardProps
+    {jobId, host, postingUrl, postingTitle, postingDescription, location, aproximate, chatId, chatCreated}: WorkerPendingJobCardProps
 ) {
     const svgClr = svgColor();
+    const [, setSelectedChat] = useSelectedChat();
+    const router = useRouter();
+
+
+    function sendMessage() {
+        const recipient: Participant = {
+            name: host.name,
+            pfpUrl: host.pfpUrl,
+            username: host.username
+        };
+
+        if(chatCreated) {
+            const chatSelection: SelectedChat = {
+                recipient: recipient,
+                chatId: chatId,
+                create: false
+            };
+
+            setSelectedChat(chatSelection);
+            router.push("/messages");
+        } else {
+            const chatSelection: SelectedChat = {
+                recipient: recipient,
+                create: true
+            };
+
+            setSelectedChat(chatSelection);
+            router.push("/messages");
+        }
+    }
 
     return (
         <div className={styles.workerPendingJobCard}>
@@ -52,7 +86,7 @@ export default function WorkerPendingJobCard(
                     </div>
                 </div>
             </div>
-            <button className={styles.contactButton}>
+            <button className={styles.contactButton} onClick={sendMessage}>
                 Contactar
             </button>
         </div>

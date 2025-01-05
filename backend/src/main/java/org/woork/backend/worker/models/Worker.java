@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.woork.backend.user.User;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -50,5 +51,10 @@ public class Worker {
         this.rating = 0;
         this.jobsCompleted = 0;
         this.categories = new HashSet<>();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return Objects.equals(this.id, ((Worker) o).getId());
     }
 }

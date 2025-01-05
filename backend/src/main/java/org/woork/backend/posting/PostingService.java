@@ -196,7 +196,7 @@ public class PostingService {
         if(authenticationService.isUserAuthenticated()) {
             User user = authenticationService.getCurrentUser();
 
-            if(!postingAvailable && !posting.belongsToUser(user))
+            if(!postingAvailable && (!posting.belongsToUser(user) && !pendingJobService.userIsWorkerInPosting(user, posting)))
                 throw new PostingDoesNotExistException();
 
             if(user.isWorker()) {

@@ -1,4 +1,3 @@
-import CloseSVG from "@/components/SVGs/Close";
 import styles from "./Sidebar.module.scss";
 import { svgColor } from "@/utils/extra/utils";
 import House from "@/components/SVGs/House";

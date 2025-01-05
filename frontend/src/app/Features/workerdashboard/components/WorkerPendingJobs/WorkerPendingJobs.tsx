@@ -26,6 +26,7 @@ export default function WorkerPendingJobs() {
                             location={job.location}
                             aproximate={job.location_shared_at == null}
                             chatId={job.chatCreated ? job.chatId : null}
+                            chatCreated={job.chatCreated}
                         />
                     )
                 })}

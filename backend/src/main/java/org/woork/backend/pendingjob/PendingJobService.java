@@ -2,6 +2,7 @@ package org.woork.backend.pendingjob;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.woork.backend.exceptions.exceptions.PostingDoesNotExistException;
 import org.woork.backend.messaging.ChatService;
 import org.woork.backend.messaging.models.Chat;
 import org.woork.backend.messaging.repositories.ChatRepository;
@@ -105,5 +106,14 @@ public class PendingJobService {
                     return new WorkerPendingJobResource(job, postingUrl, chat.getId());
                 }
         ).toList();
+    }
+
+    public boolean userIsWorkerInPosting(User user, Posting posting) {
+        if(!user.isWorker())
+            return false;
+
+        PendingJob job = pendingJobRepository.findByPosting(posting).orElseThrow(PostingDoesNotExistException::new);
+        Worker worker = workerService.getWorker(user);
+        return job.getWorker().equals(worker);
     }
 }

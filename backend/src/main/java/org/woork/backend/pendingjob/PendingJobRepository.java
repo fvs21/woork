@@ -16,4 +16,5 @@ public interface PendingJobRepository extends JpaRepository<PendingJob, Long> {
     Optional<PendingJob> findByWorkerAndHost(Worker worker, User host);
     boolean existsByPosting(Posting posting);
     Optional<List<PendingJob>> findAllByWorker(Worker worker);
+    Optional<PendingJob> findByPosting(Posting posting);
 }
