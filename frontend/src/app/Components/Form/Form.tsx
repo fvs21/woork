@@ -11,6 +11,7 @@ export default function Form({overflow, children, className}: FormProps) {
     return (
         <div className={styles['form-overlay']}>
             <div 
+                style={{overflowY: "auto"}} 
                 className={`${styles['form-container']} ${className}`}
             >
                 {children}
