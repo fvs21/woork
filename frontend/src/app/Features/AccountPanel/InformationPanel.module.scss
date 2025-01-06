@@ -1,9 +1,5 @@
 @use "@/styles/variables" as var;
 
-.accountPanelContainer {
-    min-width: 400px;
-}
-
 .profile-picture {
     border-radius: 50%;
     outline: 2px solid var.$primary-color;

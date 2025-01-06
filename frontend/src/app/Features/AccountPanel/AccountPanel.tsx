@@ -1,12 +1,10 @@
 import { Suspense, useState } from 'react'
 import styles from './InformationPanel.module.scss'
 import LabeledButton from '@/components/LabeledButton/LabeledButton';
-//import { defaultPfpUrl, formatGender } from '../../utils/account/AccountUtils';
 import { lazy } from 'react';
 import { formatAddress, formatGender } from '@/utils/account/AccountUtils';
 import LoadingModal from '@/components/LoadingModal/LoadingModal';
 import { useUser } from '@/api/hooks/user';
-import Image from 'next/image';
 
 const PhoneNumberModal = lazy(() => import("./PhoneNumberModal"));
 const EmailModal = lazy(() => import("./EmailModal"));

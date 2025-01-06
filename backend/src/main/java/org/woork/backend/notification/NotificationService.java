@@ -4,12 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.woork.backend.exceptions.exceptions.NotificationDoesNotExistException;
+import org.woork.backend.exceptions.exceptions.PostingDoesNotExistException;
 import org.woork.backend.notification.models.Notification;
 import org.woork.backend.notification.models.NotificationObject;
+import org.woork.backend.notification.models.NotificationType;
 import org.woork.backend.notification.records.NotificationData;
+import org.woork.backend.notification.records.PostingApplicationNotification;
 import org.woork.backend.notification.repositories.NotificationObjectRepository;
 import org.woork.backend.notification.repositories.NotificationRepository;
 import org.woork.backend.notification.resources.NotificationResource;
+import org.woork.backend.posting.Posting;
+import org.woork.backend.posting.PostingRepository;
+import org.woork.backend.url.UrlService;
 import org.woork.backend.user.User;
 
 import java.util.ArrayList;
@@ -20,13 +26,44 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final NotificationObjectRepository notificationObjectRepository;
     private final SimpMessagingTemplate template;
+    private final PostingRepository postingRepository;
+    private final UrlService urlService;
 
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository, NotificationObjectRepository notificationObjectRepository, SimpMessagingTemplate template) {
+    public NotificationService(NotificationRepository notificationRepository, NotificationObjectRepository notificationObjectRepository, SimpMessagingTemplate template, PostingRepository postingRepository, UrlService urlService) {
         this.notificationRepository = notificationRepository;
         this.notificationObjectRepository = notificationObjectRepository;
         this.template = template;
+        this.postingRepository = postingRepository;
+        this.urlService = urlService;
     }
+
+    public PostingApplicationNotification generatePostingApplicationNotification(Notification notification) {
+        User applicant = notification.getNotificationObject().getAuthor();
+
+        Long postingId = notification.getNotificationObject().getEntity_id();
+        Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
+        String postingUrl = urlService.encodeIdToUrl(postingId);
+
+        return new PostingApplicationNotification(
+                applicant.getFullName(),
+                "/profile/show/" + applicant.getUsername(),
+                posting.getTitle(),
+                "/posting/" + postingUrl
+        );
+    }
+
+    public void generateAndSendNotificationPayload(NotificationType type, Notification notification) {
+        switch (type) {
+            case JOB_APPLICATION -> {
+                PostingApplicationNotification not = generatePostingApplicationNotification(notification);
+            }
+            case NEW_MESSAGE -> {
+            }
+            case ACCEPTED_APPLICATION -> {
+            }
+        }
+    };
 
     public void createAndSendNotification(User author, NotificationData data) {
         NotificationObject notificationObject = new NotificationObject();
