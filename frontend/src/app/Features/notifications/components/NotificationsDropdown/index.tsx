@@ -1,10 +1,13 @@
 import { useNotifications } from "../../api";
+import Notification from "../Notification/Notification";
 import styles from "./NotificationsDropdown.module.scss";
 
 export default function NotificationsDropdown() {
     const { data, isLoading } = useNotifications();
 
-    console.log(data);
+    if(isLoading) {
+        return <></>
+    }
 
     return (
         <div className={styles.notificationsDropdownContent}>
@@ -13,7 +16,11 @@ export default function NotificationsDropdown() {
             </div>
             <hr style={{margin: 0}} className="hr-line" />
             <ul className={styles.notificationsList}>
-                
+                {data.map(function(not, i) {
+                    return (
+                        <Notification key={not.id} notification={not} />
+                    )
+                })}
             </ul>
         </div>
     )

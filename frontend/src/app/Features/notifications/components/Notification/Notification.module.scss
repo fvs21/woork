@@ -1,3 +1,5 @@
+@use "@/styles/variables" as var;
+
 .notification {
     list-style: none;
     font-size: 13px;
@@ -63,4 +65,54 @@
 
 .notificationBtn:hover {
     background-color: var.$secondary-color;
+}
+
+.notificationUserLink {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.notificationUserLink:hover {
+    text-decoration: underline;
+}
+
+.postingApplicationNotificationBody {
+    width: 100%;
+}
+
+.acceptButtonContainer {
+    width: 150px;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    gap: 5px;
+}
+
+@mixin acceptRejectBtn {
+    width: min-content;
+    padding: 6px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.acceptApplicantBtn {
+    @include acceptRejectBtn;
+    background-color: var.$primary-color;
+    color: white;
+}
+
+.acceptApplicantBtn:hover {
+    opacity: 0.7;
+}
+
+.rejectApplicantBtn {
+    @include acceptRejectBtn;
+    background-color: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+}
+
+.rejectApplicantBtn:hover {
+    opacity: 0.7;
 }

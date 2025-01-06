@@ -1,4 +1,4 @@
-import { Notification as N } from "../../types";
+import { Notification as N, PostingApplicationPayload } from "../../types";
 import styles from "./Notification.module.scss";
 import PostingApplicationNotification from "./PostingApplicationNotification";
 
@@ -10,7 +10,7 @@ export default function Notification({notification}: NotificationProps) {
     function determineNotificationType() {
         switch(notification.type) {
             case "JOB_APPLICATION":
-                return <PostingApplicationNotification />
+                return <PostingApplicationNotification payload={notification.payload as PostingApplicationPayload}/>
         }
     }
 
