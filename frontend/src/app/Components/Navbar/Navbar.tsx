@@ -11,6 +11,7 @@ import { getUnreadNotificationsCount } from "@/utils/notification";
 import UserDropdown from "../UserDropdown/UserDropdown";
 import { useEffect } from "react";
 import Searchbar from "../Searchbar/Searchbar";
+import NotificationsDropdown from "@/features/notifications/components/NotificationsDropdown";
 
 export default function Navbar() {
     const [user] = useUser();
@@ -89,6 +90,7 @@ export default function Navbar() {
                                     />
                                 </button>
                                 {accountDropdown && <UserDropdown />}
+                                {notificationsDropdown && <NotificationsDropdown />}
                             </div>
                         </>
                     ) : (

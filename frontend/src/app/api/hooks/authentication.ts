@@ -97,8 +97,7 @@ export const useLogout = () => {
         }, 
         onSuccess: async () => {
             setTimeout(() => {
-                queryClient.removeQueries(['user-info']);
-                queryClient.removeQueries(['access-token']);
+                queryClient.resetQueries();
             }, 2000);
 
             await logoutServer();

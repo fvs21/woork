@@ -32,11 +32,17 @@ function useWebSockets(): { connected: boolean; connect: () => Client; } {
 
         if(stompClient) {
             stompClient.subscribe(`/user/queue/messages`, onMessageReceived);
+            stompClient.subscribe(`/user/queue/notifications`, onNotificationReceived);
         }
     }
 
     function onError(): void {
         setConected(false);
+    }
+
+    function onNotificationReceived(payload: Message) {
+        console.log(JSON.parse(payload.body));
+        
     }
 
     function onMessageReceived(payload: Message) {

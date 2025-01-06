@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,7 +46,7 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .headers(headers ->
-                    headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.sameOrigin())
+                    headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
                 .authorizeHttpRequests((authorize) -> authorize
                         //AUTH
@@ -105,6 +106,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/location/**").permitAll()
                         //NOTIFICATIONS
                         .requestMatchers(
+                                "/api/notification",
                                 "/api/notification/**"
                         ).authenticated()
                         //PROFILE

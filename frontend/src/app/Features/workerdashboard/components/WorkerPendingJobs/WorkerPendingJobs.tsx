@@ -11,7 +11,7 @@ export default function WorkerPendingJobs() {
     return (
         <div className={styles.pendingJobsContainer}>
             <div className={styles.header}>
-                Trabajos pendientes
+                Trabajos por realizar
             </div>
             <div className={styles.pendingJobs}>
                 {data.map(function(job, i) {

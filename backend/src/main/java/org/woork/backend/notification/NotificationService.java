@@ -5,6 +5,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.woork.backend.exceptions.exceptions.NotificationDoesNotExistException;
 import org.woork.backend.messaging.models.Chat;
+import org.woork.backend.messaging.repositories.ChatRepository;
 import org.woork.backend.notification.models.Notification;
 import org.woork.backend.notification.models.NotificationObject;
 import org.woork.backend.notification.models.NotificationType;
@@ -14,6 +15,7 @@ import org.woork.backend.notification.records.NotificationData;
 import org.woork.backend.notification.records.notifications.PostingApplicationNotification;
 import org.woork.backend.notification.repositories.NotificationObjectRepository;
 import org.woork.backend.notification.repositories.NotificationRepository;
+import org.woork.backend.notification.resources.NotificationResource;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.posting.PostingRepository;
 import org.woork.backend.url.UrlService;
@@ -29,14 +31,16 @@ public class NotificationService {
     private final SimpMessagingTemplate template;
     private final PostingRepository postingRepository;
     private final UrlService urlService;
+    private final ChatRepository chatRepository;
 
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository, NotificationObjectRepository notificationObjectRepository, SimpMessagingTemplate template, PostingRepository postingRepository, UrlService urlService) {
+    public NotificationService(NotificationRepository notificationRepository, NotificationObjectRepository notificationObjectRepository, SimpMessagingTemplate template, PostingRepository postingRepository, UrlService urlService, ChatRepository chatRepository) {
         this.notificationRepository = notificationRepository;
         this.notificationObjectRepository = notificationObjectRepository;
         this.template = template;
         this.postingRepository = postingRepository;
         this.urlService = urlService;
+        this.chatRepository = chatRepository;
     }
 
     public NewMessageNotification generateNewMessageNotification(User author, Chat chat) {
@@ -84,7 +88,7 @@ public class NotificationService {
         notifications.forEach(notification -> template.convertAndSendToUser(
                 notification.getReceiver().getUsername(),
                 "/queue/notifications",
-                payload
+                new NotificationResource(notification, payload)
         ));
     }
 
@@ -104,8 +108,33 @@ public class NotificationService {
         return notifications;
     }
 
-    public List<Notification> getNotificationForUser(User user) {
-        return notificationRepository.findByReceiverOrderByCreatedAtDesc(user).orElse(new ArrayList<>());
+    public List<NotificationResource> getNotificationForUser(User user) {
+        List<Notification> notifications = notificationRepository.findByReceiverOrderByCreatedAtDesc(user).orElse(new ArrayList<>());
+
+        return notifications.stream().map(
+                notification -> {
+                    NotificationObject notificationObject = notification.getNotificationObject();
+                    Object entity = getNotificationEntityObject(notificationObject.getEntity_type(), notificationObject.getEntity_id());
+                    Object payload = determineAndGenerateNotificationPayload(notificationObject.getEntity_type(), notificationObject.getAuthor(), entity);
+                    return new NotificationResource(notification, payload);
+                }
+        ).toList();
+    }
+
+    private Object getNotificationEntityObject(NotificationType type, Long entityId) {
+        switch (type) {
+            case JOB_APPLICATION -> {
+                return postingRepository.findPostingById(entityId).orElse(null);
+            }
+            case NEW_MESSAGE -> {
+                return chatRepository.findById(entityId).orElse(null);
+            }
+            case ACCEPTED_APPLICATION -> {
+
+            }
+        }
+
+        return null;
     }
 
     public String generateNotificationMessage() {

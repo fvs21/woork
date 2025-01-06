@@ -1,15 +1,15 @@
 package org.woork.backend.notification;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.woork.backend.authentication.AuthenticationService;
+import org.woork.backend.notification.resources.NotificationResource;
 import org.woork.backend.user.User;
 
+import java.util.List;
+
 @RestController
-@RequestMapping(name = "api/notification")
+@RequestMapping("api/notification")
 public class NotificationController {
     private final AuthenticationService authenticationService;
     private final NotificationService notificationService;
@@ -18,6 +18,12 @@ public class NotificationController {
     public NotificationController(AuthenticationService authenticationService, NotificationService notificationService) {
         this.authenticationService = authenticationService;
         this.notificationService = notificationService;
+    }
+
+    @GetMapping
+    public List<NotificationResource> getNotifications() {
+        User user = authenticationService.getCurrentUser();
+        return notificationService.getNotificationForUser(user);
     }
 
     @PostMapping("/notification_seen")
