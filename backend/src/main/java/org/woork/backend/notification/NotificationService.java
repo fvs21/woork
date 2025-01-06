@@ -4,15 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.woork.backend.exceptions.exceptions.NotificationDoesNotExistException;
-import org.woork.backend.exceptions.exceptions.PostingDoesNotExistException;
+import org.woork.backend.messaging.models.Chat;
 import org.woork.backend.notification.models.Notification;
 import org.woork.backend.notification.models.NotificationObject;
 import org.woork.backend.notification.models.NotificationType;
+import org.woork.backend.notification.records.notifications.AcceptedPostingApplicationNotification;
+import org.woork.backend.notification.records.notifications.NewMessageNotification;
 import org.woork.backend.notification.records.NotificationData;
-import org.woork.backend.notification.records.PostingApplicationNotification;
+import org.woork.backend.notification.records.notifications.PostingApplicationNotification;
 import org.woork.backend.notification.repositories.NotificationObjectRepository;
 import org.woork.backend.notification.repositories.NotificationRepository;
-import org.woork.backend.notification.resources.NotificationResource;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.posting.PostingRepository;
 import org.woork.backend.url.UrlService;
@@ -38,34 +39,56 @@ public class NotificationService {
         this.urlService = urlService;
     }
 
-    public PostingApplicationNotification generatePostingApplicationNotification(Notification notification) {
-        User applicant = notification.getNotificationObject().getAuthor();
-
-        Long postingId = notification.getNotificationObject().getEntity_id();
-        Posting posting = postingRepository.findPostingById(postingId).orElseThrow(PostingDoesNotExistException::new);
-        String postingUrl = urlService.encodeIdToUrl(postingId);
-
-        return new PostingApplicationNotification(
-                applicant.getFullName(),
-                "/profile/show/" + applicant.getUsername(),
-                posting.getTitle(),
-                "/posting/" + postingUrl
+    public NewMessageNotification generateNewMessageNotification(User author, Chat chat) {
+        return new NewMessageNotification(
+              author.getFullName(),
+              "/profile/show" + author.getUsername(),
+              chat.getId()
         );
     }
 
-    public void generateAndSendNotificationPayload(NotificationType type, Notification notification) {
+    public PostingApplicationNotification generatePostingApplicationPayload(User author, Posting posting) {
+        return new PostingApplicationNotification(
+                author.getFullName(),
+                "/profile/show/" + author.getUsername(),
+                posting.getTitle(),
+                "/posting/" + urlService.encodeIdToUrl(posting.getId())
+        );
+    }
+
+    public AcceptedPostingApplicationNotification generateAcceptedPostingApplicationPayload(User author, Posting posting) {
+        return null;
+    }
+
+    public Object determineAndGenerateNotificationPayload(NotificationType type, User author, Object entity) {
         switch (type) {
             case JOB_APPLICATION -> {
-                PostingApplicationNotification not = generatePostingApplicationNotification(notification);
+                return generatePostingApplicationPayload(author, (Posting) entity);
             }
             case NEW_MESSAGE -> {
+                return generateNewMessageNotification(author, (Chat) entity);
             }
             case ACCEPTED_APPLICATION -> {
+                return generateAcceptedPostingApplicationPayload(author, (Posting) entity);
             }
         }
-    };
+
+        return null;
+    }
 
     public void createAndSendNotification(User author, NotificationData data) {
+        List<Notification> notifications = createNotifications(author, data);
+
+        Object payload = determineAndGenerateNotificationPayload(data.notificationType(), author, data.entity());
+
+        notifications.forEach(notification -> template.convertAndSendToUser(
+                notification.getReceiver().getUsername(),
+                "/queue/notifications",
+                payload
+        ));
+    }
+
+    public List<Notification> createNotifications(User author, NotificationData data) {
         NotificationObject notificationObject = new NotificationObject();
         notificationObject.setEntity_id(data.entityId());
         notificationObject.setEntity_type(data.notificationType());
@@ -78,11 +101,7 @@ public class NotificationService {
 
         notificationRepository.saveAll(notifications);
 
-        notifications.forEach(notification -> template.convertAndSendToUser(
-                notification.getReceiver().getUsername(),
-                "/notifications",
-                new NotificationResource(notification)
-        ));
+        return notifications;
     }
 
     public List<Notification> getNotificationForUser(User user) {

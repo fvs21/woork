@@ -320,6 +320,7 @@ public class PostingService {
                     new NotificationData(
                             NotificationType.JOB_APPLICATION,
                             List.of(posting.getAuthor()),
+                            posting,
                             postingId
                     )
             );

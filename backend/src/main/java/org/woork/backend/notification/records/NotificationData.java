@@ -8,6 +8,7 @@ import java.util.List;
 public record NotificationData(
         NotificationType notificationType,
         List<User> receivers,
+        Object entity,
         Long entityId
 ) {
 }

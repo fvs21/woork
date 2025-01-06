@@ -1,4 +1,4 @@
-package org.woork.backend.notification.records;
+package org.woork.backend.notification.records.notifications;
 
 public record PostingApplicationNotification(
         String applicantName,

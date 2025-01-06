@@ -9,13 +9,13 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class NotificationResource {
-    private String message;
+    private Object payload;
     private boolean read;
     private Long id;
     private LocalDate createdAt;
 
-    public NotificationResource(Notification notification) {
-        this.message = null;
+    public NotificationResource(Notification notification, Object payload) {
+        this.payload = payload;
         this.read = notification.isHasRead();
         this.id = notification.getId();
         this.createdAt = notification.getCreatedAt();
