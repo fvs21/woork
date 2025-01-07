@@ -58,7 +58,7 @@ export default function PendingJob({title, workerPfpUrl, workerName, workerUsern
                 <a target="_blank" href={"/posting/" + jobId} className={styles.link}>{title}</a>
             </header> 
             <div className={styles.workerPfpContainer}>
-                <img className={styles.workerPfp} src={workerPfpUrl} onClick={() => {}}/>
+                <img className={styles.workerPfp} src={workerPfpUrl} onClick={() => router.push("/profile/show/" + workerUsername)}/>
             </div>
             <div className={styles.workerNameContainer}> 
                 <div style={{fontWeight: "600"}}>Trabajador aceptado:</div>

@@ -57,14 +57,14 @@ export default function WorkerPendingJobCard(
 
     return (
         <div className={styles.workerPendingJobCard}>
+            <div className={styles.mapContainer}>
+                <PostingLocationMap latitude={location.latitude} longitude={location.longitude} aproximate={aproximate} mapId={jobId}/>
+            </div>
             <Link className={styles.title} href={"/posting/" + postingUrl}>
                 {postingTitle}
             </Link> 
             <div className={styles.description}>
                 {postingDescription}
-            </div>
-            <div className={styles.mapContainer}>
-                <PostingLocationMap latitude={location.latitude} longitude={location.longitude} aproximate={aproximate} mapId={jobId}/>
             </div>
             <div className={styles.creatorInformationContainer}>
                 <span style={{fontWeight: 500}}>Creador: </span>

@@ -10,29 +10,32 @@ export default function PendingJobs() {
     if(isLoading) {
         return <></>
     }
-    
+
     return (
         <>
             <header className={styles.pendingJobsTitle}>
                 Trabajos aceptados
             </header>
-            <div className={styles.pendingJobsListing}>
-                {data.map(function(job, i) {
-                    return (
-                        <PendingJob 
-                            key={i}
-                            title={job.postingTitle}
-                            workerPfpUrl={job.worker.pfpUrl}
-                            workerName={job.worker.name}
-                            workerRating={job.worker.rating}
-                            workerUsername={job.worker.username}
-                            jobId={job.postingUrl}
-                            chatCreated={job.chatCreated}
-                            chatId={job?.chatId}
-                        />
-                    )
-                })}
-            </div>
+                {data.length > 0 ?
+                    <div className={styles.pendingJobsListing}>
+                        {data.map(function(job, i) {
+                            return (
+                                <PendingJob 
+                                    key={i}
+                                    title={job.postingTitle}
+                                    workerPfpUrl={job.worker.pfpUrl}
+                                    workerName={job.worker.name}
+                                    workerRating={job.worker.rating}
+                                    workerUsername={job.worker.username}
+                                    jobId={job.postingUrl}
+                                    chatCreated={job.chatCreated}
+                                    chatId={job?.chatId}
+                                />
+                            )
+                        })}
+                    </div>
+                    : <div style={{width: "100%", textAlign: "center"}}>No tienes ningun trabajo activo</div>
+                }
         </>
     );
 }

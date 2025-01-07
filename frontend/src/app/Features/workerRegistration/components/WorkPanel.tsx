@@ -3,12 +3,27 @@ import styles from "./WorkPanel.module.scss";
 import { lazy, Suspense, useEffect, useState } from "react";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
 import { determineSvgIconForRequirement } from "../utils/WorkerRegistrationUtils";
+import { useRegisterWorker } from "@/api/hooks/worker";
+import { flash } from "@/flash-message/flashMessageCreator";
 
 const RegisterWorkerModal = lazy(() => import("./WorkerRegistration/RegisterWorkerModal"));
 
 export default function WorkPanel() {
     const [user] = useUser();
     const [registerModal, setRegisterModal] = useState<boolean>(false);
+
+    const { register, registerWorkerInvalid } = useRegisterWorker();
+
+    async function handleSubmit(e: any) {
+        e.preventDefault();
+
+        try {
+            const request = await register();
+            flash("Registro exitoso", 4000, "success");
+        } catch(error) {
+            flash(error.response.data.message, 4000, "error");
+        }
+    }
 
     //just for development
     const status = {
@@ -61,6 +76,9 @@ export default function WorkPanel() {
                         Carta de antecedentes no penales
                     </span>
                     {determineSvgIconForRequirement(status.criminalRecords)}
+                </div>
+                <div>
+                    <button onClick={handleSubmit}>Registrate</button>
                 </div>
             </div>
             {registerModal &&

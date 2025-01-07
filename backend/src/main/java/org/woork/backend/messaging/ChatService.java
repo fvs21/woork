@@ -89,7 +89,7 @@ public class ChatService {
         messageRepository.save(message);
 
         notificationService.createAndSendNotification(
-                sender,
+                receiver,
                 new NotificationData(
                         NotificationType.NEW_MESSAGE,
                         List.of(receiver),
@@ -157,7 +157,7 @@ public class ChatService {
             User receiver = userService.getUserByUsername(receiverUsername);
 
             notificationService.createAndSendNotification(
-                    sender,
+                    receiver,
                     new NotificationData(
                             NotificationType.NEW_MESSAGE,
                             List.of(receiver),

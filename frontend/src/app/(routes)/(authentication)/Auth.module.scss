@@ -10,6 +10,10 @@
     padding-bottom: 50px;
 }
 
+.verifyPhoneContainer {
+   padding-top: 80px; 
+}
+
 .logotype-container {
     text-align: center;
 }
@@ -76,6 +80,7 @@
 @media only screen and (max-width: 650px) {
     .authContainer {
         padding-top: 0;
+        padding-bottom: 0;
     }
 
     .logotype-container {

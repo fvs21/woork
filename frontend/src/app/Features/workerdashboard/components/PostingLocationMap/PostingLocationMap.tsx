@@ -45,7 +45,7 @@ export default function PostingLocationMap({latitude, longitude, aproximate, map
             style={{
                 width: "100%",
                 height: "100%",
-                borderRadius: "6px"
+                borderRadius: "6px",
             }}>
         </div>
     )
