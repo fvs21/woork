@@ -2,8 +2,8 @@ export type Notification = {
     read: boolean;
     id: number;
     createdAt: string;
-    type: "JOB_APPLICATION" | "NEW_MESSAGE" | "ACCEPTED_APPLICATION"
-    payload: PostingApplicationPayload | NewMessagePayload
+    type: "JOB_APPLICATION" | "NEW_MESSAGE" | "ACCEPTED_APPLICATION";
+    payload: PostingApplicationPayload | NewMessagePayload | AcceptedApplicationPayload;
 }
 
 export type PostingApplicationPayload = {

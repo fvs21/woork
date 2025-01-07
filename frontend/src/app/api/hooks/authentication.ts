@@ -140,7 +140,7 @@ export const useUpdatePhone = () => {
     const [, setUser] = useUser();
 
     const { mutateAsync: updatePhone, isLoading } = useMutation({
-        mutationFn: async (body) => {
+        mutationFn: async (body: { phone: string; countryCode: string }) => {
             return await api.patch<User>("/auth/phone/update", body);
         },
         onSuccess: (data) => {            

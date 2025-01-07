@@ -1,5 +1,6 @@
-import { Notification as N, PostingApplicationPayload } from "../../types";
+import { AcceptedApplicationPayload, Notification as N, PostingApplicationPayload } from "../../types";
 import styles from "./Notification.module.scss";
+import AcceptedApplicationNotification from "./notification_types/AcceptedApplicationNotification";
 import PostingApplicationNotification from "./notification_types/PostingApplicationNotification";
 
 type NotificationProps = {
@@ -10,7 +11,9 @@ export default function Notification({notification}: NotificationProps) {
     function determineNotificationType() {
         switch(notification.type) {
             case "JOB_APPLICATION":
-                return <PostingApplicationNotification payload={notification.payload as PostingApplicationPayload}/>
+                return <PostingApplicationNotification payload={notification.payload as PostingApplicationPayload} createdAt={notification.createdAt}/>
+            case "ACCEPTED_APPLICATION":
+                return <AcceptedApplicationNotification payload={notification.payload as AcceptedApplicationPayload} createdAt={notification.createdAt}/>
         }
     }
 
@@ -26,6 +29,6 @@ export default function Notification({notification}: NotificationProps) {
                 )}
             </div>
             {determineNotificationType()}
-        </div>
+         </div>
     )
 }

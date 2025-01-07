@@ -17,6 +17,7 @@ import org.woork.backend.notification.repositories.NotificationObjectRepository;
 import org.woork.backend.notification.repositories.NotificationRepository;
 import org.woork.backend.notification.resources.NotificationResource;
 import org.woork.backend.pendingjob.PendingJob;
+import org.woork.backend.pendingjob.PendingJobRepository;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.posting.PostingRepository;
 import org.woork.backend.url.UrlService;
@@ -33,15 +34,17 @@ public class NotificationService {
     private final PostingRepository postingRepository;
     private final UrlService urlService;
     private final ChatRepository chatRepository;
+    private final PendingJobRepository pendingJobRepository;
 
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository, NotificationObjectRepository notificationObjectRepository, SimpMessagingTemplate template, PostingRepository postingRepository, UrlService urlService, ChatRepository chatRepository) {
+    public NotificationService(NotificationRepository notificationRepository, NotificationObjectRepository notificationObjectRepository, SimpMessagingTemplate template, PostingRepository postingRepository, UrlService urlService, ChatRepository chatRepository, PendingJobRepository pendingJobRepository) {
         this.notificationRepository = notificationRepository;
         this.notificationObjectRepository = notificationObjectRepository;
         this.template = template;
         this.postingRepository = postingRepository;
         this.urlService = urlService;
         this.chatRepository = chatRepository;
+        this.pendingJobRepository = pendingJobRepository;
     }
 
     public NewMessageNotification generateNewMessageNotification(User author, Chat chat) {
@@ -137,7 +140,7 @@ public class NotificationService {
                 return chatRepository.findById(entityId).orElse(null);
             }
             case ACCEPTED_APPLICATION -> {
-
+                return pendingJobRepository.findById(entityId).orElse(null);
             }
         }
 

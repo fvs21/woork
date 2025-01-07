@@ -6,9 +6,11 @@ export const notificationMutations = () => {
 
     const addNotification = (notification: Notification) => {
         queryClient.setQueryData(['notifications'], 
-            (prevData: Array<Notification>) => [
-                notification, ...prevData
-            ]
+            (prevData: Array<Notification>) => {
+                if(prevData == undefined)
+                    return [notification]
+                return [notification, ...prevData]
+            }
         );
     }
 

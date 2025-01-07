@@ -7,11 +7,10 @@ import { useState } from "react";
 import NotificationsButton from "../NotificationsButton/NotificationsButton";
 //import NotificationsDropdown from "@/features/notificationstab/NotificationsDropdown";
 import { useUser } from "@/api/hooks/user";
-import { getUnreadNotificationsCount } from "@/utils/notification";
+import { getUnreadNotificationsCount } from "@/features/notifications/utils";
 import UserDropdown from "../UserDropdown/UserDropdown";
 import Searchbar from "../Searchbar/Searchbar";
 import NotificationsDropdown from "@/features/notifications/components/NotificationsDropdown";
-import { useNotifications } from "@/features/notifications/api";
 
 export default function Navbar() {
     const [user] = useUser();

@@ -73,12 +73,12 @@ export default function PhoneVerification() {
                         name={"verificationCode"}
                         type={"text"}
                         placeholder={"Código de verificación"}
+                        value={otp}
                         setValue={updateCode}
                         autofocus={false}
                     />
                     {false && (
                         <span className="error-msg">
-                            {errors.verification_code}
                         </span>
                     )}
                 </div>

@@ -2,7 +2,7 @@ import { useTheme } from "@/hooks/theme";
 import MailSVG from "../SVGs/Mail";
 import styles from "./NotificationsButton.module.scss";
 import { useNotifications } from "@/features/notifications/api";
-import { getUnreadNotificationsCount } from "@/utils/notification";
+import { getUnreadNotificationsCount } from "@/features/notifications/utils";
 
 type NotificationsButtonProps = {
     click: () => void;

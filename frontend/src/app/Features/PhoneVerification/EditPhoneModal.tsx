@@ -14,7 +14,7 @@ export default function EditPhoneModal({closeModal}) {
     const [phoneNumberValid, setPhoneNumberValid] = useState(true);
     const [errorMsg, setErrorMsg] = useState("");
 
-    const { editPhone, isLoading } = useUpdatePhone();
+    const { updatePhone, isLoading } = useUpdatePhone();
 
     function validInput() {
         return validatePhoneNumber(phoneNumber.phone) && validateCountryCode(phoneNumber.countryCode);
@@ -39,7 +39,7 @@ export default function EditPhoneModal({closeModal}) {
         e.preventDefault();
 
         try {
-            await editPhone({
+            await updatePhone({
                 'phone': phoneNumber.phone,
                 'countryCode': phoneNumber.countryCode
             });

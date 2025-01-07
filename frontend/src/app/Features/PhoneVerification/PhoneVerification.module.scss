@@ -137,3 +137,9 @@
     padding: 8px 0;
     position: relative;
 }
+
+@media only screen and (max-width: 650px) {
+    .phoneVerificationContainer {
+        height: 100%;
+    }
+}
