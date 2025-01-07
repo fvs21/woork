@@ -18,3 +18,11 @@ export type NewMessagePayload = {
     senderProfileUrl: string;
     chatId: number;
 }
+
+export type AcceptedApplicationPayload = {
+    creatorName: string;
+    creatorProfileUrl: string;
+    postingTitle: string;
+    postingUrl: string;
+    pendingJobId: number;
+}

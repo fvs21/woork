@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { PostingApplicationPayload } from "../../types";
-import styles from "./Notification.module.scss";
+import { PostingApplicationPayload } from "../../../types";
+import styles from "../Notification.module.scss";
 
 type PostingApplicationNotificationProps = {
     payload: PostingApplicationPayload;

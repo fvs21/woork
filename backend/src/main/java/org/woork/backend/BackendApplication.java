@@ -25,16 +25,16 @@ public class BackendApplication {
     }
 
 
-//    @Bean
-//    CommandLineRunner run(ImageRepository imageRepository) {
-//        return args -> {
+    @Bean
+    CommandLineRunner run(ImageRepository imageRepository) {
+        return args -> {
 //            imageRepository.save(new Image(
 //                    "default-pfp",
 //                    "image/jpg",
 //                    Dotenv.load().get("images_path") + "/default-pfp.jpg",
 //                    "http://localhost:8000/api/images/default-pfp"
 //            ));
-//        };
-//    }
+        };
+    }
 
 }

@@ -1,7 +1,6 @@
 @use "@/styles/variables" as var;
 
 .workerPendingJobCard {
-    min-width: 320px;
     border: 1px solid var(--border-color); 
     border-radius: 10px;
     padding: 12px;
@@ -16,6 +15,11 @@
 .description {
     padding-top: var.$margin-xxs;
     font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 .mapContainer {

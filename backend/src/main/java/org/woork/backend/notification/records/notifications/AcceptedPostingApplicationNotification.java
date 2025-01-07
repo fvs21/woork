@@ -1,4 +1,10 @@
 package org.woork.backend.notification.records.notifications;
 
-public class AcceptedPostingApplicationNotification {
+public record AcceptedPostingApplicationNotification(
+        String creatorName,
+        String creatorProfileUrl,
+        String postingTitle,
+        String postingUrl,
+        Long pendingJobId
+) {
 }

@@ -406,6 +406,16 @@ public class PostingService {
         PendingJob createdJob = pendingJobService.createJobSession(creator, applicant, posting);
         Long establishedJobSessionsCount = pendingJobService.getPendingJobCount(creator);
 
+        notificationService.createAndSendNotification(
+                creator,
+                new NotificationData(
+                        NotificationType.ACCEPTED_APPLICATION,
+                        List.of(applicant.getUser()),
+                        createdJob,
+                        createdJob.getId()
+                )
+        );
+
         return new AcceptJobApplicationResponse(
                 new HostPendingJobResource(createdJob, postingHashId),
                 establishedJobSessionsCount

@@ -8,6 +8,8 @@ import { Message as ChatMessage, MessageEvent, MessagesListRecipient } from "@/f
 import { useUser } from "@/api/hooks/user";
 import { chatMutations, useStompClient } from "@/features/messages/store";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import { notificationMutations } from "@/features/notifications/store";
+import { Notification } from "@/features/notifications/types";
 
 function useWebSockets(): { connected: boolean; connect: () => Client; } {
     let stompClient: Client | null = null;
@@ -15,6 +17,7 @@ function useWebSockets(): { connected: boolean; connect: () => Client; } {
     const [connected, setConected] = useState<boolean>(false);
 
     const { addMessage, readChat, newChat } = chatMutations();
+    const { addNotification } = notificationMutations();
 
     function connect(): Client {
         const socket = new SockJS("http://localhost:8000/ws");
@@ -41,8 +44,8 @@ function useWebSockets(): { connected: boolean; connect: () => Client; } {
     }
 
     function onNotificationReceived(payload: Message) {
-        console.log(JSON.parse(payload.body));
-        
+        const notification = JSON.parse(payload.body);
+        addNotification(notification as Notification);
     }
 
     function onMessageReceived(payload: Message) {

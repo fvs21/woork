@@ -7,7 +7,8 @@ export const useNotifications = () => {
         queryFn: async (): Promise<Array<Notification>> => {
             const request = await api.get("/notification");
             return request.data;
-        }
+        },
+        queryKey: ['notifications']
     });
 
     return { data, isLoading };

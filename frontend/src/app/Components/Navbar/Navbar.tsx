@@ -9,9 +9,9 @@ import NotificationsButton from "../NotificationsButton/NotificationsButton";
 import { useUser } from "@/api/hooks/user";
 import { getUnreadNotificationsCount } from "@/utils/notification";
 import UserDropdown from "../UserDropdown/UserDropdown";
-import { useEffect } from "react";
 import Searchbar from "../Searchbar/Searchbar";
 import NotificationsDropdown from "@/features/notifications/components/NotificationsDropdown";
+import { useNotifications } from "@/features/notifications/api";
 
 export default function Navbar() {
     const [user] = useUser();
@@ -19,8 +19,6 @@ export default function Navbar() {
 
     const [accountDropdown, setAccountDropdown] = useState(false);
     const [notificationsDropdown, setNotificationDropdown] = useState(false);
-
-    //const { notifications, addNotification } = useNotifications();
 
     function isLeftClick(e) {
         return e.buttons === 1 || e.buttons === 0;
@@ -40,9 +38,6 @@ export default function Navbar() {
                         <>
                             <div className={styles.notifications}>
                                 <NotificationsButton
-                                    count={getUnreadNotificationsCount(
-                                        []
-                                    )}
                                     click={() => {
                                         setNotificationDropdown(
                                             !notificationsDropdown

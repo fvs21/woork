@@ -1,6 +1,6 @@
 import { Notification as N, PostingApplicationPayload } from "../../types";
 import styles from "./Notification.module.scss";
-import PostingApplicationNotification from "./PostingApplicationNotification";
+import PostingApplicationNotification from "./notification_types/PostingApplicationNotification";
 
 type NotificationProps = {
     notification: N;

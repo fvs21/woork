@@ -11,6 +11,10 @@
     gap: 5px;
 }
 
+.notification:last-child {
+    border: none;
+}
+
 .message {
     text-overflow: ellipsis;
     display: -webkit-box;

@@ -35,4 +35,12 @@
     .pendingJobs {
         grid-template-columns: repeat(1, minmax(0, 1fr));
     }
+
+    .pendingJobsContainer {
+        padding: 30px 10px;
+    }
+
+    .header {
+        font-size: 25px;
+    }
 }

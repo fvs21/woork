@@ -2,10 +2,9 @@
 
 .sideBarContainer {
     height: 100%;
-    position: absolute;
-    left: 0;
-    width: 220px;
+    min-width: 220px;
     border-right: 1px solid var(--border-color);
+    overflow-y: auto;
 }
 
 .shrinkButtonContainer {
@@ -69,6 +68,6 @@
     }
 
     .sideBarContainer {
-        width: min-content;
+        min-width: max-content;
     }
 }

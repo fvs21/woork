@@ -16,6 +16,7 @@ import org.woork.backend.notification.records.notifications.PostingApplicationNo
 import org.woork.backend.notification.repositories.NotificationObjectRepository;
 import org.woork.backend.notification.repositories.NotificationRepository;
 import org.woork.backend.notification.resources.NotificationResource;
+import org.woork.backend.pendingjob.PendingJob;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.posting.PostingRepository;
 import org.woork.backend.url.UrlService;
@@ -60,8 +61,14 @@ public class NotificationService {
         );
     }
 
-    public AcceptedPostingApplicationNotification generateAcceptedPostingApplicationPayload(User author, Posting posting) {
-        return null;
+    public AcceptedPostingApplicationNotification generateAcceptedPostingApplicationPayload(User author, PendingJob pendingJob) {
+        return new AcceptedPostingApplicationNotification(
+                author.getFullName(),
+                "/profile/show/" + author.getUsername(),
+                pendingJob.getPosting().getTitle(),
+                "/posting/" + urlService.encodeIdToUrl(pendingJob.getPosting().getId()),
+                pendingJob.getId()
+        );
     }
 
     public Object determineAndGenerateNotificationPayload(NotificationType type, User author, Object entity) {
@@ -73,7 +80,7 @@ public class NotificationService {
                 return generateNewMessageNotification(author, (Chat) entity);
             }
             case ACCEPTED_APPLICATION -> {
-                return generateAcceptedPostingApplicationPayload(author, (Posting) entity);
+                return generateAcceptedPostingApplicationPayload(author, (PendingJob) entity);
             }
         }
 

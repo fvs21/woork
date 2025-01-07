@@ -30,7 +30,8 @@ public class Notification {
     @JoinColumn(name = "notifier_id", referencedColumnName = "user_id")
     private User receiver;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "notification_object")
     private NotificationObject notificationObject;
 
     private boolean hasRead;
