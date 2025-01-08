@@ -6,6 +6,7 @@ import org.woork.backend.notification.models.Notification;
 import org.woork.backend.notification.models.NotificationType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,7 +14,7 @@ public class NotificationResource {
     private Object payload;
     private boolean read;
     private Long id;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     private NotificationType type;
 
     public NotificationResource(Notification notification, Object payload) {

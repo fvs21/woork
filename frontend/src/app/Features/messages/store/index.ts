@@ -18,6 +18,7 @@ export const useStompClient = () => {
 
 export const chatMutations = () => {
     const queryClient = useQueryClient();
+    const [, setSelectedChat] = useSelectedChat();
     const [user] = useUser();
 
     //function called when a user creates a new chat.
@@ -28,6 +29,28 @@ export const chatMutations = () => {
                 chat, ...prevData
             ])
         );
+        const message = chat.lastMessage;
+        const newChatId = chat.chatId;
+        const participant = chat.chatUser;
+        const currentUser: Participant = {
+            username: user.username,
+            pfpUrl: user.pfp_url,
+            name: user.firstName + user.lastName
+        };
+
+        const newChat: Chat = {
+            messages: [message],
+            id: newChatId,
+            participants: [currentUser, participant],
+            createdAt: new Date().toUTCString()
+        }
+
+        queryClient.setQueryData(['chat', newChatId], newChat);
+        setSelectedChat({
+            chatId: newChatId,
+            recipient: participant,
+            create: false
+        });
     }
 
     //function to add a message to the users chat ui

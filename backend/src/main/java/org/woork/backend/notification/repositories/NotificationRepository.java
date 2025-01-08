@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    Optional<List<Notification>> findByReceiverOrderByCreatedAtDesc(User notifier);
+    Optional<List<Notification>> findAllByReceiverOrderByCreatedAtDesc(User notifier);
     Optional<List<Notification>> findByReceiverAndHasRead(User user, boolean read);
 }

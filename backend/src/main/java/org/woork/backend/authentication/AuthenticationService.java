@@ -81,7 +81,7 @@ public class AuthenticationService {
 
     private String arrayToName(ArrayList<String> names) {
         if(names.size() > 1) {
-            return names.get(0) + " " + names.get(1);
+            return String.join(" ", names);
         } else {
             return names.get(0);
         }

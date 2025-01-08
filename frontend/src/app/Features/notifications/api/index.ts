@@ -8,7 +8,9 @@ export const useNotifications = () => {
             const request = await api.get("/notification");
             return request.data;
         },
-        queryKey: ['notifications']
+        queryKey: ['notifications'],
+        refetchOnWindowFocus: false,
+        refetchOnMount: false
     });
 
     return { data, isLoading };

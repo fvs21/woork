@@ -9,6 +9,7 @@ export const notificationMutations = () => {
             (prevData: Array<Notification>) => {
                 if(prevData == undefined)
                     return [notification]
+                
                 return [notification, ...prevData]
             }
         );

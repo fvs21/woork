@@ -119,7 +119,7 @@ public class NotificationService {
     }
 
     public List<NotificationResource> getNotificationForUser(User user) {
-        List<Notification> notifications = notificationRepository.findByReceiverOrderByCreatedAtDesc(user).orElse(new ArrayList<>());
+        List<Notification> notifications = notificationRepository.findAllByReceiverOrderByCreatedAtDesc(user).orElse(new ArrayList<>());
 
         return notifications.stream().map(
                 notification -> {
@@ -145,10 +145,6 @@ public class NotificationService {
         }
 
         return null;
-    }
-
-    public String generateNotificationMessage() {
-        return "";
     }
 
     public Notification getNotification(Long id) {

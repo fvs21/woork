@@ -3,7 +3,7 @@
 .notification {
     list-style: none;
     font-size: 13px;
-    height: 60px;
+    min-width: 60px;
     border-bottom: 1px solid var(--border-color);
     padding: 6px;
     padding-right: 25px;
@@ -87,7 +87,6 @@
 .acceptButtonContainer {
     width: 150px;
     display: flex;
-    height: 100%;
     align-items: center;
     gap: 5px;
 }

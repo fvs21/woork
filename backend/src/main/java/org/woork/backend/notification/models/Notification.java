@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.woork.backend.user.User;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -38,10 +39,10 @@ public class Notification {
 
     private boolean isHidden;
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     public Notification() {
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
         this.hasRead = false;
         this.isHidden = false;
     }
@@ -49,7 +50,7 @@ public class Notification {
     public Notification(User receiver, NotificationObject notificationObject) {
         this.receiver = receiver;
         this.notificationObject = notificationObject;
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
         this.hasRead = false;
         this.isHidden = false;
     }
