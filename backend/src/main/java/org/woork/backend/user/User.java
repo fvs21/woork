@@ -168,7 +168,7 @@ public class User implements UserDetails {
 
     @Getter
     @Setter
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiver")
     private List<Notification> notifications;
 
     public User() {

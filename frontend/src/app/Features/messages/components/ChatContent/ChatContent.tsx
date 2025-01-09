@@ -18,7 +18,7 @@ export default function ChatContent({chatId}: ChatContentProps) {
     const queryClient = useQueryClient();
 
     const messages = data?.messages;
-    let lastReadMessageIndex = messages?.findIndex(msg => msg.readAt != null);
+    let lastReadMessageIndex = messages?.findIndex(msg => msg.readAt != null);    
 
     useEffect(() => {
         if(isLoading)

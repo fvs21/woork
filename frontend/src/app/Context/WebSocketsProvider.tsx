@@ -54,10 +54,13 @@ function useWebSockets(): { connected: boolean; connect: () => Client; } {
         switch(message.eventType) {
             case 'new_chat':
                 newChat(message.eventPayload as MessagesListRecipient);
+                break;
             case 'new_message':
                 addMessage(message.eventPayload as ChatMessage);
+                break;
             case 'chat_read':
                 readChat(message.eventPayload as number);
+                break;
         }
     }
 

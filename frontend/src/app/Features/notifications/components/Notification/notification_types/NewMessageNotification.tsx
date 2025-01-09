@@ -16,8 +16,8 @@ export default function NewMessageNotification({payload, createdAt}: NewMessageN
                 &nbsp;te ha enviado un mensaje.
                 <div className={styles.createdAt}>{formatNotificationDate(createdAt)}</div>
             </div>
-            <div className={styles.acceptButtonContainer}>
-                <button>Ver</button>
+            <div className={styles.checkMessageBtnContainer}>
+                <Link href={"/messages"} className={styles.checkMessageBtn}>Ver</Link>
             </div>
         </>
     )

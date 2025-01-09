@@ -50,7 +50,7 @@ public class NotificationService {
     public NewMessageNotification generateNewMessageNotification(User author, Chat chat) {
         return new NewMessageNotification(
               author.getFullName(),
-              "/profile/show" + author.getUsername(),
+              "/profile/show/" + author.getUsername(),
               chat.getId()
         );
     }

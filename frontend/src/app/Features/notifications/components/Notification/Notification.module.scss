@@ -133,3 +133,20 @@
     padding: 8px;
     color: white;
 }
+
+.checkMessageBtnContainer {
+    width: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.checkMessageBtn {
+    padding: 4px;
+    border: none;
+    border-radius: 6px;
+    width: 100%;
+    background-color: var.$primary-color;
+    color: white;
+    display: block;
+    text-align: center;
+}
