@@ -436,7 +436,7 @@ public class PostingService {
     }
 
     public Set<PostingResource> getUserCreatedPostings(User user) {
-        Set<Posting> postings = postingRepository.findByAuthor(user).orElse(new HashSet<>());
+        Set<Posting> postings = postingRepository.findAllByAuthorOrderByCreatedAtDesc(user).orElse(new HashSet<>());
 
         return postings.stream().map(
                 posting -> {

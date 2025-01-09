@@ -12,6 +12,7 @@ import org.woork.backend.user.User;
 import org.woork.backend.worker.models.Worker;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -64,9 +65,12 @@ public class Posting {
     @JoinColumn(name = "completed_by")
     private Worker completedBy;
 
+    private LocalDateTime createdAt;
+
     public Posting() {
         images = new HashSet<>();
         postingApplications = new ArrayList<>();
+        this.createdAt = LocalDateTime.now();
     }
 
     public Posting(String title, String description, BigDecimal price, String category, Address address,
@@ -78,6 +82,7 @@ public class Posting {
         this.address = address;
         this.category = category;
         this.images = images;
+        this.createdAt = LocalDateTime.now();
     }
 
     public boolean belongsToUser(User user) {

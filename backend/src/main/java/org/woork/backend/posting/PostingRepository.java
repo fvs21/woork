@@ -18,4 +18,5 @@ public interface PostingRepository extends JpaRepository<Posting, Long> {
     Optional<Set<Posting>> findByAuthor_Id(Long id);
     Optional<List<Posting>> findPostingsByAddressAndCategory(Address address, String category);
     Optional<List<Posting>> findAllByCategory(String category);
+    Optional<Set<Posting>> findAllByAuthorOrderByCreatedAtDesc(User author);
 }
