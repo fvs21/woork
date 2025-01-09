@@ -33,3 +33,10 @@
         right: 15px;
     }
 } 
+
+@media only screen and (max-width: 550px) {
+    .notificationsDropdownContent {
+        width: 100vw;
+        right: -12px;
+    }
+}
