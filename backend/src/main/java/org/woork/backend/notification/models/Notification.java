@@ -27,7 +27,7 @@ public class Notification {
     @Column(name = "notification_id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "notifier_id", referencedColumnName = "user_id")
     private User receiver;
 

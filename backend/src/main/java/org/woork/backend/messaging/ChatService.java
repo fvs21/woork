@@ -71,7 +71,6 @@ public class ChatService {
 
         //check if chat already exists
         if (chatRepository.existsByParticipantsContainingAndParticipantsContaining(sender, receiver)) {
-            log.info("Error here");
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Chat already created"
@@ -136,6 +135,7 @@ public class ChatService {
 
         Message message = new Message(sender, payload.getContent(), chat, payload.getType());
         messageRepository.save(message);
+
 
         template.convertAndSendToUser(
                 receiverUsername,

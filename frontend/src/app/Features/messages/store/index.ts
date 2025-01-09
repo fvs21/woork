@@ -25,9 +25,9 @@ export const chatMutations = () => {
     //the backend returns the new chat id to the sender (the user that sends the first message)
     const newChat = (chat: MessagesListRecipient) => {
         queryClient.setQueryData(['chats'], 
-            (prevData: Array<MessagesListRecipient>) => ([
+            (prevData: Array<MessagesListRecipient>) => [
                 chat, ...prevData
-            ])
+            ]
         );
         const message = chat.lastMessage;
         const newChatId = chat.chatId;
@@ -38,6 +38,12 @@ export const chatMutations = () => {
             name: user.firstName + user.lastName
         };
 
+        setSelectedChat({
+            chatId: newChatId,
+            recipient: participant,
+            create: false
+        });
+
         const newChat: Chat = {
             messages: [message],
             id: newChatId,
@@ -46,11 +52,6 @@ export const chatMutations = () => {
         }
 
         queryClient.setQueryData(['chat', newChatId], newChat);
-        setSelectedChat({
-            chatId: newChatId,
-            recipient: participant,
-            create: false
-        });
     }
 
     //function to add a message to the users chat ui
@@ -62,8 +63,9 @@ export const chatMutations = () => {
             })
         );
 
-        let chatList: Array<MessagesListRecipient> = queryClient.getQueryData(['chats']);
+        let chatList: Array<MessagesListRecipient> = queryClient.getQueryData(['chats']) || [];
         const index: number = chatList.findIndex(elem => elem.chatId == message.chatId);
+
 
         if(index == -1) {
             const createdChat: MessagesListRecipient = {
@@ -75,7 +77,7 @@ export const chatMutations = () => {
 
             queryClient.setQueryData(['chats'], 
                 (prevData: Array<MessagesListRecipient>) => [
-                    createdChat, ...prevData
+                    createdChat, ...(chatList.length == 0 ? [] : prevData)
                 ]
             )
         } else {

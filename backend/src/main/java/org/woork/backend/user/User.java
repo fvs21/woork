@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.woork.backend.image.Image;
 import org.woork.backend.address.Address;
 import org.woork.backend.messaging.models.Chat;
+import org.woork.backend.notification.models.Notification;
 import org.woork.backend.posting.Posting;
 import org.woork.backend.role.Role;
 
@@ -164,6 +165,11 @@ public class User implements UserDetails {
     @Getter
     @Setter
     private List<Chat> chats;
+
+    @Getter
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Notification> notifications;
 
     public User() {
         this.role = Role.USER;
