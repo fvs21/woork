@@ -29,7 +29,7 @@ public class BackendApplication {
     CommandLineRunner run(ImageRepository imageRepository) {
         return args -> {
 //            imageRepository.save(new Image(
-//                    "default-pfp",
+//                    "default-pfp.jpg",
 //                    "image/jpg",
 //                    Dotenv.load().get("images_path") + "/default-pfp.jpg",
 //                    "http://localhost:8000/api/images/default-pfp"

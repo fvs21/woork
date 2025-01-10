@@ -319,7 +319,7 @@ public class User implements UserDetails {
 
     public String getProfilePictureUrl() {
         if(profilePicture == null) {
-            return "http://localhost:8000/api/images/default-pfp";
+            return "http://localhost:8000/api/images/default-pfp.jpg";
         }
         return "http://localhost:8000" + profilePicture.getImageUrl();
     }

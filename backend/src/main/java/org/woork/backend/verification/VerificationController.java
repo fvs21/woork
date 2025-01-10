@@ -23,7 +23,7 @@ public class VerificationController {
     }
 
     @PostMapping(value = "/id", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String uploadId(
+    public String uploadIdPhotos(
             @RequestPart("id_front") MultipartFile idFront, // image of the front of the id
             @RequestPart("id_back") MultipartFile idBack // image of back of the id
     ) {
@@ -32,5 +32,21 @@ public class VerificationController {
         return "Uploaded";
     }
 
+    @PostMapping(value = "/face", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String uploadFacePhoto(
+            @RequestPart("face") MultipartFile facePhoto
+    ) {
+        User user = authenticationService.getCurrentUser();
+        verificationService.uploadFacePhoto(user, facePhoto);
+        return "Uploaded";
+    }
 
+    @PostMapping(value = "/criminal-records", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String uploadCriminalRecords(
+            @RequestPart("criminalRecords") MultipartFile criminalRecordsPhoto
+    ) {
+        User user = authenticationService.getCurrentUser();
+        verificationService.uploadCriminalRecords(user, criminalRecordsPhoto);
+        return "Uploaded";
+    }
 }

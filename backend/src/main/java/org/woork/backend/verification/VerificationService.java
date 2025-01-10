@@ -26,8 +26,8 @@ public class VerificationService {
         if(verificationData.getUserId() == null)
             verificationData.setUserId(userId);
 
-        Image idFront = imageService.uploadImage(idFrontImage, "verification");
-        Image idBack = imageService.uploadImage(idBackImage, "verification");
+        Image idFront = imageService.uploadPrivateImage(idFrontImage, "verification");
+        Image idBack = imageService.uploadPrivateImage(idBackImage, "verification");
 
         verificationData.setIdPhotoFront(idFront);
         verificationData.setIdPhotoBack(idBack);
@@ -43,11 +43,21 @@ public class VerificationService {
         if(verificationData.getUserId() == null)
             verificationData.setUserId(userId);
 
-        Image faceImg = imageService.uploadImage(facePhoto, "verification");
+        Image faceImg = imageService.uploadPrivateImage(facePhoto, "verification");
         verificationData.setFacePhoto(faceImg);
         verificationRepository.save(verificationData);
     }
 
     //upload criminal records
+    public void uploadCriminalRecords(User user, MultipartFile criminalRecordsPhoto) {
+        Long userId = user.getId();
+        VerificationData verificationData = verificationRepository.findByUserId(userId).orElse(new VerificationData());
 
+        if(verificationData.getUserId() == null)
+            verificationData.setUserId(userId);
+
+        Image criminalRecords = imageService.uploadPrivateImage(criminalRecordsPhoto, "verification");
+        verificationData.setCriminalRecords(criminalRecords);
+        verificationRepository.save(verificationData);
+    }
 }

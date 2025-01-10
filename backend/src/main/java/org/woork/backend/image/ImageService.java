@@ -100,7 +100,6 @@ public class ImageService {
         Image image = imageRepository.findByImageName(fileName).orElseThrow(ImageNotFoundException::new);
         String container = image.getContainer().isEmpty() ? "" : image.getContainer() + "/";
         String filePath = imagesPath + "/" + container + image.getImageName();
-        log.info(filePath);
 
         try {
             return Files.readAllBytes(new File(filePath).toPath());

@@ -5,5 +5,6 @@ import jakarta.persistence.*;
 
 public enum Role {
     USER,
-    ADMIN
+    ADMIN,
+    REVIEWER
 }
