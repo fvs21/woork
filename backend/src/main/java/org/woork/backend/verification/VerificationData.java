@@ -1,0 +1,40 @@
+package org.woork.backend.verification;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import lombok.Getter;
+import lombok.Setter;
+import org.woork.backend.image.Image;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Setter
+public class VerificationData {
+    @Id
+    private Long userId;
+
+    @OneToOne
+    private Image facePhoto;
+
+    @OneToOne
+    private Image idPhotoFront;
+
+    @OneToOne
+    private Image idPhotoBack;
+
+    private LocalDateTime identityVerifiedAt;
+
+    @OneToOne
+    private Image criminalRecords;
+
+    private LocalDateTime criminalRecordsVerifiedAt;
+
+    public VerificationData() {}
+
+    public VerificationData(Long userId) {
+        this.userId = userId;
+    }
+}

@@ -5,6 +5,7 @@ import LoadingModal from "@/components/LoadingModal/LoadingModal";
 import { determineSvgIconForRequirement } from "../utils/WorkerRegistrationUtils";
 import { useRegisterWorker } from "@/api/hooks/worker";
 import { flash } from "@/flash-message/flashMessageCreator";
+import { useDashboardOption } from "@/features/dashboard/context";
 
 const RegisterWorkerModal = lazy(() => import("./WorkerRegistration/RegisterWorkerModal"));
 
@@ -13,6 +14,7 @@ export default function WorkPanel() {
     const [registerModal, setRegisterModal] = useState<boolean>(false);
 
     const { register, registerWorkerInvalid } = useRegisterWorker();
+    const [,setOption] = useDashboardOption();
 
     async function handleSubmit(e: any) {
         e.preventDefault();
@@ -65,7 +67,7 @@ export default function WorkPanel() {
                     </span>
                     {determineSvgIconForRequirement(status.information)}
                 </div>
-                <div className={`${styles.requirement} ${determineStylesForRequirement(status.identification)}`}>
+                <div className={`${styles.requirement} ${determineStylesForRequirement(status.identification)}`} onClick={() => setOption(1)}>
                     <span>
                         Verificación de identidad con identificación: INE o IFE
                     </span>

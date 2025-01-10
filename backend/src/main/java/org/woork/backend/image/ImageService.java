@@ -21,6 +21,7 @@ public class ImageService {
     private final ImageRepository imageRepository;
 
     private static final String imagesPath = Dotenv.load().get("images_path");
+    private static final String privateFilesPath = Dotenv.load().get("private_files_path");
 
     @Autowired
     public ImageService(ImageRepository imageRepository) {
@@ -28,17 +29,16 @@ public class ImageService {
     }
 
     public Image uploadImage(MultipartFile file, String prefix) {
-        String fileType = file.getContentType().split("/")[1];
-        if(!(fileType.equals("png") || fileType.equals("jpg") || fileType.equals("jpeg"))) {
+        if(!checkValidImageType(file))
             throw new UnsupportedImageTypeException();
-        }
+
         try {
             String extension = "." + file.getContentType().split("/")[1];
 
             File imageFile = File.createTempFile(prefix, extension, new File(imagesPath + "/" + prefix));
 
             byte[] bytes = stripExifMetadata(file.getBytes());
-            try(FileOutputStream fos = new FileOutputStream(imageFile.getPath())) {
+            try( FileOutputStream fos = new FileOutputStream(imageFile.getPath()) ) {
                 fos.write(bytes);
             } catch (IOException e) {
                 log.info(e.getMessage());
@@ -51,8 +51,10 @@ public class ImageService {
                     imageFile.getName(),
                     file.getContentType(),
                     imageFile.getPath(),
-                    imageUrl
+                    imageUrl,
+                    prefix
             );
+
             return imageRepository.save(image);
         } catch (IOException e) {
             log.info(e.getMessage());
@@ -60,16 +62,51 @@ public class ImageService {
         }
     }
 
+    public Image uploadPrivateImage(MultipartFile file, String prefix) {
+        if(!checkValidImageType(file))
+            throw new UnsupportedImageTypeException();
+
+        try {
+            String extension = "." + file.getContentType().split("/")[1];
+
+            File imageFile = File.createTempFile(prefix, extension, new File(privateFilesPath + "/images/" + prefix));
+
+            byte[] bytes = stripExifMetadata(file.getBytes());
+            try( FileOutputStream fos = new FileOutputStream(imageFile.getPath()) ) {
+                fos.write(bytes);
+            }
+
+            String imageUrl = "/api/admin/images/" + imageFile.getName();
+            Image image = new Image(
+                    imageFile.getName(),
+                    file.getContentType(),
+                    imageFile.getPath(),
+                    imageUrl,
+                    prefix
+            );
+            return imageRepository.save(image);
+
+        } catch (IOException e) {
+            throw new UnableToUploadImageException();
+        }
+    }
+
+    private boolean checkValidImageType(MultipartFile file) {
+        String fileType = file.getContentType().split("/")[1];
+        return fileType.equals("png") || fileType.equals("jpg") || fileType.equals("jpeg");
+    }
+
     public byte[] downloadImage(String fileName) {
         Image image = imageRepository.findByImageName(fileName).orElseThrow(ImageNotFoundException::new);
-        String filePath = image.getImagePath();
+        String container = image.getContainer().isEmpty() ? "" : image.getContainer() + "/";
+        String filePath = imagesPath + "/" + container + image.getImageName();
+        log.info(filePath);
 
         try {
             return Files.readAllBytes(new File(filePath).toPath());
         } catch (IOException e) {
             throw new UnableToDownloadImageException();
         }
-
     }
 
     public String getImageType(String fileName) {

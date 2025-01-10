@@ -39,13 +39,16 @@ public class Image {
     @Column(name = "image_url", unique = true, nullable = false)
     private String imageUrl;
 
+    private String container;
+
     public Image() {}
 
-    public Image(String imageName, String imageType, String imagePath, String imageUrl) {
+    public Image(String imageName, String imageType, String imagePath, String imageUrl, String container) {
         this.imageName = imageName;
         this.imagePath = imagePath;
         this.imageUrl = imageUrl;
         this.imageType = imageType;
+        this.container = container;
     }
 
 }

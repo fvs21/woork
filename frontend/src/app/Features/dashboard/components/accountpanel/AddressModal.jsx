@@ -3,7 +3,7 @@ import Modal from "@/components/Modal/Modal";
 import styles from "./InformationPanel.module.scss";
 import CloseSVG from "@/components/SVGs/Close";
 import SubmitButton from "@/components/SubmitButton/SubmitButton";
-import { validateAddress, validateNumber, validateStreet } from "../../services/validators";
+import { validateAddress, validateNumber, validateStreet } from "@/services/validators";
 import CountriesSelector from "@/components/CountriesSelector/CountriesSelector";
 import { loadCities, loadStates } from "@/utils/location/LocationUtils";
 import InputLabel from "@/components/ValidatedInput/InputLabel";

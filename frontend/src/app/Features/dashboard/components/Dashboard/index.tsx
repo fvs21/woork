@@ -5,19 +5,16 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import styles from "./Dashboard.module.scss";
 import Logotype from '@/components/Logotype/Logotype';
-import AccountPanel from '@/features/accountpanel/AccountPanel';
 import useWindowDimensions from '@/hooks/window';
-import VerifyPanel from '@/features/verifypanel/VerifyPanel';
 import { useUser } from '@/api/hooks/user';
 import { useTheme } from '@/hooks/theme';
 import LogotypeWhite from '@/components/Logotype/LogotypeWhite';
 import { svgColor } from '@/utils/extra/utils';
-import WorkPanel from '@/features/workerRegistration/components/WorkPanel';
-import SecurityPanel from '@/features/security/SecurityPanel';
 import { useLogout } from '@/api/hooks/authentication';
 import { useRouter } from 'next/navigation';
 import MutationButton from '@/components/MutationButton';
 import { useDashboardOption } from '../../context';
+import { determineOptionPanel } from '../../utils';
 
 export default function Dashboard() {
     const [user] = useUser();
@@ -76,20 +73,6 @@ export default function Dashboard() {
             await logout();
         } catch(error) {
             console.log(error);
-        }
-    }
-
-    function determineOptionPanel() {
-        switch(option) {
-            case 0:
-            case -1:
-                return <AccountPanel />
-            case 1:
-                return <VerifyPanel />
-            case 2:
-                return <WorkPanel />
-            case 3:
-                return <SecurityPanel />
         }
     }
 
@@ -197,7 +180,7 @@ export default function Dashboard() {
                         </button>
                     </>
                 }
-                {determineOptionPanel()}
+                {determineOptionPanel(option)}
             </div>
         </div>
     )

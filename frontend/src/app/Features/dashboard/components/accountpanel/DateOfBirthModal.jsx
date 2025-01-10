@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Modal from "@/components/Modal/Modal";
 import CloseSVG from "@/components/SVGs/Close";
-import RegisterDateInput from "../registration/components/RegisterDateInput";
+import RegisterDateInput from "@/features/registration/components/RegisterDateInput";
 import styles from "./InformationPanel.module.scss";
 import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import { validateAge } from "@/services/validators";
