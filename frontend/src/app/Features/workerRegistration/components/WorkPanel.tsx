@@ -77,9 +77,6 @@ export default function WorkPanel() {
                     </span>
                     {determineSvgIconForRequirement(status.criminalRecords)}
                 </div>
-                <div>
-                    <button onClick={handleSubmit}>Registrate</button>
-                </div>
             </div>
             {registerModal &&
                 <Suspense fallback={<LoadingModal />}>
