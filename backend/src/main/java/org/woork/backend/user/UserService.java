@@ -17,6 +17,7 @@ import org.woork.backend.sms.SMSService;
 import org.woork.backend.token.TokenService;
 import org.woork.backend.user.requests.UpdateGenderRequest;
 import org.woork.backend.user.resources.UserResource;
+import org.woork.backend.validators.ValidatorImpl;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -31,6 +32,7 @@ public class UserService implements UserDetailsService {
     private final AddressService addressService;
     private final ImageService imageService;
     private final SMSService smsService;
+    private final ValidatorImpl validatorImpl;
 
     @Autowired
     public UserService(
@@ -38,13 +40,14 @@ public class UserService implements UserDetailsService {
             TokenService tokenService,
             AddressService addressService,
             ImageService imageService,
-            SMSService smsService
-    ) {
+            SMSService smsService,
+            ValidatorImpl validatorImpl) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
         this.addressService = addressService;
         this.imageService = imageService;
         this.smsService = smsService;
+        this.validatorImpl = validatorImpl;
     }
 
     public boolean isUserVerified(User user) {
@@ -86,6 +89,8 @@ public class UserService implements UserDetailsService {
     }
 
     public UserResource updateAddress(User user, UpdateAddressRequest updateAddressRequest) {
+        validatorImpl.validateFields(updateAddressRequest);
+
         if(user.getAddress() != null) {
             Long locationId = user.getAddress().getId();
             Address address = addressService.updateAddress(locationId, updateAddressRequest);

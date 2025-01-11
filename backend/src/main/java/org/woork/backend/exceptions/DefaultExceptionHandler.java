@@ -15,7 +15,8 @@ public class DefaultExceptionHandler {
             EmailAlreadyTakenException.class,
             PhoneNumberAlreadyTakenException.class,
             EmailNotAddedException.class,
-            UnableToGenerateVerificationCodeException.class
+            UnableToGenerateVerificationCodeException.class,
+            CannotUploadVerificationDataException.class
     })
     public ResponseEntity<DefaultExceptionResponse> handleConflictedRequest(DefaultException e) {
         return new ResponseEntity<>(

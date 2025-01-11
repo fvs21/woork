@@ -62,9 +62,6 @@ public class PostingService {
     private final WorkerService workerService;
     private final PendingJobService pendingJobService;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     public PostingService(
             PostingRepository postingRepository,

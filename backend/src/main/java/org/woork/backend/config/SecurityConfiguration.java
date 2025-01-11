@@ -129,6 +129,13 @@ public class SecurityConfiguration {
                                 HttpMethod.GET,
                                 "/api/chats/**"
                         ).authenticated()
+                        //VERIFICATION
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/verification/**"
+                        ).authenticated()
+                        //ADMIN
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

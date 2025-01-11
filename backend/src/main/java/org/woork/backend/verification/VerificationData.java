@@ -27,10 +27,14 @@ public class VerificationData {
 
     private LocalDateTime identityVerifiedAt;
 
+    private boolean identityVerificationFailed;
+
     @OneToOne
     private Image criminalRecords;
 
     private LocalDateTime criminalRecordsVerifiedAt;
+
+    private boolean criminalRecordsVerificationFailed;
 
     public VerificationData() {}
 

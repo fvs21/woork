@@ -1,7 +1,9 @@
 package org.woork.backend.user;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.address.requests.UpdateAddressRequest;
@@ -44,14 +46,17 @@ public class UserController {
 
     @PatchMapping("/address/update")
     public UserResource updateLocation(@Valid @RequestBody UpdateAddressRequest updateAddressRequest) {
-        validatorImpl.validateFields(updateAddressRequest);
         User user = authenticationService.getCurrentUser();
 
         return userService.updateAddress(user, updateAddressRequest);
     }
 
     @PatchMapping("/pfp/update")
-    public UserResource updateProfilePicture(@RequestParam("image") MultipartFile multipartFile) {
+    public UserResource updateProfilePicture(
+            @RequestParam("image")
+            @NotNull(message = "Foto de perfil faltante")
+            MultipartFile multipartFile
+    ) {
         User user = authenticationService.getCurrentUser();
 
         return userService.updateProfilePicture(user, multipartFile);
