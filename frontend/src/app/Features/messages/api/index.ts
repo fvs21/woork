@@ -23,6 +23,7 @@ export const useLoadChat = (id: number) => {
         },
         queryKey: ['chat', id],
         refetchOnWindowFocus: false,
+        refetchOnMount: false,
         enabled: id != undefined
     });
 

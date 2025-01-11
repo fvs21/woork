@@ -24,6 +24,8 @@ public class UserResource {
     private AddressResource address;
     private String username;
 
+    private boolean hasIdentityVerified;
+
     @JsonProperty(value = "is_worker")
     private boolean isWorker;
 
@@ -41,5 +43,6 @@ public class UserResource {
         this.address = user.getAddress() != null ? new AddressResource(user.getAddress()) : null;
         this.isWorker = user.isWorker();
         this.username = user.getUsername();
+        this.hasIdentityVerified = user.hasIdentityVerified();
     }
 }

@@ -14,6 +14,7 @@ export type User = {
     phoneVerified: boolean;
     address: Address;
     username: string;
+    hasIdentityVerified: boolean;
 }
 
 export type Address = {

@@ -21,6 +21,9 @@ services:
       - backend/.env
   db:
     image: postgres
+    environment:
+      - POSTGRES_USER=${PSQL_USER}
+      - POSTGRES_PASSWORD=${PSQL_PASSWORD}
     expose:
       - 5432
 

@@ -45,13 +45,6 @@ export default function WorkPanel() {
         }
     }
 
-    useEffect(() => {
-        return;
-        if(!user.is_worker) {
-            setRegisterModal(true);
-        }
-    }, []);
-
     return (
         <div>
             <div className={styles.header}>

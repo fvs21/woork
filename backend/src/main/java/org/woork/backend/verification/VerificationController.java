@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.woork.backend.authentication.AuthenticationService;
 import org.woork.backend.user.User;
-import org.woork.backend.validators.ValidatorImpl;
 import org.woork.backend.verification.responses.UserVerificationStatusResponse;
 import org.woork.backend.verification.responses.WorkerVerificationStatusResponse;
 
@@ -16,13 +15,11 @@ import org.woork.backend.verification.responses.WorkerVerificationStatusResponse
 public class VerificationController {
     private final VerificationService verificationService;
     private final AuthenticationService authenticationService;
-    private final ValidatorImpl validatorImpl;
 
     @Autowired
-    public VerificationController(VerificationService verificationService, AuthenticationService authenticationService, ValidatorImpl validatorImpl) {
+    public VerificationController(VerificationService verificationService, AuthenticationService authenticationService) {
         this.verificationService = verificationService;
         this.authenticationService = authenticationService;
-        this.validatorImpl = validatorImpl;
     }
 
     @PostMapping(value = "/id", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
