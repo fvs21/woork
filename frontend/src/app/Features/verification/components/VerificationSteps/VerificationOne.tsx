@@ -2,7 +2,7 @@ import Logotype from "@/components/Logotype/Logotype";
 import styles from "./Verification.module.scss";
 import Link from "next/link";
 
-export default function VerificationOne() {
+export default function VerificationOne({setStep}) {
     return (
         <section>
             <div style={{marginBottom: "20px"}}>
@@ -15,10 +15,12 @@ export default function VerificationOne() {
                     <li>Una foto de una identificación oficial, ya sea licencia de conducir o credencial para votar</li>
                     <li>Una foto de tu cara.</li>
                 </ol>
-                <Link href={"#"} className={styles['information-disclaimer']}>¿Cómo utilizamos esta información?</Link>
+                <Link href={"#"} className={styles.informationDisclaimer}>¿Cómo utilizamos esta información?</Link>
             </div>
             <div>
-                <button className={styles['start-verification-btn']}>Comienza con la verificación</button>
+                <button className={styles.startVerificationBtn} onClick={() => setStep(1)}>
+                    Comenzar
+                </button>
             </div>
         </section>
     )

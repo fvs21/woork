@@ -9,7 +9,7 @@ export default function MainView() {
 
     return (
         <main className={styles.contentContainer}>
-            {determineVerificationStep(step)}
+            {determineVerificationStep(step, setStep)}
         </main>
     )
 }

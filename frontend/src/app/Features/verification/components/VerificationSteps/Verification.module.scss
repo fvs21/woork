@@ -5,7 +5,7 @@
     font-weight: 700;
 }
 
-.start-verification-btn {
+.startVerificationBtn {
     background-color: #15b67c;
     color: white;
     border: none;
@@ -18,7 +18,7 @@
     transition: 0.3s;
 }
 
-.start-verification-btn:hover {
+.startVerificationBtn:hover {
     background-color: #18c787;
 }
 
@@ -32,11 +32,17 @@
     }
 }
 
-.information-disclaimer {
+.informationDisclaimer {
     color: var.$primary-color;
     text-decoration: none;
 }
 
-.information-disclaimer:hover {
+.informationDisclaimer:hover {
     text-decoration: underline;
+}
+
+@media only screen and (max-width: 805px) {
+    .title {
+        font-size: 40px;
+    }
 }
