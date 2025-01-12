@@ -51,7 +51,6 @@
 
 .idsForm {
     width: 800px;
-    height: 500px;
     border: 1px solid var(--border-color);
     border-radius: 10px;
 }
@@ -68,14 +67,47 @@
     line-height: 1.3;
     padding: 15px;
     padding-top: var.$margin-xxs;
+    padding-bottom: 0;
 }
 
 .requirementsList {
     padding: 0 25px;
+    margin-bottom: 0;
+}
 
-    li {
-        padding-bottom: var.$margin-xxs;
-    }
+.requirement {
+    padding-bottom: var.$margin-xxs;
+}
+
+.requirement:last-child {
+    padding-bottom: 0;
+}
+
+.idsSubmitFormsContainer {
+    padding: 15px;
+    width: 100%;
+    height: 300px;
+    display: flex;
+    gap: 10px;
+}
+
+.idSubmitForm {
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
+}
+
+.idSubmit {
+    width: 100%;
+    height: 100%;
+    background-color: var(--input-color);
+    border-radius: 6px;
+}
+
+.formLabel {
+    font-size: 14px;
+    font-weight: 500;
 }
 
 @media only screen and (max-width: 805px) {
