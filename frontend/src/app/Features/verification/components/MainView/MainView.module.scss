@@ -1,11 +1,12 @@
 @use "@/styles/variables" as var;
 
 .contentContainer {
-    padding-top: 130px;
+    padding-top: 80px;
     padding-bottom: 130px;
     padding-left: 30px;
     padding-right: 30px;
     margin-left: auto !important;
     margin-right: auto !important; 
     max-width: 1240px;
+    height: 100%;
 }
