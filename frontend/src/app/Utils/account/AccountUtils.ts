@@ -1,11 +1,13 @@
-export function checkIfValidImage(file) {
-    const validTypes = ["image/jpeg", "image/jpg"];
+import { Address } from "@/types/global";
+
+export function checkIfValidImage(file: Blob) {
+    const validTypes = ["image/jpeg", "image/jpg", "image/png"];
     return validTypes.includes(file.type);
 }
 
 export const defaultPfpUrl = "http://localhost:8000/api/images/default-pfp";
 
-export function formatGender(gender) {
+export function formatGender(gender: string) {
     switch(gender) {
         case "Male":
             return "Hombre";
@@ -16,6 +18,6 @@ export function formatGender(gender) {
     }
 }
 
-export function formatAddress(address) {
+export function formatAddress(address: Address) {
     return `${address?.street}, ${address?.number}. C.P. ${address?.zip_code} - ${address?.city}, ${address?.state}, ${address?.country}`
 }
