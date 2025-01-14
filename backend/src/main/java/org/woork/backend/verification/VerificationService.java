@@ -24,7 +24,7 @@ public class VerificationService {
 
     //upload id (front and back photo)
     public void uploadIdPhotos(User user, MultipartFile idFrontImage, MultipartFile idBackImage) {
-        if(!idFrontImage.isEmpty() || !idBackImage.isEmpty()) {
+        if(idFrontImage.isEmpty() || idBackImage.isEmpty()) {
             throw new ValidationException("Foto(s) de identificación faltante(s).");
         }
 

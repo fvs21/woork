@@ -1,8 +1,35 @@
-import UploadSVG from "@/components/SVGs/Upload";
 import styles from "./Verification.module.scss";
 import DocumentInput from "../DocumentInput";
+import { useState } from "react";
+import MutationButton from "@/components/MutationButton";
+import { useUploadId } from "../../api";
+import { flash } from "@/flash-message/flashMessageCreator";
 
 export default function VerificationTwo({ setStep }) {
+    const [idFront, setIdFront] = useState<File>();
+    const [idBack, setIdBack] = useState<File>();
+
+    const { upload, isLoading, uploadDisabled } = useUploadId();
+
+    const inputDisabled = !idFront || !idBack;
+
+    async function handleSubmit() {
+        if(inputDisabled) {
+            return;
+        }
+
+        const form = new FormData();
+        form.append('id_front', idFront);
+        form.append('id_back', idBack);
+
+        try {
+            await upload(form);
+            setStep(2);
+        } catch {
+            flash("Sucedió un error al procesar tus documentos", 4000, "error");
+        }
+    }
+
     return (
         <section className={styles.verificationContainer}>
             <div className={styles.verificationFormsContainer}>
@@ -22,20 +49,20 @@ export default function VerificationTwo({ setStep }) {
                     <div className={styles.idsSubmitFormsContainer}>
                         <div className={styles.idSubmitForm}>
                             <label className={styles.formLabel}>Parte delantera</label>
-                            <DocumentInput />
+                            <DocumentInput document={idFront} setDocument={setIdFront}/>
                         </div>
                         <div className={styles.idSubmitForm}>
                             <label className={styles.formLabel}>Parte trasera</label>
-                            <DocumentInput />
+                            <DocumentInput document={idBack} setDocument={setIdBack}/>
                         </div>
                     </div>
                     <div className={styles.submitBtnContainer}>
-                        <button className={styles.submitBtn}>
+                        <MutationButton classname={styles.submitBtn} click={handleSubmit} disable={uploadDisabled || inputDisabled}>
                             Enviar
-                        </button>
+                        </MutationButton>
                     </div>
                 </div>
             </div>
         </section>
     )
-}
+}   

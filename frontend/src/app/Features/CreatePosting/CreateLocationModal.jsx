@@ -1,5 +1,5 @@
 import Modal from "@/components/Modal/Modal";
-import styles from "../AccountPanel/InformationPanel.module.scss";
+import styles from "@/features/dashboard/components/accountpanel/InformationPanel.module.scss";
 import { useEffect, useState } from "react";
 import ArrowBackSVG from "@/components/SVGs/ArrowBack";
 import InputLabel from "@/components/ValidatedInput/InputLabel";

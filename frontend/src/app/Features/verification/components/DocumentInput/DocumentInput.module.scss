@@ -18,3 +18,27 @@
 .dragOver {
     background-color: var(--button-hover);
 }
+
+.searchForFileButton {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.submittedFile {
+    display: block;
+    text-align: center;
+}
+
+.documentName {
+    font-size: 12px;
+}
+
+.changeSubmittedFileButton {
+    border: none;
+    border-radius: 4px;
+    background-color: var(--button-hover);
+    color: var(--text-color);
+    cursor: pointer;
+}

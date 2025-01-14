@@ -87,6 +87,7 @@ public class ImageService {
             return imageRepository.save(image);
 
         } catch (IOException e) {
+            log.info(e.getMessage());
             throw new UnableToUploadImageException();
         }
     }

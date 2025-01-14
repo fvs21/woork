@@ -1,0 +1,52 @@
+@use "@/styles/variables" as var;
+
+.facePhotoModal {
+    width: 500px;
+    padding: 15px;
+}
+
+.cameraVideoContainer {
+    margin-top: 2rem;
+    height: 250px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.cameraVideo {
+    width: 200px;
+    height: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+    object-fit: cover;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg); 
+    -moz-transform: rotateY(180deg); 
+}
+
+.takePictureButtonContainer {
+    width: 100%;
+    padding-top: var.$margin-xl;
+    padding-bottom: var.$margin-xs;
+}
+
+.takePictureButton {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background-color: var.$primary-color;
+    color: white;
+    cursor: pointer;
+}
+
+.takenPhotoPreview {
+    height: 250px;
+    width: 200px;
+    object-fit: cover;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg); 
+    -moz-transform: rotateY(180deg);
+    border-radius: 6px;
+}

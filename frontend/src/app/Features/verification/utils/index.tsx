@@ -1,4 +1,5 @@
 import VerificationOne from "../components/VerificationSteps/VerificationOne";
+import VerificationThree from "../components/VerificationSteps/VerificationThree";
 import VerificationTwo from "../components/VerificationSteps/VerificationTwo";
 
 export function determineVerificationStep(step: number, setStep: (step: number) => void) {
@@ -7,5 +8,7 @@ export function determineVerificationStep(step: number, setStep: (step: number) 
             return <VerificationOne setStep={setStep}/>
         case 1:
             return <VerificationTwo setStep={setStep} />
+        case 2:
+            return <VerificationThree setStep={setStep} />
     }
 }
