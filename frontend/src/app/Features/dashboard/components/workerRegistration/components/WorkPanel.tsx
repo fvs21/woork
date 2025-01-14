@@ -3,46 +3,52 @@ import styles from "./WorkPanel.module.scss";
 import { lazy, Suspense, useEffect, useState } from "react";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
 import { determineSvgIconForRequirement } from "../utils/WorkerRegistrationUtils";
-import { useRegisterWorker } from "@/api/hooks/worker";
-import { flash } from "@/flash-message/flashMessageCreator";
 import { useDashboardOption } from "@/features/dashboard/context";
+import { useWorkerRegistrationStatus } from "../api";
+import { useRouter } from "next/navigation";
 
 const RegisterWorkerModal = lazy(() => import("./WorkerRegistration/RegisterWorkerModal"));
 
 export default function WorkPanel() {
     const [user] = useUser();
     const [registerModal, setRegisterModal] = useState<boolean>(false);
+    const router = useRouter();
 
-    const { register, registerWorkerInvalid } = useRegisterWorker();
     const [,setOption] = useDashboardOption();
 
-    async function handleSubmit(e: any) {
-        e.preventDefault();
-
-        try {
-            const request = await register();
-            flash("Registro exitoso", 4000, "success");
-        } catch(error) {
-            flash(error.response.data.message, 4000, "error");
-        }
-    }
-
-    //just for development
-    const status = {
-        information: 'verified',
-        identification: 'none',
-        criminalRecords: 'none'
-    }
+    const { data, isLoading } = useWorkerRegistrationStatus();
 
     function determineStylesForRequirement(status: string) {
         switch(status) {
-            case 'none':
-            case 'rejected':
+            case 'NOT_SUBMITTED':
+            case 'FAILED':
                 return styles.canSubmit;
-            case 'pending':
-            case 'verified':
+            case 'SUBMITTED':
+            case 'APPROVED':
                 return styles.cannotSubmit;
         }
+    }
+
+    if(isLoading)
+        return <></>;
+
+    const identificationStatus = (() => {
+        if(data.userVerificationStatus.facePhotoStatus == "NOT_SUBMITTED" && data.userVerificationStatus.idPhotosStatus == "NOT_SUBMITTED")
+            return "NOT_SUBMITTED";
+        if(data.userVerificationStatus.facePhotoStatus == "SUBMITTED" || data.userVerificationStatus.idPhotosStatus == "SUBMITTED")
+            return "SUBMITTED";
+        if(data.userVerificationStatus.facePhotoStatus == "FAILED" || data.userVerificationStatus.idPhotosStatus == "FAILED")
+            return "FAILED";
+        if(data.userVerificationStatus.facePhotoStatus == "APPROVED" && data.userVerificationStatus.idPhotosStatus == "APPROVED")
+            return "APPROVED";
+
+        return "NOT_SUBMITTED";
+    })();
+
+    const status = {
+        information: 'verified',
+        identification: identificationStatus,
+        criminalRecords: data.criminalRecordsVerificationStatus
     }
 
     return (
@@ -66,7 +72,7 @@ export default function WorkPanel() {
                     </span>
                     {determineSvgIconForRequirement(status.identification)}
                 </div>
-                <div className={`${styles.requirement} ${determineStylesForRequirement(status.criminalRecords)}`}>
+                <div className={`${styles.requirement} ${determineStylesForRequirement(status.criminalRecords)}`} onClick={() => router.push("/worker-registration")}> 
                     <span>
                         Carta de antecedentes no penales
                     </span>

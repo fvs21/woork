@@ -207,12 +207,48 @@
     margin-top: var.$margin-m;
 }
 
+.criminalRecordsTitle {
+    font-size: 60px;
+    font-weight: 600;
+}
+
+.criminalRecordsDescription {
+    font-size: 20px;
+    padding-top: var.$margin-s;
+    line-height: 1.9;
+}
+
+.criminalRecordsForm {
+    width: 800px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+
+.criminalRecordsFormTitle {
+    font-size: 25px;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+}
+
+.criminalRecordsFormDescription {
+    padding: 15px;
+}
+
+.criminalRecordsInput {
+    height: 300px;
+}
+
 @media only screen and (max-width: 805px) {
     .title {
         font-size: 40px;
     }
 
     .finalMessage {
+        font-size: 16px;
+    }
+
+    .criminalRecordsDescription {
         font-size: 16px;
     }
 }

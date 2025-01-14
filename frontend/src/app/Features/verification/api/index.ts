@@ -1,6 +1,6 @@
 import { api, apiMultipart } from "@/api/axios";
 import { useMutation, useQuery } from "react-query";
-import { VerificationStatus } from "../types";
+import { VerificationStatus, WorkerVerificationStatus } from "../types";
 
 export const useVerificationStatus = () => {
     const { data, isLoading } = useQuery({
@@ -42,6 +42,21 @@ export const useUploadFacePhoto = () => {
 
     return { 
         upload, 
+        isLoading,
+        uploadDisabled: isLoading && !isError
+    };
+}
+
+export const useUploadCriminalRecords = () => {
+    const { mutateAsync: upload, isLoading, isError } = useMutation({
+        mutationFn: async (formData: FormData) => {
+            const request = await apiMultipart.post("/verification/criminal-records", formData);
+            return request.data;
+        }
+    });
+
+    return {
+        upload,
         isLoading,
         uploadDisabled: isLoading && !isError
     };

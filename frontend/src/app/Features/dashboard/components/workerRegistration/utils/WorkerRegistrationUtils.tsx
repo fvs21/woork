@@ -4,6 +4,7 @@ import WorkerRegistrationThree from "../components/WorkerRegistration/WorkerRegi
 import WorkerRegistrationTwo from "../components/WorkerRegistration/WorkerRegistrationTwo"
 import Checkmark from "@/components/SVGs/Checkmark"
 import CloseSVG from "@/components/SVGs/Close"
+import Clock from "@/components/SVGs/Clock"
 
 export const determineWorkerRegistrationModal = (step: number, setStep: Function) => {
     switch(step) {
@@ -18,13 +19,13 @@ export const determineWorkerRegistrationModal = (step: number, setStep: Function
 
 export function determineSvgIconForRequirement(status: string) {
     switch(status) {
-        case 'none':
+        case 'NOT_SUBMITTED':
             return <ArrowRightSVG width={"20px"} color={"var(--text-color)"} />
-        case 'pending':
-            return <></>
-        case 'verified': 
+        case 'SUBMITTED':
+            return <Clock width="20px" color={"var(--text-color)"} />
+        case 'APPROVED': 
             return <Checkmark width="20px" color={"green"} />
-        case 'rejected':
+        case 'REJECTED':
             return <CloseSVG width="20px" color="red" />
     }
 }
