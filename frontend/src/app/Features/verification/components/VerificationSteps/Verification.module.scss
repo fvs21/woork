@@ -178,6 +178,18 @@
     color: var(--text-color);
 }
 
+.deletePhotoBtn {
+    @include optionBtn;
+    background-color: var(--input-color);
+    color: var(--text-color);
+}
+
+.submitPhotoBtn {
+    @include optionBtn;
+    background-color: var.$primary-color;
+    color: white;
+}
+
 @media only screen and (max-width: 805px) {
     .title {
         font-size: 40px;

@@ -7,6 +7,14 @@ export default function VerificationThree({ setStep }) {
     const [facePhoto, setFacePhoto] = useState<File>();
     const [faceSnapshotModal, setFaceSnapshotModal] = useState<boolean>(false);
 
+    const deletePhoto = () => {
+        setFacePhoto(undefined);
+    };
+
+    const submitPhoto = () => {
+        
+    };
+
     return (
         <section className={styles.verificationContainer}>
             <div className={styles.verificationFormsContainer}>
@@ -25,10 +33,27 @@ export default function VerificationThree({ setStep }) {
                     <div className={styles.faceExampleContainer}>
                         <img src="https://t4.ftcdn.net/jpg/02/19/63/31/360_F_219633151_BW6TD8D1EA9OqZu4JgdmeJGg4JBaiAHj.jpg" className={styles.facePhotoExample} alt="Foto de ejemplo" />
                     </div>
-                    <div className={styles.facePhotoOptionsContainer}>
-                        <button className={styles.takePhotoBtn} onClick={() => setFaceSnapshotModal(true)}>Tomarse foto</button>
-                        <button className={styles.uploadPhotoBtn}>Subir foto</button>
-                    </div>
+                    {
+                        facePhoto ? (
+                            <div className={styles.facePhotoOptionsContainer}>
+                                <button className={styles.deletePhotoBtn} onClick={deletePhoto}>
+                                    Eliminar foto
+                                </button>
+                                <button className={styles.submitPhotoBtn} onClick={submitPhoto}>
+                                    Enviar foto
+                                </button>
+                            </div>
+                        ) : (
+                            <div className={styles.facePhotoOptionsContainer}>
+                                <button className={styles.takePhotoBtn} onClick={() => setFaceSnapshotModal(true)}>
+                                    Tomarse foto
+                                </button>
+                                <button className={styles.uploadPhotoBtn}>
+                                    Subir foto
+                                </button>
+                            </div>
+                        )
+                    }
                 </div>
             </div>
             {faceSnapshotModal && <FacePhotoModal setDisplayModal={setFaceSnapshotModal} facePhoto={facePhoto} setFacePhoto={setFacePhoto}/>}

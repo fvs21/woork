@@ -3,7 +3,6 @@ import styles from "./FacePhotoModal.module.scss";
 import CloseSVG from "@/components/SVGs/Close";
 import React, { useEffect, useRef, useState } from "react";
 import { flash } from "@/flash-message/flashMessageCreator";
-import LoadingSpinnerClear from "@/components/LoadingSpinnerClear";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 type FacePhotoModalProps = {
@@ -19,6 +18,7 @@ export default function FacePhotoModal({setDisplayModal, facePhoto, setFacePhoto
 
     const [takenPhoto, setTakenPhoto] = useState<string | null>();
     const [isStreaming, setIsStreaming] = useState<boolean>(false);
+    const [photo, setPhoto] = useState<File>();
 
     const constraints = {
         audio: false,
@@ -39,7 +39,7 @@ export default function FacePhotoModal({setDisplayModal, facePhoto, setFacePhoto
                 type: "image/png"
             });
 
-            setFacePhoto(file);
+            setPhoto(file);
         })
 
         const data = canvasRef.current.toDataURL("image/png");
@@ -53,7 +53,7 @@ export default function FacePhotoModal({setDisplayModal, facePhoto, setFacePhoto
 
         const data = canvasRef.current.toDataURL("image/png");
         setTakenPhoto(data);
-        setFacePhoto(undefined);
+        setPhoto(undefined);
         startStream();
     }
 
@@ -64,22 +64,24 @@ export default function FacePhotoModal({setDisplayModal, facePhoto, setFacePhoto
                 setIsStreaming(true);
             }
         ).catch(error => {
-            setDisplayModal(false);
+            closeModal();
             flash("No se encontro niguna cámara para tomar la foto", 4000, "error");
         });
     }
 
     function stopStream(): void {
-        if(videoRef.current == null)
-            return;
-
-        const stream = videoRef.current.srcObject as MediaStream;
+        const stream = videoRef.current?.srcObject as MediaStream;
 
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
             videoRef.current.srcObject = null;
             setIsStreaming(false);
         }
+    }
+
+    function save() {
+        setFacePhoto(photo);
+        closeModal();
     }
 
     useEffect(() => {
@@ -96,7 +98,7 @@ export default function FacePhotoModal({setDisplayModal, facePhoto, setFacePhoto
                 <CloseSVG width="18px" color="var(--text-color)" />
             </button>
             <div className={styles.cameraVideoContainer}>
-                {facePhoto ? 
+                {photo ? 
                     <img src={takenPhoto} className={styles.takenPhotoPreview} />
 
                 :
@@ -111,11 +113,25 @@ export default function FacePhotoModal({setDisplayModal, facePhoto, setFacePhoto
                 }
                 <canvas id="face-photo" hidden ref={canvasRef} width={200} height={250}></canvas>
             </div>
-            <div className={styles.takePictureButtonContainer}>
-                <button className={styles.takePictureButton} onClick={facePhoto ? clearPhoto : takePhoto}>
-                    {facePhoto ? "Volver a tomar foto" : "Tomar foto"}
-                </button>
-            </div>
+            {
+                photo ? (
+                    <div className={styles.photoOptionsContainer}>
+                      <button className={styles.retakePictureBtn} onClick={clearPhoto}>
+                        Volver a tomar foto
+                      </button>
+                      <button className={styles.savePictureBtn} onClick={save}>
+                        Guardar foto
+                      </button>
+                    </div>
+                ) : (
+                    <div className={styles.takePictureButtonContainer}>
+                        <button className={styles.takePictureButton} onClick={photo ? clearPhoto : takePhoto}>
+                            Tomar foto
+                        </button>
+                    </div>
+                )
+            }
+           
         </Modal>
     )
 }
