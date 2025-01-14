@@ -31,3 +31,18 @@ export const useUploadId = () => {
         uploadDisabled: isLoading && !isError
     };
 }
+
+export const useUploadFacePhoto = () => {
+    const { mutateAsync: upload, isLoading, isError } = useMutation({
+        mutationFn: async (formData: FormData) => {
+            const request = await apiMultipart.post("/verification/face", formData);
+            return request.data;
+        }
+    });
+
+    return { 
+        upload, 
+        isLoading,
+        uploadDisabled: isLoading && !isError
+    };
+}

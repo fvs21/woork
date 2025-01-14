@@ -1,18 +1,34 @@
 import { useState } from "react";
 import styles from "./Verification.module.scss";
 import FacePhotoModal from "../FacePhotoModal";
+import { useUploadFacePhoto } from "../../api";
+import { flash } from "@/flash-message/flashMessageCreator";
+import MutationButton from "@/components/MutationButton";
 //Face photo verification form
 
 export default function VerificationThree({ setStep }) {
     const [facePhoto, setFacePhoto] = useState<File>();
     const [faceSnapshotModal, setFaceSnapshotModal] = useState<boolean>(false);
 
+    const { upload, isLoading, uploadDisabled } = useUploadFacePhoto();
+
     const deletePhoto = () => {
         setFacePhoto(undefined);
     };
 
-    const submitPhoto = () => {
+    const submitPhoto = async () => {
+        const formData = new FormData();
+        formData.append("face", facePhoto);
+
+        console.log(facePhoto.name);
         
+
+        try {
+            await upload(formData);
+            setStep(3);
+        } catch {
+            flash("Ocurrió un error al procesar tu foto.", 4000, "error");
+        }
     };
 
     return (
@@ -39,17 +55,14 @@ export default function VerificationThree({ setStep }) {
                                 <button className={styles.deletePhotoBtn} onClick={deletePhoto}>
                                     Eliminar foto
                                 </button>
-                                <button className={styles.submitPhotoBtn} onClick={submitPhoto}>
+                                <MutationButton classname={styles.submitPhotoBtn} click={submitPhoto} disable={uploadDisabled}>
                                     Enviar foto
-                                </button>
+                                </MutationButton>
                             </div>
                         ) : (
                             <div className={styles.facePhotoOptionsContainer}>
                                 <button className={styles.takePhotoBtn} onClick={() => setFaceSnapshotModal(true)}>
-                                    Tomarse foto
-                                </button>
-                                <button className={styles.uploadPhotoBtn}>
-                                    Subir foto
+                                    Tomar foto
                                 </button>
                             </div>
                         )

@@ -36,11 +36,11 @@ export default function FacePhotoModal({setDisplayModal, facePhoto, setFacePhoto
 
         canvasRef.current.toBlob(blob => {
             const file = new File([blob], "headshot", {
-                type: "image/png"
+                type: "image/jpeg"
             });
 
             setPhoto(file);
-        })
+        }, "image/jpeg");
 
         const data = canvasRef.current.toDataURL("image/png");
         setTakenPhoto(data);
