@@ -7,7 +7,7 @@ export default function VerificationOne({setStep}) {
         <section>
             <div style={{marginBottom: "20px"}}>
                 <Logotype width={"250px"} />
-                <div className={styles.title}>Verifíca tu identidad para utilizar Woork</div>
+                <div className={styles.title}>Verifíca tu identidad en Woork</div>
             </div>
             <div className={styles.requirements}>
                 <h3>Necesitaras:</h3>
