@@ -1,5 +1,6 @@
 package org.woork.backend.profile.resources;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.woork.backend.profile.records.TimeInPlatform;
@@ -19,6 +20,11 @@ public class PublicProfileResource {
     private String pfp_url;
     private TimeInPlatform timeInPlatform;
 
+    @JsonProperty(value = "is_worker")
+    private boolean isWorker;
+
+    public PublicProfileResource() {}
+
     public PublicProfileResource(User user) {
         this.firstName = user.getFirstName();
         this.about = user.getAbout();
@@ -27,6 +33,7 @@ public class PublicProfileResource {
         this.identityVerified = user.hasIdentityVerified();
         this.pfp_url = user.getProfilePictureUrl();
         this.timeInPlatform = calculateTimeInPlatform(user.getCreatedAt());
+        this.isWorker = user.isWorker();
     }
 
     private TimeInPlatform calculateTimeInPlatform(LocalDate creation) {

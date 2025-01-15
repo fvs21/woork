@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.woork.backend.user.User;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Setter

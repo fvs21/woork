@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import org.woork.backend.authentication.AuthenticationService;
 import org.woork.backend.profile.requests.EditProfileRequest;
 import org.woork.backend.profile.resources.PublicProfileResource;
+import org.woork.backend.profile.resources.PublicWorkerProfileResource;
 import org.woork.backend.user.User;
 import org.woork.backend.user.UserService;
 import org.woork.backend.validators.ValidatorImpl;
+import org.woork.backend.worker.models.Worker;
 
 import java.util.Map;
 
@@ -32,18 +34,18 @@ public class ProfileController {
     public Map<String, Object> usersProfile() {
         User user = authenticationService.getCurrentUser();
         return Map.of(
-                "publicProfile", new PublicProfileResource(user),
+                "publicProfile", profileService.getProfile(user),
                 "isUsersAccount", true
         );
     }
 
     @GetMapping("/show/{username}")
     public Map<String, Object> showProfile(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
         User authenticatedUser = authenticationService.getCurrentUser();
+
         return Map.of(
-                "publicProfile", new PublicProfileResource(user),
-                "isUsersAccount", authenticatedUser.getId().equals(user.getId())
+                "publicProfile", profileService.getProfileByUsername(username),
+                "isUsersAccount", authenticatedUser.getUsername().equals(username)
         );
     }
 
@@ -52,6 +54,6 @@ public class ProfileController {
         validatorImpl.validateFields(editProfileRequest);
 
         User user = authenticationService.getCurrentUser();
-        return profileService.updateAbout(user, editProfileRequest.getAbout());
+        return profileService.updateAbout(user, editProfileRequest);
     }
 }

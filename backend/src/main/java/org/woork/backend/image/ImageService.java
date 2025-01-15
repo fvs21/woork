@@ -37,7 +37,7 @@ public class ImageService {
 
             File imageFile = File.createTempFile(prefix, extension, new File(imagesPath + "/" + prefix));
 
-            byte[] bytes = stripExifMetadata(file.getBytes());
+            byte[] bytes = stripExifMetadata(file.getBytes(), file.getContentType());
             try( FileOutputStream fos = new FileOutputStream(imageFile.getPath()) ) {
                 fos.write(bytes);
             } catch (IOException e) {
@@ -71,7 +71,7 @@ public class ImageService {
 
             File imageFile = File.createTempFile(prefix, extension, new File(privateFilesPath + "/images/" + prefix));
 
-            byte[] bytes = stripExifMetadata(file.getBytes());
+            byte[] bytes = stripExifMetadata(file.getBytes(), file.getContentType());
             try( FileOutputStream fos = new FileOutputStream(imageFile.getPath()) ) {
                 fos.write(bytes);
             }
@@ -114,13 +114,17 @@ public class ImageService {
         return image.getImageType();
     }
 
-    private byte[] stripExifMetadata(byte[] fileBytes) {
+    private byte[] stripExifMetadata(byte[] fileBytes, String contentType) {
+        if (!contentType.equalsIgnoreCase("image/jpeg")) {
+            return fileBytes;
+        }
+
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             new ExifRewriter().removeExifMetadata(fileBytes, byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException();
         }
     }
 
