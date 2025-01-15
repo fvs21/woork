@@ -12,7 +12,8 @@ export default async function Page() {
     const profile = await getUserProfile(accessToken);
 
     const editInformation = {
-        about: profile.publicProfile.about
+        about: profile.publicProfile.about,
+        categories: profile.publicProfile.categories
     }
 
     return (

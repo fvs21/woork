@@ -13,6 +13,7 @@ import org.woork.backend.user.UserService;
 import org.woork.backend.worker.WorkerService;
 import org.woork.backend.worker.models.CategoryTag;
 import org.woork.backend.worker.models.Worker;
+import org.woork.backend.worker.repositories.CategoryTagRepository;
 import org.woork.backend.worker.repositories.WorkerRepository;
 
 import java.util.Arrays;
@@ -26,13 +27,15 @@ public class ProfileService {
     private final WorkerService workerService;
     private final WorkerRepository workerRepository;
     private final UserService userService;
+    private final CategoryTagRepository categoryTagRepository;
 
     @Autowired
-    public ProfileService(UserRepository userRepository, WorkerService workerService, WorkerRepository workerRepository, UserService userService) {
+    public ProfileService(UserRepository userRepository, WorkerService workerService, WorkerRepository workerRepository, UserService userService, CategoryTagRepository categoryTagRepository) {
         this.userRepository = userRepository;
         this.workerService = workerService;
         this.workerRepository = workerRepository;
         this.userService = userService;
+        this.categoryTagRepository = categoryTagRepository;
     }
 
     public PublicProfileResource getProfile(User user) {
@@ -50,21 +53,25 @@ public class ProfileService {
     }
 
     public PublicProfileResource updateAbout(User user, EditProfileRequest request) {
+        user.setAbout(request.getAbout());
+        userRepository.save(user);
+
         if(!user.isWorker()) {
-            user.setAbout(request.getAbout());
-            return new PublicProfileResource(userRepository.save(user));
+            return new PublicProfileResource(user);
         }
 
-        Set<Categories> categories = request.getCategories();
+        Set<String> categories = request.getCategories();
 
-        if(categories.stream().anyMatch(cat -> !Arrays.stream(Categories.values()).toList().contains(cat))) {
+        if(categories.stream().anyMatch(cat -> !Categories.getCodes().contains(cat))) {
             throw new UnableToUpdateUserException("Invalid category tag");
         }
 
         Worker worker = workerService.getWorker(user);
 
         Set<CategoryTag> categoryTags = categories.stream().map(
-                cat -> new CategoryTag(cat.toString())
+                cat -> categoryTagRepository.findById(cat).orElse(
+                        categoryTagRepository.save(new CategoryTag(cat))
+                )
         ).collect(Collectors.toSet());
 
         worker.setCategories(categoryTags);

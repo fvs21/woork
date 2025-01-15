@@ -8,12 +8,14 @@ import { useEditProfile } from "@/api/hooks/profile";
 import { useRouter } from "next/navigation";
 import { flash } from "@/flash-message/flashMessageCreator";
 import CategoryTagInput from "./CategoryTagInput";
+import { CategoriesList } from "@/services/Categories";
 
 const AboutModal = lazy(() => import("./AboutModal"));
 
 type EditProfileProps = {
     editInformation: {
         about: string;
+        categories: string[];
     };
 }
 
@@ -21,6 +23,12 @@ export default function EditProfile({editInformation}: EditProfileProps) {
     const [user] = useUser();
 
     const [about, setAbout] = useState(editInformation.about);
+
+
+    const [categories, setAddedCategories] = useState(
+        editInformation.categories.map(category => CategoriesList.find(cat => cat.tag === category)!)
+    );
+
     const [aboutModal, setAboutModal] = useState(false);
     const openModal = () => setAboutModal(true);
     const closeModal = () => setAboutModal(false);
@@ -31,13 +39,14 @@ export default function EditProfile({editInformation}: EditProfileProps) {
     async function submitEdit(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
-        if(about == editInformation.about) {
+        if(about == editInformation.about && categories.map(cat => cat.tag).sort() == editInformation.categories.sort()) {
             return;
         }
 
         try {
             await edit({
-                about: about
+                about: about,
+                categories: user.is_worker ? categories.map(cat => cat.tag) : []
             });
             router.push("/profile");
         } catch(error) {
@@ -97,7 +106,7 @@ export default function EditProfile({editInformation}: EditProfileProps) {
                                         Agrega las categorías de trabajo en las que tienes experiencia y te gustaría ofrecer tus servicios.
                                     </div>
                                     <div className={styles.categoryContainer}>
-                                        <CategoryTagInput />
+                                        <CategoryTagInput categories={categories} setCategories={setAddedCategories}/>
                                     </div>
                                 </div>
                             </>

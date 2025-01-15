@@ -11,19 +11,22 @@ import Footer from "@/components/Footer/Footer";
 import UserPictureViewer from "./UserPictureViewer";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
 import StarSVG from "@/components/SVGs/Star";
-import Electrical from "@/components/SVGs/JobCategories/Electrical";
-import Pet from "@/components/SVGs/JobCategories/Pet";
-import Plumbery from "@/components/SVGs/JobCategories/Plumbery";
-import Plant from "@/components/SVGs/JobCategories/Plant";
+import { PublicProfile, PublicWorkerProfile } from "../../types";
+import CategoryTagViewer from "./CategoryTagViewer";
 
-export default function ProfileViewer({profile, isUsersAccount}) {
+type ProfileViewerProps = {
+    profile: PublicProfile | PublicWorkerProfile;
+    isUsersAccount: boolean;
+}
+
+export default function ProfileViewer({profile, isUsersAccount}: ProfileViewerProps) {
     const time = (profile.timeInPlatform.time != 0 ? profile.timeInPlatform.time : 1 );
 
     const [pfpViewer, setPfpViewer] = useState(false);
 
     const svgClr = svgColor();
 
-    function formatUnits() {
+    function formatTimeUnits() {
         if(profile.timeInPlatform.units == "months") {
             return time == 1 ? "mes" : "meses";
         } else 
@@ -42,7 +45,7 @@ export default function ProfileViewer({profile, isUsersAccount}) {
                     <div className={styles.basicInfoContainer}>
                         <div className={styles.photoAndNameContainer}>
                             <button className={styles.userPhotoBtn} onClick={() => setPfpViewer(true)}>
-                                <img className={styles.userPhoto} src={profile?.pfp_url} />
+                                <img className={styles.userPhoto} src={profile?.pfp_url} alt="Foto de perfil"/>
                             </button>
                             <div className={styles.name}>{profile.firstName}</div>
                         </div>
@@ -50,14 +53,14 @@ export default function ProfileViewer({profile, isUsersAccount}) {
                             <div className={styles.experience}>
                                 <div className={styles.time}>
                                     {
-                                        time + `${profile.timeInPlatform.units == "months" ? ` ${formatUnits()}` : ` ${formatUnits()}`} en Woork`
+                                        time + `${profile.timeInPlatform.units == "months" ? ` ${formatTimeUnits()}` : ` ${formatTimeUnits()}`} en Woork`
                                     }
                                 </div>
                                 <span className={styles.statsSubtitle}>
-                                    {profile.isWorker ? "Trabajador" : "Miembro"}
+                                    {profile.is_worker ? "Trabajador" : "Miembro"}
                                 </span>
                             </div>
-                            {profile.isWorker && 
+                            {profile.is_worker && 
                                 <div className={styles.starsContainer}>
                                     <div className={styles.stars}>
                                         4.34
@@ -66,7 +69,7 @@ export default function ProfileViewer({profile, isUsersAccount}) {
                                     <span className={styles.statsSubtitle}>Calificación</span>
                                 </div>
                             }
-                            {profile.isWorker && 
+                            {profile.is_worker && 
                                 <div className={styles.jobCompletedContainer}>
                                     <div className={styles.jobCompleted}>
                                         72
@@ -114,7 +117,7 @@ export default function ProfileViewer({profile, isUsersAccount}) {
                                 `${profile.firstName} no ha agregado una descripción.`
                             }
                         </div>
-                        {profile.isWorker && 
+                        {profile.is_worker && 
                             <>
                                 <hr className="hr-line" />
                                 <div className={styles.categoryTags}>
@@ -122,22 +125,9 @@ export default function ProfileViewer({profile, isUsersAccount}) {
                                         Categorías
                                     </div>
                                     <div className={styles.categoryTagsList}>
-                                        <div className={styles.tag}>
-                                            <Electrical width={"20px"} />
-                                            Electricidad
-                                        </div>
-                                        <div className={styles.tag}>
-                                            <Pet width={"20px"} />
-                                            Mascotas
-                                        </div>
-                                        <div className={styles.tag}>
-                                            <Plumbery width={"20px"} />
-                                            Plomería
-                                        </div>
-                                        <div className={styles.tag}>
-                                            <Plant width={"20px"} />
-                                            Jardinería
-                                        </div>
+                                        {(profile as PublicWorkerProfile).categories.map((cat, i) => {
+                                            return <CategoryTagViewer category={cat} key={cat}/>
+                                        })}
                                     </div>
                                 </div>
                             </>

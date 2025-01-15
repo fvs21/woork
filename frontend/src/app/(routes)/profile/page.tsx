@@ -1,7 +1,7 @@
 import { refreshToken } from "@/api/server/auth";
 import { getUserProfile } from "@/api/server/profile";
 import Layout from "@/components/Layout/Layout";
-import ProfileViewer from "@/features/profile/components/ProfileViewer";
+import ProfileViewer from "@/features/profile/components/ProfileViewer/ProfileViewer";
 
 export const metadata = {
     title: "Woork - Tu perfil"

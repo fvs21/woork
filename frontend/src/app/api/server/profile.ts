@@ -1,3 +1,4 @@
+import { PublicProfile, PublicWorkerProfile } from "@/features/profile/types";
 import { Auth } from "./auth";
 
 const BASE_URL = "http://localhost:8000/api";

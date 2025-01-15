@@ -4,31 +4,25 @@ import styles from './Edit.module.scss';
 import { useState } from 'react';
 import UnaddedCategoryTag from '../CategoryTag/UnaddedCategoryTag';
 
-export default function CategoryTagInput() {
+export default function CategoryTagInput({categories, setCategories}: { categories: Category[]; setCategories: (categories: Category[]) => void }) {
     const [editMode, setEditMode] = useState(false);
 
-    const [addedCategories, setAddedCategories] = useState([
-        CategoriesList[0],
-        CategoriesList[1],
-        CategoriesList[7]
-    ]);
-
-    const unusedCategories = CategoriesList.filter(category => !addedCategories.includes(category));
+    const unusedCategories = CategoriesList.filter(category => !categories.includes(category));
 
     function deleteCategory(category: Category) {
-        let cat = [...addedCategories];
+        let cat = [...categories];
         cat.splice(cat.indexOf(category), 1);
-        setAddedCategories(cat);
+        setCategories(cat);
     }
 
     function addCategory(category: Category) {
-        setAddedCategories([...addedCategories, category])
+        setCategories([...categories, category])
     }
 
     return (
         <div>
             <div className={styles.categoriesList}>
-                {addedCategories.map((category, i) => {
+                {categories.map((category, i) => {
                     return (
                         <CategoryTag category={category} editMode={editMode} deleteCategory={deleteCategory} key={category.name}/>
                     );

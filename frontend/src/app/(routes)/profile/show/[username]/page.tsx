@@ -1,7 +1,8 @@
 import { refreshToken } from "@/api/server/auth";
 import { searchProfile } from "@/api/server/profile";
 import Layout from "@/components/Layout/Layout";
-import ProfileViewer from "@/features/profile/components/ProfileViewer";
+import ProfileViewer from "@/features/profile/components/ProfileViewer/ProfileViewer";
+import { PublicProfile, PublicWorkerProfile } from "@/features/profile/types";
 import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
@@ -28,10 +29,14 @@ export default async function Page({ params }) {
 
     if(profile.error)
         notFound();
+
+    const publicProfile = profile.publicProfile;
     
     return (
         <Layout>
-            <ProfileViewer profile={profile.publicProfile} isUsersAccount={false} />
+            <ProfileViewer 
+                profile={publicProfile.is_worker ? publicProfile as PublicWorkerProfile : publicProfile as PublicProfile} 
+                isUsersAccount={false} />
         </Layout>
     )
 }
