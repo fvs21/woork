@@ -2,7 +2,6 @@
 
 import { useVerificationStatus } from "../../api";
 import { determineVerificationStep } from "../../utils";
-import styles from "./MainView.module.scss";
 import { useEffect, useState } from "react";
 
 export default function MainView() {
@@ -25,8 +24,8 @@ export default function MainView() {
         return <></>
 
     return (
-        <main className={styles.contentContainer}>
+        <>
             {determineVerificationStep(step, setStep)}
-        </main>
+        </>
     )
 }

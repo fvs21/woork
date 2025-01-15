@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function VerificationOne({setStep}) {
     return (
-        <section>
+        <section className={styles.contentContainer}>
             <div style={{marginBottom: "20px"}}>
                 <Logotype width={"250px"} />
                 <div className={styles.title}>Verifíca tu identidad en Woork</div>

@@ -5,6 +5,17 @@
     font-weight: 700;
 }
 
+.contentContainer {
+    padding-top: 80px;
+    padding-bottom: 130px;
+    padding-left: 30px;
+    padding-right: 30px;
+    margin-left: auto !important;
+    margin-right: auto !important; 
+    max-width: 1240px;
+    height: 100%;
+}
+
 .startVerificationBtn {
     background-color: #15b67c;
     color: white;
@@ -41,19 +52,27 @@
     text-decoration: underline;
 }
 
+.verificationContainer {
+    height: 100%;
+}
+
 .verificationFormsContainer {
     width: 100%;
     height: 100%;
+
     display: flex;
-    align-items: center;
     justify-content: center;
+
     padding-bottom: 40px;
+    padding-top: 60px;
 }
 
 .idsForm {
     width: 800px;
+    height: min-content;
     border: 1px solid var(--border-color);
     border-radius: 10px;
+    overflow-y: auto;
 }
 
 .idsFormTitle {
@@ -126,6 +145,7 @@
     border: 1px solid var(--border-color);
     width: 700px;
     border-radius: 10px;
+    height: min-content;
 }
 
 .facePhotoFormDescription {
@@ -250,5 +270,25 @@
 
     .criminalRecordsDescription {
         font-size: 16px;
+    }
+}
+
+@media only screen and (max-width: 580px) {
+    .verificationFormsContainer {
+        padding: 0;
+    }
+
+    .idsForm {
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 0;
+        border: none;
+    }
+
+    .facePhotoForm {
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 0;
+        border: none;
     }
 }
