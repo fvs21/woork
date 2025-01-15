@@ -33,10 +33,10 @@ export const Categories = {
     "Instalación": "BHDUS3"
 }
 
-type Category = {
+export type Category = {
     name: string;
     tag: string;
-    icon: React.MemoExoticComponent<({ width }: { width: number; }) => React.ReactNode>;
+    icon: React.MemoExoticComponent<({ width, color }: { width: number; color?: string; }) => React.ReactNode>;
 }
 
 export const CategoriesList: Array<Category> = [

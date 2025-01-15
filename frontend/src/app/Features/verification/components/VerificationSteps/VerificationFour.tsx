@@ -5,7 +5,7 @@ export default function VerificationFour() {
     const router = useRouter();
 
     return (
-        <section>
+        <section className={styles.contentContainer}>
             <div className={styles.title} style={{marginBottom: "20px"}}>
                 Siguientes pasos
             </div>

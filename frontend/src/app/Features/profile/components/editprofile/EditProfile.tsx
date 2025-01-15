@@ -7,6 +7,7 @@ import styles from "./Edit.module.scss";
 import { useEditProfile } from "@/api/hooks/profile";
 import { useRouter } from "next/navigation";
 import { flash } from "@/flash-message/flashMessageCreator";
+import CategoryTagInput from "./CategoryTagInput";
 
 const AboutModal = lazy(() => import("./AboutModal"));
 
@@ -61,8 +62,8 @@ export default function EditProfile({editInformation}: EditProfileProps) {
                             La información que compartas sirve para que otros trabajadores y personas puedan conocerte mejor.
                         </div>
                         <hr className="hr-line" />
-                        <div className={styles.aboutSection}>
-                            <div className={styles.aboutTitle}>
+                        <div className={styles.editableSection}>
+                            <div className={styles.editableSectionTitle}>
                                 Acerca de ti
                             </div>
                             <div className={styles.aboutContainer}>
@@ -85,6 +86,22 @@ export default function EditProfile({editInformation}: EditProfileProps) {
                                 }
                             </div>
                         </div>
+                        {user.is_worker && (
+                            <>
+                                <hr className="hr-line" />
+                                <div className={styles.editableSection}>
+                                    <div className={styles.editableSectionTitle}>
+                                        Categorías de trabajo
+                                    </div>
+                                    <div className={styles.jobCategoriesDescription}>
+                                        Agrega las categorías de trabajo en las que tienes experiencia y te gustaría ofrecer tus servicios.
+                                    </div>
+                                    <div className={styles.categoryContainer}>
+                                        <CategoryTagInput />
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </section>
             </div>

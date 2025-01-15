@@ -34,7 +34,7 @@ export default function PendingJobs() {
                             )
                         })}
                     </div>
-                    : <div style={{width: "100%", textAlign: "center"}}>No tienes ningun trabajo activo</div>
+                    : <div style={{width: "100%", textAlign: "center"}}>No tienes ningun trabajo creado activo</div>
                 }
         </>
     );

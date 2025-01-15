@@ -52,13 +52,9 @@
     margin-bottom: var.$margin-l;
 }
 
-.aboutSection {
+.editableSection {
     margin-top: var.$margin-m;
-}
-
-.aboutTitle {
-    font-size: 22px;
-    font-weight: 500;
+    margin-bottom: var.$margin-l;
 }
 
 .aboutContainer {
@@ -123,7 +119,7 @@
     margin-bottom: var.$margin-xs;
 }
 
-.aboutTitle {
+.editableSectionTitle {
     font-size: 26px;
     font-weight: 550;
 }
@@ -167,9 +163,21 @@
     font-size: 16px;
 }
 
+.jobCategoriesDescription {
+    padding: var.$margin-xs 0;
+}
+
+.categoriesList {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: var.$margin-xs 0;
+}
+
 @media only screen and (max-width: 800px) {
     .editProfileContainer {
         padding: 50px;
+        padding-bottom: 100px;
     }
 
     .informationContainer {

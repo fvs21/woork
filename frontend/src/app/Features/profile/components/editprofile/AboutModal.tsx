@@ -25,7 +25,7 @@ export default function AboutModal({about, setAbout, closeModal}) {
                 <CloseSVG width={"20px"} color={svgColor()} />
             </button>
             <div className={styles.aboutModalHeader}>
-                <div className={styles.aboutTitle}>
+                <div className={styles.editableSectionTitle}>
                     Acerca de ti
                 </div>
                 <div className={styles.instructions}>
